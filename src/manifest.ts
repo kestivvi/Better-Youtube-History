@@ -40,8 +40,12 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['sidePanel', 'storage'],
+  permissions: ['sidePanel', 'storage', 'tabs', 'identity'],
   chrome_url_overrides: {
     newtab: 'newtab.html',
+  },
+  oauth2: {
+    client_id: '499463732095-s87itm7psq38rntkvvkgl0fl1e2n0lit.apps.googleusercontent.com',
+    scopes: ['openid', 'email', 'profile'],
   },
 })
