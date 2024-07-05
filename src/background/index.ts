@@ -30,8 +30,18 @@ async function finishUserOAuth(url: string) {
     const hashMap = parseUrlHash(url)
     const access_token = hashMap.get('access_token')
     const refresh_token = hashMap.get('refresh_token')
-    if (!access_token || !refresh_token) {
-      throw new Error(`no supabase tokens found in URL hash`)
+
+    // get provider_token and provider_refresh_token
+    const provider_token = hashMap.get('provider_token')
+    const provider_refresh_token = hashMap.get('provider_refresh_token')
+
+    console.log('access_token', access_token)
+    console.log('refresh_token', refresh_token)
+    console.log('provider_token', provider_token)
+    console.log('provider_refresh_token', provider_refresh_token)
+
+    if (!access_token || !refresh_token || !provider_token || !provider_refresh_token) {
+      throw new Error(`no tokens found in URL hash`)
     }
 
     // check if they work
@@ -44,11 +54,13 @@ async function finishUserOAuth(url: string) {
     // persist session to storage
     await chrome.storage.local.set({ session: data.session })
 
+    // persist provider tokens to storage
+    await chrome.storage.local.set({ provider_token, provider_refresh_token })
+
     console.log('session', data.session)
 
     // finally redirect to a post oauth page
     const homePage = chrome.runtime.getURL('home.html')
-    // chrome.tabs.update({ url: 'https://myapp.com/user-login-success/' })
     chrome.tabs.update({ url: homePage })
 
     console.log(`finished handling user OAuth callback`)
