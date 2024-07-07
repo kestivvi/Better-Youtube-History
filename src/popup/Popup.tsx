@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import './Popup.css'
-import secrets from '../secrets'
-import { createClient } from '@supabase/supabase-js'
-
-const manifest = chrome.runtime.getManifest()
-const supabase = createClient(secrets.supabase.url, secrets.supabase.key)
+import { database } from '../background/database'
+import { VideoEventDocType } from '../background/database/collections/VideoEvent/schema'
+import LoginSection from './components/LoginSection'
+import CalendarCheck from './components/CalendarCheck'
 
 export default function () {
   const homePage = chrome.runtime.getURL('home.html')
@@ -13,15 +12,13 @@ export default function () {
   const [session, setSession] = useState<any>(null)
   const loggedIn = session !== null
 
+  const [videosEvents, setVideosEvents] = useState<VideoEventDocType[]>([])
+
   useEffect(() => {
     ;(async () => {
       const { session } = await chrome.storage.local.get('session')
-      console.log('session', session)
+      console.log('tried to get session', new Date().toISOString(), session)
       if (session) {
-        const { error: supaAuthError } = await supabase.auth.setSession(session)
-        if (supaAuthError) {
-          throw supaAuthError
-        }
         setSession(session)
       }
     })()
@@ -32,88 +29,56 @@ export default function () {
       <a href={homePage} target="_blank">
         Strona Główna
       </a>
-      {!loggedIn && (
-        <button
-          onClick={() => {
-            loginWithGoogle()
-          }}
-        >
-          Login
-        </button>
-      )}
+      <br />
+
+      <LoginSection />
 
       {loggedIn && (
         <>
-          <button
-            onClick={async () => {
-              const { provider_token } = await chrome.storage.local.get('provider_token')
-
-              console.log('Trying to verify provider token...', provider_token)
-              fetch(
-                'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=' + provider_token,
-                {
-                  method: 'POST',
-                },
-              )
-                .then((response) => {
-                  console.log('verify provider token response', response)
-                })
-                .catch((error) => {
-                  console.error('verify provider token error', error)
-                })
-            }}
-          >
-            Verify token
-          </button>
+          <CalendarCheck />
+          <br />
 
           <button
             onClick={async () => {
-              const { provider_token } = await chrome.storage.local.get('provider_token')
+              if (database) {
+                const videosEvents = (await database.videos_events.find().exec()).flatMap((x) =>
+                  x.toJSON(),
+                )
+                console.log('videosEvents', videosEvents)
+                setVideosEvents(videosEvents)
 
-              const response = await fetch(
-                'https://www.googleapis.com/calendar/v3/users/me/calendarList',
-                {
-                  headers: {
-                    Authorization: `Bearer ${provider_token}`,
-                  },
-                },
-              )
-
-              const data = await response.json()
-              console.log('data', data)
+                const videosRecords = (await database.videos_records.find().exec()).slice(-5)
+                console.log('videosRecords', videosRecords)
+              } else {
+                console.error('Database not initialized.')
+              }
             }}
           >
-            Get list of calendars
+            Show db stuff
           </button>
+
+          <br />
+
+          {videosEvents.map((videoEvent) => (
+            <div key={videoEvent.id}>
+              {videoEvent.title} - {videoEvent.startTime} - {videoEvent.endTime}
+            </div>
+          ))}
         </>
       )}
     </>
   )
 }
 
-/**
- * Method used to login with google provider.
- */
-export async function loginWithGoogle() {
-  const redirectTo = chrome.identity.getRedirectURL()
-  console.log('redirecting to', redirectTo)
-
-  console.log('manifest.oauth2!.scopes!.join', manifest.oauth2!.scopes!.join(' '))
-  console.log('manifest.oauth2!.client_id', manifest.oauth2!.client_id)
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo,
-      queryParams: {
-        client_id: manifest.oauth2!.client_id,
-        response_type: 'code',
-        scope: manifest.oauth2!.scopes!.join(' '),
-        access_type: 'offline',
-        prompt: 'consent',
-      },
-    },
-  })
-  if (error) throw error
-  await chrome.tabs.create({ url: data.url })
-}
+// {
+//   "kind": "calendar#calendar",
+//   "etag": "\"LjhH-nwiDNJ8QcXDSg77tDKeaNA\"",
+//   "id": "0e3ea19f881fc91a3211a85847f88ff482cf015bcb8339b1880a290e8e15d7af@group.calendar.google.com",
+//   "summary": "Youtube History",
+//   "timeZone": "UTC",
+//   "conferenceProperties": {
+//       "allowedConferenceSolutionTypes": [
+//           "hangoutsMeet"
+//       ]
+//   }
+// }
