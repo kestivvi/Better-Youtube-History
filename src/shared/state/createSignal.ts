@@ -1,13 +1,13 @@
 import { effect, signal, Signal } from '@preact/signals-react'
 
-type SignalExports<T, K extends string> = {
-  [P in `${K}Signal`]: P extends `${K}Signal` ? Signal<T> : never
+type ReturnedSignalObj<T, K extends string> = {
+  [P in `${K}Signal`]: Signal<T>
 }
 
 export function createSignal<T, K extends string>(
   variableName: K,
   initialValue: T,
-): SignalExports<T, K> {
+): ReturnedSignalObj<T, K> {
   // Initialize a signal
   const signalObject = signal<T>(initialValue)
 
@@ -35,5 +35,5 @@ export function createSignal<T, K extends string>(
 
   return {
     [`${variableName}Signal`]: signalObject,
-  } as SignalExports<T, K>
+  } as ReturnedSignalObj<T, K>
 }
