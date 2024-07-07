@@ -1,16 +1,32 @@
 import { useEffect, useState } from 'react'
 import { getProviderToken } from '../../background/auth/getProviderToken'
+import { createClient } from '@supabase/supabase-js'
+import secrets from '../../secrets'
 
 export default function () {
   const [calendarExists, setCalendarExists] = useState<'YES' | 'NO' | 'LOADING'>('LOADING')
 
   useEffect(() => {
     ;(async () => {
+      const supabase = createClient(secrets.supabase.url, secrets.supabase.key)
+      const x = await supabase.from('user_calendar_ids').select()
+      console.log('[CalendarCheck] user_calendar_ids', x)
+
+      if (x.data && x.data?.length > 0) {
+        await chrome.storage.local.set({ calendarId: x.data[0].calendar_id })
+        console.log('[CalendarCheck] set calendarId chrome storage', x.data[0].calendar_id)
+      }
+
       const { calendarId } = await chrome.storage.local.get('calendarId')
 
       if (!calendarId) {
         setCalendarExists('NO')
         return
+      }
+
+      if (x.data && x.data.length === 0) {
+        const y = await supabase.from('user_calendar_ids').insert([{ calendar_id: calendarId }])
+        console.log('[CalendarCheck] inserted calendar_id', y)
       }
 
       const provider_token = await getProviderToken()
@@ -61,7 +77,7 @@ export default function () {
             })
 
             const data = await response.json()
-            console.log('Create Youtube History Calendar', data)
+            console.log('[CalendarCheck] Create Youtube History Calendar', data)
 
             chrome.storage.local.set({ calendarId: data.id })
             setCalendarExists('YES')
