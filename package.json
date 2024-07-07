@@ -23,7 +23,10 @@
     "zip": "npm run build && node src/zip.js"
   },
   "dependencies": {
+    "@mantine/core": "^7.11.1",
+    "@mantine/hooks": "^7.11.1",
     "@supabase/supabase-js": "^2.44.2",
+    "@tabler/icons-react": "^3.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxdb": "^15.18.4",
@@ -37,8 +40,11 @@
     "@vitejs/plugin-react": "^4.1.0",
     "gulp": "^4.0.2",
     "gulp-zip": "^6.0.0",
+    "postcss": "^8.4.39",
+    "postcss-preset-mantine": "^1.15.0",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.0.3",
-    "typescript": "^5.2.2",
+    "typescript": "5.5.3",
     "vite": "^4.4.11"
   }
 }
