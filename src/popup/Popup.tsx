@@ -2,10 +2,11 @@ import Home from './views/Home'
 import { useState } from 'react'
 import Settings from './views/Settings'
 import Header from './views/Header'
-import { useSession, useSessionUnsafe } from './Providers/SessionProvider/SessionContext'
+import { useSessionUnsafe } from './Providers/SessionProvider/SessionContext'
 import LoginView from './views/LoginView'
+import Dev from './views/Dev'
 
-export type View = 'HOME' | 'SETTINGS'
+export type View = 'HOME' | 'SETTINGS' | 'DEV'
 
 export default function () {
   const [view, setView] = useState<View>('HOME')
@@ -22,8 +23,9 @@ export default function () {
   return (
     <>
       <Header view={view} setView={setView} />
-      {view === 'HOME' && <Home setView={setView} />}
-      {view === 'SETTINGS' && <Settings setView={setView} />}
+      {view === 'HOME' && <Home />}
+      {view === 'SETTINGS' && <Settings />}
+      {view === 'DEV' && <Dev setView={setView} />}
     </>
   )
 }
