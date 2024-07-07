@@ -1,7 +1,7 @@
-import { signal, Signal } from '@preact/signals-react'
+import { effect, signal, Signal } from '@preact/signals-react'
 
 type SignalExports<T, K extends string> = {
-  [P in `${K}Signal` | `${K}SignalSet`]: P extends `${K}Signal` ? Signal<T> : (newValue: T) => void
+  [P in `${K}Signal`]: P extends `${K}Signal` ? Signal<T> : never
 }
 
 export function createSignal<T, K extends string>(
@@ -11,29 +11,29 @@ export function createSignal<T, K extends string>(
   // Initialize a signal
   const signalObject = signal<T>(initialValue)
 
-  // Define a function to update the signal's value and synchronize it with chrome's local storage
-  const setValue = (newValue: T) => {
-    signalObject.value = newValue
-    chrome.storage.local.set({ [variableName]: newValue })
-  }
-
-  // Retrieve the value from chrome's local storage when the module is loaded
+  // Retrieve the value from chrome's local storage
   chrome.storage.local.get(variableName, (result) => {
     const storedValue = result[variableName]
+
     if (storedValue !== undefined) {
-      setValue(storedValue)
+      signalObject.value = storedValue
     }
+
+    // Update the value in chrome's local storage whenever the signal's value changes
+    // This effect is called after retrieving the value from storage to avoid setting initial value to chrome's local storage
+    effect(() => {
+      chrome.storage.local.set({ [variableName]: signalObject.value })
+    })
   })
 
   // Listen for changes to the value in chrome's local storage
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && variableName in changes && changes[variableName]) {
-      setValue(changes[variableName].newValue)
+      signalObject.value = changes[variableName].newValue
     }
   })
 
   return {
     [`${variableName}Signal`]: signalObject,
-    [`${variableName}SignalSet`]: setValue,
   } as SignalExports<T, K>
 }
