@@ -6,7 +6,7 @@
  * @param leadTimeInSeconds - The lead time in seconds before expiration when a refresh should be considered.
  * @returns true if the session needs to be refreshed, false otherwise.
  */
-export function isRefreshNeeded(
+export function isSessionRefreshNeeded(
   session: { expires_at: number },
   leadTimeInSeconds: number,
 ): boolean {

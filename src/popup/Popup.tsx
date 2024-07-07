@@ -25,7 +25,7 @@ export default function () {
       <Header view={view} setView={setView} />
       {view === 'HOME' && <Home />}
       {view === 'SETTINGS' && <Settings />}
-      {view === 'DEV' && <Dev setView={setView} />}
+      {view === 'DEV' && <Dev />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { type RxDatabase, addRxPlugin, removeRxDatabase } from 'rxdb'
+import { type RxDatabase, addRxPlugin } from 'rxdb'
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode'
 import { createRxDatabase } from 'rxdb'
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie'
@@ -8,9 +8,7 @@ import { videoRecordSchema } from './collections/VideoRecord/schema'
 
 export type MyDatabase = RxDatabase<MyDatabaseCollections>
 
-// console.log("process.env", process.env);
-// process.env.__DEV__ && addRxPlugin(RxDBDevModePlugin)
-
+// @ts-expect-error
 const isDev = process.env.NODE_ENV == 'development'
 if (isDev) {
   addRxPlugin(RxDBDevModePlugin)
@@ -48,5 +46,3 @@ let database: MyDatabase | null = null
 })()
 
 export { database }
-
-// export const database = await setupDatabase();

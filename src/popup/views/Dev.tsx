@@ -4,11 +4,7 @@ import { VideoEventDocType } from '../../background/database/collections/VideoEv
 import CalendarCheck from '../components/CalendarCheck'
 import LoginSection from '../components/LoginSection'
 
-type Props = {
-  setView: (view: 'HOME' | 'SETTINGS') => void
-}
-
-export default function ({ setView }: Props) {
+export default function () {
   const homePage = chrome.runtime.getURL('home.html')
   console.log('homePage', homePage)
 
@@ -29,7 +25,6 @@ export default function ({ setView }: Props) {
 
   return (
     <>
-      <button onClick={() => setView('SETTINGS')}>Settings</button>
       <a href={homePage} target="_blank">
         Strona Główna
       </a>

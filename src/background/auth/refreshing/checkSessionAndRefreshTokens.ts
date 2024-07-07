@@ -1,7 +1,8 @@
 import { type SupabaseClient } from '@supabase/supabase-js'
-import { isRefreshNeeded } from './isRefreshNeeded'
+import { isSessionRefreshNeeded } from './isSessionRefreshNeeded'
 import { refreshSession } from './refreshSession'
 import { refreshProviderToken } from './refreshProviderToken'
+import { isProviderTokenRefreshNeeded } from './isProviderTokenRefreshNeeded'
 
 export async function checkSessionAndRefreshTokens(
   supabase: SupabaseClient,
@@ -17,9 +18,13 @@ export async function checkSessionAndRefreshTokens(
 
     console.log('[checkSessionAndRefreshTokens] Checking session...', session)
 
-    const shouldRefresh = isRefreshNeeded(session, leadTimeInSeconds)
+    const shouldRefreshSession = isSessionRefreshNeeded(session, leadTimeInSeconds)
+    const shouldRefreshProviderToken = await isProviderTokenRefreshNeeded(
+      session,
+      leadTimeInSeconds,
+    )
 
-    if (!shouldRefresh) {
+    if (!shouldRefreshSession && !shouldRefreshProviderToken) {
       console.log('[checkSessionAndRefreshTokens] Session is still valid, no need to refresh.')
       return
     }
