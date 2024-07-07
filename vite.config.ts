@@ -20,6 +20,13 @@ export default defineConfig(({ mode }) => {
       },
     },
 
-    plugins: [crx({ manifest }), react()],
+    plugins: [
+      crx({ manifest }),
+      react({
+        babel: {
+          plugins: [['module:@preact/signals-react-transform']],
+        },
+      }),
+    ],
   }
 })
