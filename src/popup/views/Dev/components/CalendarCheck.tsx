@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
 import { supabaseSignal } from '@/shared/state/supabase'
+import { calendarIdSignal } from '@/shared/state/calendarId'
 
 export default function () {
   const [calendarExists, setCalendarExists] = useState<'YES' | 'NO' | 'LOADING'>('LOADING')
@@ -11,13 +12,11 @@ export default function () {
       console.log('[CalendarCheck] user_calendar_ids', query)
 
       if (query.data && query.data?.length > 0) {
-        await chrome.storage.local.set({ calendarId: query.data[0].calendar_id })
+        calendarIdSignal.value = query.data[0].calendar_id
         console.log('[CalendarCheck] set calendarId chrome storage', query.data[0].calendar_id)
       }
 
-      const { calendarId } = await chrome.storage.local.get('calendarId')
-
-      if (!calendarId) {
+      if (!calendarIdSignal.value) {
         setCalendarExists('NO')
         return
       }
@@ -25,12 +24,12 @@ export default function () {
       if (query.data && query.data.length === 0) {
         const y = await supabaseSignal.value
           .from('user_calendar_ids')
-          .insert([{ calendar_id: calendarId }])
+          .insert([{ calendar_id: calendarIdSignal.value }])
         console.log('[CalendarCheck] inserted calendar_id', y)
       }
 
       const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/${calendarId}`,
+        `https://www.googleapis.com/calendar/v3/calendars/${calendarIdSignal.value}`,
         {
           headers: {
             Authorization: `Bearer ${providerTokenSignal.value}`,
@@ -74,7 +73,8 @@ export default function () {
           const data = await response.json()
           console.log('[CalendarCheck] Create Youtube History Calendar', data)
 
-          chrome.storage.local.set({ calendarId: data.id })
+          calendarIdSignal.value = data.id
+
           setCalendarExists('YES')
         }}
       >
@@ -87,8 +87,17 @@ export default function () {
       <button
         onClick={async () => {
           const calendarId = (document.getElementById('calendarId') as HTMLInputElement).value
-          chrome.storage.local.set({ calendarId })
+          calendarIdSignal.value = calendarId
           setCalendarExists('YES')
+
+          const session = await supabaseSignal.value.auth.getSession()
+
+          console.log('[CalendarCheck] session', session)
+
+          const y = await supabaseSignal.value
+            .from('user_calendar_ids')
+            .insert([{ calendar_id: calendarId }])
+          console.log('[CalendarCheck] inserted calendar_id', y)
         }}
       >
         Use existing calendar

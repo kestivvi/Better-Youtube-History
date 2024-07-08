@@ -1,14 +1,13 @@
 import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
 import { VideoEventDocType } from '../database/collections/VideoEvent/schema'
+import { calendarIdSignal } from '@/shared/state/calendarId'
 
 export async function addEventToGoogleCalendar(
   videoEvent: VideoEventDocType,
   googleCalendarEventPrefix: string,
 ): Promise<{ error: string | null }> {
-  const { calendarId } = await chrome.storage.local.get('calendarId')
-
   const response = await fetch(
-    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`,
+    `https://www.googleapis.com/calendar/v3/calendars/${calendarIdSignal.value}/events`,
     {
       method: 'POST',
       headers: {
