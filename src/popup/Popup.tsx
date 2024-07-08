@@ -6,6 +6,8 @@ import LoginView from './views/LoginView'
 import Dev from './views/Dev'
 import { sessionStateSignal } from '@/shared/state/auth/session'
 import { Flex, Loader } from '@mantine/core'
+import { calendarIdSignal } from '@/shared/state/calendarId'
+import SetCalendarView from './views/SetCalendarView'
 
 export type View = 'HOME' | 'SETTINGS' | 'DEV'
 
@@ -22,6 +24,10 @@ export default function () {
 
   if (sessionStateSignal.value === 'NOT_LOGGED_IN') {
     return <LoginView />
+  }
+
+  if (calendarIdSignal.value === null) {
+    return <SetCalendarView />
   }
 
   return (
