@@ -1,10 +1,9 @@
-import { createClient } from '@supabase/supabase-js'
-import secrets from '../secrets'
 import { setupOAuthFlow } from './auth/oauthFlow/setupOAuthFlow'
 import { setupHandlingRuntimeMessages } from './runtime_messages/setupHandlingRuntimeMessages'
 import { checkSessionAndRefreshTokens } from './auth/refreshing/checkSessionAndRefreshTokens'
 import { checkForEventsToAdd } from './googleCalendar/checkForEventsToAdd'
 import { database } from './database'
+import { supabaseSignal } from '@/shared/state/supabase'
 
 console.log('background is running')
 
@@ -14,21 +13,19 @@ const GOOGLE_CALENDAR_EVENT_PREFIX = '📺 '
 const REFRESH_BUFFER_TIME_IN_SECONDS = 60 * 10
 const INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES = 10
 
-const supabase = createClient(secrets.supabase.url, secrets.supabase.key)
-
 // Initialize OAuth flow for user authentication.
 // This includes adding a tab listener when the background script is activated.
 setupOAuthFlow()
-
 setupHandlingRuntimeMessages()
 
+setTimeout(() => checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX), 1000)
 setInterval(
   async () => await checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX),
   GOOGLE_CALENDAR_SYNC_INTERVAL_MINUTES * 60 * 1000,
 )
 
 setInterval(
-  async () => checkSessionAndRefreshTokens(supabase, REFRESH_BUFFER_TIME_IN_SECONDS),
+  async () => checkSessionAndRefreshTokens(supabaseSignal.value, REFRESH_BUFFER_TIME_IN_SECONDS),
   INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES * 60 * 1000,
 )
 

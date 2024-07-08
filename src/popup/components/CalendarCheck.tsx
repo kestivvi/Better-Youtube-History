@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import secrets from '../../secrets'
 import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
+import { supabaseSignal } from '@/shared/state/supabase'
 
 export default function () {
   const [calendarExists, setCalendarExists] = useState<'YES' | 'NO' | 'LOADING'>('LOADING')
 
   useEffect(() => {
     ;(async () => {
-      const supabase = createClient(secrets.supabase.url, secrets.supabase.key)
-      const x = await supabase.from('user_calendar_ids').select()
-      console.log('[CalendarCheck] user_calendar_ids', x)
+      const query = await supabaseSignal.value.from('user_calendar_ids').select()
+      console.log('[CalendarCheck] user_calendar_ids', query)
 
-      if (x.data && x.data?.length > 0) {
-        await chrome.storage.local.set({ calendarId: x.data[0].calendar_id })
-        console.log('[CalendarCheck] set calendarId chrome storage', x.data[0].calendar_id)
+      if (query.data && query.data?.length > 0) {
+        await chrome.storage.local.set({ calendarId: query.data[0].calendar_id })
+        console.log('[CalendarCheck] set calendarId chrome storage', query.data[0].calendar_id)
       }
 
       const { calendarId } = await chrome.storage.local.get('calendarId')
@@ -24,8 +22,10 @@ export default function () {
         return
       }
 
-      if (x.data && x.data.length === 0) {
-        const y = await supabase.from('user_calendar_ids').insert([{ calendar_id: calendarId }])
+      if (query.data && query.data.length === 0) {
+        const y = await supabaseSignal.value
+          .from('user_calendar_ids')
+          .insert([{ calendar_id: calendarId }])
         console.log('[CalendarCheck] inserted calendar_id', y)
       }
 
