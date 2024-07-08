@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { database } from '../../background/database'
-import { VideoEventDocType } from '../../background/database/collections/VideoEvent/schema'
-import CalendarCheck from '../components/CalendarCheck'
-import LoginSection from '../components/LoginSection'
+import { database } from '@/background/database'
+import { VideoEventDocType } from '@/background/database/collections/VideoEvent/schema'
 import { sessionStateSignal } from '@/shared/state/auth/session'
+import { useState } from 'react'
+import CalendarCheck from './components/CalendarCheck'
+import LoginSection from './components/LoginSection'
 
 export default function () {
   const homePage = chrome.runtime.getURL('home.html')
