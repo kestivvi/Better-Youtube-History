@@ -1,5 +1,4 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { sessionStateSignal } from '../state/auth/session'
 import { validateAndRefreshSessionTokens } from './validateAndRefreshSessionTokens'
 import { SessionType } from '../state/auth/session/types'
 import { ProviderTokenInfo } from '../state/auth/tokens/providerTokenInfo'
@@ -13,16 +12,8 @@ export async function setupSessionAndTokens(
 ) {
   console.debug('[setupSessionAndTokens] Setting up session and tokens...')
   console.debug('[setupSessionAndTokens] Session:', session)
-  console.debug('[setupSessionAndTokens] Provider token:', providerTokenInfo)
+  console.debug('[setupSessionAndTokens] Provider token info:', providerTokenInfo)
   console.debug('[setupSessionAndTokens] Provider refresh token:', providerRefreshToken)
-
-  if (session === null) {
-    console.debug(
-      '[setupSessionAndTokens] No session found. Setting session state to NOT_LOGGED_IN.',
-    )
-    sessionStateSignal.value = 'NOT_LOGGED_IN'
-    return
-  }
 
   validateAndRefreshSessionTokens(
     session,

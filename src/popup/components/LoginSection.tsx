@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { refreshSession } from '../../background/auth/refreshing/refreshSession'
-import { refreshProviderToken } from '../../background/auth/refreshing/refreshProviderToken'
 import { sessionSignal, sessionStateSignal } from '@/shared/state/auth/session'
 import { supabaseSignal } from '@/shared/state/supabase'
+import { refreshSession } from '@/shared/auth/session/refreshSession'
+import { refreshProviderToken } from '@/shared/auth/tokens/refreshProviderToken'
+import { providerRefreshTokenSignal } from '@/shared/state/auth/tokens/providerRefreshToken'
 
 export default function () {
   const loggedIn = sessionStateSignal.value === 'LOGGED_IN'
@@ -53,8 +54,10 @@ export default function () {
 
           <button
             onClick={async () => {
+              if (!sessionSignal.value) return
+
               refreshSession(supabaseSignal.value, sessionSignal.value)
-              refreshProviderToken(supabaseSignal.value)
+              refreshProviderToken(supabaseSignal.value, providerRefreshTokenSignal.value)
             }}
           >
             Refresh Tokens

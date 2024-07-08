@@ -8,12 +8,20 @@ import { sessionStateSignal } from '../state/auth/session'
 import { ProviderTokenInfo } from '../state/auth/tokens/providerTokenInfo'
 
 export async function validateAndRefreshSessionTokens(
-  session: SessionType,
+  session: SessionType | null,
   providerTokenInfo: ProviderTokenInfo | null,
   providerRefreshToken: string | null,
   supabase: SupabaseClient,
   secondsIntoFuture: number = 60,
 ) {
+  if (session === null) {
+    console.debug(
+      '[validateAndRefreshSessionTokens] No session found. Setting session state to NOT_LOGGED_IN.',
+    )
+    sessionStateSignal.value = 'NOT_LOGGED_IN'
+    return
+  }
+
   const isSessionValid = willSessionBeValid(session, secondsIntoFuture)
   console.debug('[validateAndRefreshSessionTokens] isSessionValid:', isSessionValid)
 
