@@ -20,27 +20,22 @@ const INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES = 10
 setupOAuthFlow()
 setupHandlingRuntimeMessages()
 
-setTimeout(() => checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX), 1000)
-setInterval(
-  async () => await checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX),
-  GOOGLE_CALENDAR_SYNC_INTERVAL_MINUTES * 60 * 1000,
-)
+const calendarIntervalFn = () => checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX)
 
-validateAndRefreshSessionTokens(
-  sessionSignal.value,
-  providerTokenInfoSignal.value,
-  providerRefreshTokenSignal.value,
-  supabaseSignal.value,
-  sessionExpirationThresholdSecondsSignal.value,
-)
+setTimeout(() => calendarIntervalFn(), 1000)
+setInterval(async () => calendarIntervalFn(), GOOGLE_CALENDAR_SYNC_INTERVAL_MINUTES * 60 * 1000)
+
+const sessionIntervalFn = () =>
+  validateAndRefreshSessionTokens(
+    sessionSignal.value,
+    providerTokenInfoSignal.value,
+    providerRefreshTokenSignal.value,
+    supabaseSignal.value,
+    sessionExpirationThresholdSecondsSignal.value,
+  )
+
+sessionIntervalFn()
 setInterval(
-  async () =>
-    validateAndRefreshSessionTokens(
-      sessionSignal.value,
-      providerTokenInfoSignal.value,
-      providerRefreshTokenSignal.value,
-      supabaseSignal.value,
-      sessionExpirationThresholdSecondsSignal.value,
-    ),
+  async () => sessionIntervalFn(),
   INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES * 60 * 1000,
 )
