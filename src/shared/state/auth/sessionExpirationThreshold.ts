@@ -1,6 +1,8 @@
 import { createSignal } from '../createSignal'
 
+export const DEFAULT_SESSION_EXPIRATION_THRESHOLD_SECONDS = 60 * 10
+
 export const { sessionExpirationThresholdSecondsSignal } = createSignal(
   'sessionExpirationThresholdSeconds',
-  60 * 10,
+  DEFAULT_SESSION_EXPIRATION_THRESHOLD_SECONDS,
 )

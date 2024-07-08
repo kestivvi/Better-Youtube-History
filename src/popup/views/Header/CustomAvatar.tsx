@@ -1,23 +1,7 @@
 import { Text, Box, Avatar, Popover, Button } from '@mantine/core'
 import { IconLogout2 } from '@tabler/icons-react'
-import { sessionSignal, sessionStateSignal } from '@/shared/state/auth/session'
-import { supabaseSignal } from '@/shared/state/supabase'
-import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
-import { providerRefreshTokenSignal } from '@/shared/state/auth/tokens/providerRefreshToken'
-
-const logout = async () => {
-  const { error } = await supabaseSignal.value.auth.signOut()
-
-  if (error) {
-    console.error('signOut error', error)
-    return
-  }
-
-  sessionSignal.value = null
-  providerTokenSignal.value = null
-  providerRefreshTokenSignal.value = null
-  sessionStateSignal.value = 'NOT_LOGGED_IN'
-}
+import { sessionSignal } from '@/shared/state/auth/session'
+import { logout } from '@/shared/auth/logout'
 
 export default function () {
   return (
