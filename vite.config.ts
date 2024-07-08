@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { crx } from '@crxjs/vite-plugin'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 import manifest from './src/manifest'
 
@@ -17,6 +18,12 @@ export default defineConfig(({ mode }) => {
         output: {
           chunkFileNames: 'assets/chunk-[hash].js',
         },
+      },
+    },
+
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
       },
     },
 

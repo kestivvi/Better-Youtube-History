@@ -1,11 +1,10 @@
-import { getProviderToken } from '../auth/getProviderToken'
+import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
 import { VideoEventDocType } from '../database/collections/VideoEvent/schema'
 
 export async function addEventToGoogleCalendar(
   videoEvent: VideoEventDocType,
   googleCalendarEventPrefix: string,
 ): Promise<{ error: string | null }> {
-  const provider_token = await getProviderToken()
   const { calendarId } = await chrome.storage.local.get('calendarId')
 
   const response = await fetch(
@@ -13,7 +12,7 @@ export async function addEventToGoogleCalendar(
     {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${provider_token}`,
+        Authorization: `Bearer ${providerTokenSignal.value}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

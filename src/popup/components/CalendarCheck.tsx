@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { getProviderToken } from '../../background/auth/getProviderToken'
 import { createClient } from '@supabase/supabase-js'
 import secrets from '../../secrets'
+import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
 
 export default function () {
   const [calendarExists, setCalendarExists] = useState<'YES' | 'NO' | 'LOADING'>('LOADING')
@@ -29,13 +29,11 @@ export default function () {
         console.log('[CalendarCheck] inserted calendar_id', y)
       }
 
-      const provider_token = await getProviderToken()
-
       const response = await fetch(
         `https://www.googleapis.com/calendar/v3/calendars/${calendarId}`,
         {
           headers: {
-            Authorization: `Bearer ${provider_token}`,
+            Authorization: `Bearer ${providerTokenSignal.value}`,
           },
         },
       )
@@ -56,49 +54,45 @@ export default function () {
     return <p>Youtube History Calendar exists</p>
   }
 
-  if (calendarExists === 'NO') {
-    return (
-      <>
-        <p>Youtube History Calendar does not exist</p>
-        <p>Create automatically new one: </p>
-        <button
-          onClick={async () => {
-            const provider_token = await getProviderToken()
+  return (
+    <>
+      <p>Youtube History Calendar does not exist</p>
+      <p>Create automatically new one: </p>
+      <button
+        onClick={async () => {
+          const response = await fetch('https://www.googleapis.com/calendar/v3/calendars', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${providerTokenSignal.value}`,
+            },
+            body: JSON.stringify({
+              summary: 'Youtube History',
+              description: 'Calendar for Better Youtube History Extension\n\nDo not delete!',
+            }),
+          })
 
-            const response = await fetch('https://www.googleapis.com/calendar/v3/calendars', {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${provider_token}`,
-              },
-              body: JSON.stringify({
-                summary: 'Youtube History',
-                description: 'Calendar for Better Youtube History Extension\n\nDo not delete!',
-              }),
-            })
+          const data = await response.json()
+          console.log('[CalendarCheck] Create Youtube History Calendar', data)
 
-            const data = await response.json()
-            console.log('[CalendarCheck] Create Youtube History Calendar', data)
+          chrome.storage.local.set({ calendarId: data.id })
+          setCalendarExists('YES')
+        }}
+      >
+        Create Youtube History Calendar
+      </button>
 
-            chrome.storage.local.set({ calendarId: data.id })
-            setCalendarExists('YES')
-          }}
-        >
-          Create Youtube History Calendar
-        </button>
-
-        <br />
-        <p>Or type in ID of existing calendar here:</p>
-        <input type="text" id="calendarId" />
-        <button
-          onClick={async () => {
-            const calendarId = (document.getElementById('calendarId') as HTMLInputElement).value
-            chrome.storage.local.set({ calendarId })
-            setCalendarExists('YES')
-          }}
-        >
-          Use existing calendar
-        </button>
-      </>
-    )
-  }
+      <br />
+      <p>Or type in ID of existing calendar here:</p>
+      <input type="text" id="calendarId" />
+      <button
+        onClick={async () => {
+          const calendarId = (document.getElementById('calendarId') as HTMLInputElement).value
+          chrome.storage.local.set({ calendarId })
+          setCalendarExists('YES')
+        }}
+      >
+        Use existing calendar
+      </button>
+    </>
+  )
 }

@@ -1,8 +1,6 @@
-import { Dispatch, SetStateAction } from 'react'
-
 export type SessionStateType = 'LOADING' | 'LOGGED_IN' | 'NOT_LOGGED_IN'
 
-export type Session = {
+export type SessionType = {
   access_token: string
   expires_at: number
   expires_in: number
@@ -59,11 +57,4 @@ export type Session = {
       sub: string
     }
   }
-}
-
-export type SessionContextType = {
-  sessionState: SessionStateType
-  setSessionState: Dispatch<SetStateAction<SessionStateType>>
-  session: Session | null
-  setSession: Dispatch<SetStateAction<Session | null>>
 }

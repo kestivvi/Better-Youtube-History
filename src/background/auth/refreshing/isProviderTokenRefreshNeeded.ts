@@ -16,6 +16,7 @@ export async function isProviderTokenRefreshNeeded(
     )
 
     if (!response.ok) {
+      // TODO: It should be normal log
       console.error(`${logPrefix} Failed to verify provider token. Status: ${response.status}`)
       return true
     }

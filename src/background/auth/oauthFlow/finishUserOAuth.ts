@@ -1,15 +1,17 @@
-import { createClient } from '@supabase/supabase-js'
-import secrets from '../../../secrets'
+import { fetchAndSaveTokenInfo } from '@/shared/auth/tokens/fetchAndSaveTokenInfo'
+import { sessionSignal, sessionStateSignal } from '@/shared/state/auth/session'
+import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
+import { providerRefreshTokenSignal } from '@/shared/state/auth/tokens/providerRefreshToken'
+import { supabaseSignal } from '@/shared/state/supabase'
+import { SessionType } from '@/shared/state/auth/session/types'
 
 /**
  * Method used to finish OAuth callback for a user authentication.
+ * Used in background script as message listener on url change.
  */
 export async function finishUserOAuth(url: string) {
   try {
-    console.log(`handling user OAuth callback ...`)
-    const supabase = createClient(secrets.supabase.url, secrets.supabase.key)
-
-    console.log('url', url)
+    console.debug(`[finishUserOAuth] handling user OAuth callback. Url: `, url)
 
     // extract tokens from hash
     const hashMap = parseUrlHash(url)
@@ -20,35 +22,39 @@ export async function finishUserOAuth(url: string) {
     const provider_token = hashMap.get('provider_token')
     const provider_refresh_token = hashMap.get('provider_refresh_token')
 
-    console.log('access_token', access_token)
-    console.log('refresh_token', refresh_token)
-    console.log('provider_token', provider_token)
-    console.log('provider_refresh_token', provider_refresh_token)
+    console.debug('[finishUserOAuth] access_token', access_token)
+    console.debug('[finishUserOAuth] refresh_token', refresh_token)
+    console.debug('[finishUserOAuth] provider_token', provider_token)
+    console.debug('[finishUserOAuth] provider_refresh_token', provider_refresh_token)
 
     if (!access_token || !refresh_token || !provider_token || !provider_refresh_token) {
       throw new Error(`no tokens found in URL hash`)
     }
 
     // check if they work
-    const { data, error } = await supabase.auth.setSession({
+    const { data, error } = await supabaseSignal.value.auth.setSession({
       access_token,
       refresh_token,
     })
+
     if (error) throw error
 
-    // persist session to storage
-    await chrome.storage.local.set({ session: data.session })
+    // set the session
+    sessionSignal.value = data.session as SessionType
+    providerTokenSignal.value = provider_token
+    providerRefreshTokenSignal.value = provider_refresh_token
+    sessionStateSignal.value = 'LOGGED_IN'
 
-    // persist provider tokens to storage
-    await chrome.storage.local.set({ provider_token, provider_refresh_token })
-
-    console.log('session', data.session)
+    console.debug('[finishUserOAuth] session', data.session)
 
     // finally redirect to a post oauth page
     const homePage = chrome.runtime.getURL('home.html')
     chrome.tabs.update({ url: homePage })
 
-    console.log(`finished handling user OAuth callback`)
+    // fetch and save provider token info
+    await fetchAndSaveTokenInfo(provider_token)
+
+    console.debug(`[finishUserOAuth] finished handling user OAuth callback`)
   } catch (error) {
     console.error(error)
   }

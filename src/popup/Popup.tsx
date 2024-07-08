@@ -2,24 +2,28 @@ import Home from './views/Home'
 import { useState } from 'react'
 import Settings from './views/Settings'
 import Header from './views/Header'
-import { useSessionUnsafe } from './Providers/SessionProvider/SessionContext'
 import LoginView from './views/LoginView'
 import Dev from './views/Dev'
+import { sessionStateSignal } from '@/shared/state/auth/session'
 
 export type View = 'HOME' | 'SETTINGS' | 'DEV'
 
 export default function () {
   const [view, setView] = useState<View>('HOME')
-  const { sessionState } = useSessionUnsafe()
 
-  if (sessionState === 'LOADING') {
+  console.debug('[Popup.tsx]', sessionStateSignal.value)
+
+  if (sessionStateSignal.value === 'LOADING') {
+    console.debug('[Popup.tsx] Loading...')
     return null
   }
 
-  if (sessionState === 'NOT_LOGGED_IN') {
+  if (sessionStateSignal.value === 'NOT_LOGGED_IN') {
+    console.debug('[Popup.tsx] Not logged in')
     return <LoginView />
   }
 
+  console.debug('[Popup.tsx] Logged in')
   return (
     <>
       <Header view={view} setView={setView} />

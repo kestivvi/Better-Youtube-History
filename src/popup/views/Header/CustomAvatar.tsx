@@ -1,36 +1,33 @@
 import { Text, Box, Avatar, Popover, Button } from '@mantine/core'
-import { useSession } from '../../Providers/SessionProvider/SessionContext'
 import { IconLogout2 } from '@tabler/icons-react'
-import { useMemo } from 'react'
-import { useSupabase } from '../../Providers/SubapabaseProvider'
+import { sessionSignal, sessionStateSignal } from '@/shared/state/auth/session'
+import { supabaseSignal } from '@/shared/state/supabase'
+import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
+import { providerRefreshTokenSignal } from '@/shared/state/auth/tokens/providerRefreshToken'
+
+const logout = async () => {
+  const { error } = await supabaseSignal.value.auth.signOut()
+
+  if (error) {
+    console.error('signOut error', error)
+    return
+  }
+
+  sessionSignal.value = null
+  providerTokenSignal.value = null
+  providerRefreshTokenSignal.value = null
+  sessionStateSignal.value = 'NOT_LOGGED_IN'
+}
 
 export default function () {
-  const supabase = useSupabase()
-  const { session, setSession, setSessionState } = useSession()
-
-  const logout = useMemo(
-    () => async () => {
-      const { error } = await supabase.auth.signOut()
-
-      if (error) {
-        console.error('signOut error', error)
-        return
-      }
-
-      chrome.storage.local.remove('session')
-      chrome.storage.local.remove('provider_token')
-      setSession(null)
-      setSessionState('NOT_LOGGED_IN')
-    },
-    [setSession],
-  )
-
   return (
     <Box>
       <Popover width={200} position="bottom" shadow="md">
         <Popover.Target>
           <Avatar
-            src={session?.user?.user_metadata?.avatar_url || 'https://i.pravatar.cc/300'}
+            src={
+              sessionSignal.value?.user?.user_metadata?.avatar_url || 'https://i.pravatar.cc/300'
+            }
             alt="Avatar"
             radius="xl"
             size="md"
@@ -39,10 +36,10 @@ export default function () {
         </Popover.Target>
         <Popover.Dropdown p={4}>
           <Box p={4}>
-            <Text>{session?.user?.user_metadata?.full_name}</Text>
+            <Text>{sessionSignal.value?.user?.user_metadata?.full_name}</Text>
 
             <Text size="sm" fw={600}>
-              {session?.user?.email}
+              {sessionSignal.value?.user?.email}
             </Text>
           </Box>
 

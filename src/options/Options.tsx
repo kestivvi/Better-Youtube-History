@@ -8,7 +8,7 @@ export const Options = () => {
 
   useEffect(() => {
     chrome.storage.sync.get(['count'], (result) => {
-      setCountSync(result.count || 0)
+      setCountSync(result['count'] || 0)
     })
 
     chrome.runtime.onMessage.addListener((request) => {

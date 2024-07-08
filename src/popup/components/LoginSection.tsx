@@ -1,28 +1,30 @@
 import { useState, useEffect } from 'react'
 import { refreshSession } from '../../background/auth/refreshing/refreshSession'
 import { refreshProviderToken } from '../../background/auth/refreshing/refreshProviderToken'
-import { useSupabase } from '../Providers/SubapabaseProvider'
-import { useSession } from '../Providers/SessionProvider/SessionContext'
+import { sessionSignal, sessionStateSignal } from '@/shared/state/auth/session'
+import { supabaseSignal } from '@/shared/state/supabase'
 
 export default function () {
-  const supabase = useSupabase()
-  const { session } = useSession()
-
-  const loggedIn = session !== null
+  const loggedIn = sessionStateSignal.value === 'LOGGED_IN'
 
   const [secondsTokenExpiresIn, setSecondsTokenExpiresIn] = useState<number | null>(null)
 
   useEffect(() => {
-    if (!session) {
-      return
-    }
-    setSecondsTokenExpiresIn(Math.floor(session?.expires_at - new Date().getTime() / 1000))
+    if (!sessionSignal.value) return
+
+    setSecondsTokenExpiresIn(
+      Math.floor(sessionSignal.value?.expires_at - new Date().getTime() / 1000),
+    )
 
     const interval = setInterval(() => {
-      setSecondsTokenExpiresIn(Math.floor(session?.expires_at - new Date().getTime() / 1000))
+      if (!sessionSignal.value) return
+
+      setSecondsTokenExpiresIn(
+        Math.floor(sessionSignal.value?.expires_at - new Date().getTime() / 1000),
+      )
     }, 1000)
     return () => clearInterval(interval)
-  }, [session])
+  }, [sessionSignal.value])
 
   return (
     <>
@@ -51,8 +53,8 @@ export default function () {
 
           <button
             onClick={async () => {
-              refreshSession(supabase, session)
-              refreshProviderToken(supabase)
+              refreshSession(supabaseSignal.value, sessionSignal.value)
+              refreshProviderToken(supabaseSignal.value)
             }}
           >
             Refresh Tokens

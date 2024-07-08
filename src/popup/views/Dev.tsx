@@ -1,27 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { database } from '../../background/database'
 import { VideoEventDocType } from '../../background/database/collections/VideoEvent/schema'
 import CalendarCheck from '../components/CalendarCheck'
 import LoginSection from '../components/LoginSection'
+import { sessionStateSignal } from '@/shared/state/auth/session'
 
 export default function () {
   const homePage = chrome.runtime.getURL('home.html')
   console.log('homePage', homePage)
 
-  const [session, setSession] = useState<any>(null)
-  const loggedIn = session !== null
-
   const [videosEvents, setVideosEvents] = useState<VideoEventDocType[]>([])
-
-  useEffect(() => {
-    ;(async () => {
-      const { session } = await chrome.storage.local.get('session')
-      console.log('tried to get session', new Date().toISOString(), session)
-      if (session) {
-        setSession(session)
-      }
-    })()
-  }, [])
 
   return (
     <>
@@ -32,7 +20,7 @@ export default function () {
 
       <LoginSection />
 
-      {loggedIn && (
+      {sessionStateSignal.value === 'LOGGED_IN' && (
         <>
           <CalendarCheck />
           <br />
