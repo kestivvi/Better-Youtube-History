@@ -20,7 +20,13 @@ const INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES = 10
 setupOAuthFlow()
 setupHandlingRuntimeMessages()
 
-const calendarIntervalFn = () => checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX)
+const calendarIntervalFn = () => {
+  if (!database) {
+    console.error('[calendarIntervalFn] Database not set.')
+    return
+  }
+  checkForEventsToAdd(database, GOOGLE_CALENDAR_EVENT_PREFIX)
+}
 
 setTimeout(() => calendarIntervalFn(), 1000)
 setInterval(async () => calendarIntervalFn(), GOOGLE_CALENDAR_SYNC_INTERVAL_MINUTES * 60 * 1000)
