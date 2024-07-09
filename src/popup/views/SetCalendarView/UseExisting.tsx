@@ -5,17 +5,7 @@ import { useRef } from 'react'
 import { setCalendarViewStage } from '.'
 import { IconCaretLeftFilled } from '@tabler/icons-react'
 import { signal } from '@preact/signals-react'
-
-const fetchGoogleCalendar = async (calendarId: string) =>
-  await fetch(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}`, {
-    headers: { Authorization: `Bearer ${providerTokenSignal.value}` },
-  })
-
-const checkGoogleCalendar = async (calendarId: string): Promise<boolean> => {
-  if (!calendarId) return false
-  const response = await fetchGoogleCalendar(calendarId)
-  return response.status === 200
-}
+import { validateGoogleCalendar } from '@/shared/calendar/validateGoogleCalendarId'
 
 export default function () {
   const textInputRef = useRef<HTMLInputElement>(null)
@@ -33,7 +23,14 @@ export default function () {
 
           if (!textInputRef.current?.value) return
           const calendarId = textInputRef.current?.value
-          const calendarExists = await checkGoogleCalendar(calendarId)
+
+          if (!providerTokenSignal.value) {
+            console.error('Provider token is not set')
+            loading.value = false
+            return
+          }
+
+          const calendarExists = await validateGoogleCalendar(calendarId, providerTokenSignal.value)
           if (calendarExists) calendarIdSignal.value = calendarId
 
           loading.value = false

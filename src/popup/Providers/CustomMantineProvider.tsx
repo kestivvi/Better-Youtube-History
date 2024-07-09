@@ -1,8 +1,12 @@
-import { ColorSchemeScript, createTheme, MantineProvider } from '@mantine/core'
+import { ColorSchemeScript, colorsTuple, createTheme, MantineProvider } from '@mantine/core'
 import { ReactNode } from 'react'
 
 const theme = createTheme({
-  primaryColor: 'red',
+  colors: {
+    ytRed: colorsTuple('#F00'),
+    ytBg: colorsTuple('#282828'),
+  },
+  primaryColor: 'ytRed',
 })
 
 type Props = {

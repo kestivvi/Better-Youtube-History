@@ -5,24 +5,7 @@ import { useRef } from 'react'
 import { setCalendarViewStage } from '.'
 import { IconCaretLeftFilled } from '@tabler/icons-react'
 import { signal } from '@preact/signals-react'
-
-const createNewGoogleCalendar = async (calendarName: string) => {
-  const response = await fetch('https://www.googleapis.com/calendar/v3/calendars', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${providerTokenSignal.value}`,
-    },
-    body: JSON.stringify({
-      summary: calendarName,
-      description: 'Calendar for Better Youtube History Extension\n\nDo not delete!',
-    }),
-  })
-
-  const data = await response.json()
-  console.log('[SetCalendarView] Create Youtube History Calendar', data)
-
-  calendarIdSignal.value = data.id
-}
+import { createNewGoogleCalendar } from '@/shared/calendar/createGoogleCalendar'
 
 const DEFAULT_CALENDAR_NAME = 'Youtube History'
 
@@ -42,8 +25,20 @@ export default function () {
 
       <Button
         onClick={async () => {
+          if (!providerTokenSignal.value) {
+            console.error('Provider token is not set')
+            return
+          }
+
           loading.value = true
-          createNewGoogleCalendar(textInputRef.current?.value || DEFAULT_CALENDAR_NAME)
+
+          const { newCalendarId } = await createNewGoogleCalendar(
+            textInputRef.current?.value || DEFAULT_CALENDAR_NAME,
+            providerTokenSignal.value,
+          )
+
+          calendarIdSignal.value = newCalendarId
+
           loading.value = false
         }}
         loading={loading.value}
