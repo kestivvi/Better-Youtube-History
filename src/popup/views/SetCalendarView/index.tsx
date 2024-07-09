@@ -16,11 +16,11 @@ export default function () {
         <Text
           fw={900}
           variant="gradient"
-          gradient={{ from: 'red', to: 'yellow', deg: 60 }}
+          gradient={{ from: 'red', to: 'MyYellow', deg: 60 }}
           style={{
             fontSize: 25,
-            marginTop: 50,
-            marginBottom: 20,
+            marginTop: 20,
+            marginBottom: 10,
           }}
         >
           Better Youtube History

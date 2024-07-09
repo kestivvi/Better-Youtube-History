@@ -3,10 +3,11 @@ import { ReactNode } from 'react'
 
 const theme = createTheme({
   colors: {
-    ytRed: colorsTuple('#F00'),
+    MyRed: colorsTuple('#bc3908'),
+    MyYellow: colorsTuple('#f6aa1c'),
     ytBg: colorsTuple('#282828'),
   },
-  primaryColor: 'ytRed',
+  primaryColor: 'MyRed',
 })
 
 type Props = {

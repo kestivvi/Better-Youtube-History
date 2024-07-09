@@ -17,7 +17,7 @@ export default function () {
         ref={ref}
         id="calendar-id-input"
         label="Google Calendar ID"
-        description="To this calendar events will be added. It is id you can find in calendar settings."
+        description="ID of the Google Calendar where events will be added. It's in your Google Calendar settings."
         placeholder="64-long-random-characters-text@group.calendar.google.com"
         required
         defaultValue={calendarIdSignal.value ?? ''}

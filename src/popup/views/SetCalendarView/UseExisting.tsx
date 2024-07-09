@@ -1,37 +1,49 @@
 import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
 import { calendarIdSignal } from '@/shared/state/calendarId'
-import { Button, Stack, TextInput } from '@mantine/core'
+import { Button, Stack, Textarea } from '@mantine/core'
 import { useRef } from 'react'
 import { setCalendarViewStage } from '.'
 import { IconCaretLeftFilled } from '@tabler/icons-react'
 import { signal } from '@preact/signals-react'
 import { validateGoogleCalendar } from '@/shared/calendar/validateGoogleCalendarId'
 
-export default function () {
-  const textInputRef = useRef<HTMLInputElement>(null)
+const loading = signal(false)
+const error = signal<string | null>(null)
 
-  const loading = signal(false)
+export default function () {
+  const ref = useRef<HTMLTextAreaElement>(null)
 
   return (
-    <Stack>
-      {/* TODO: Input cannot be empty and max lenght is 20 chars or sth */}
-      <TextInput ref={textInputRef} label="Existing google calendar id" />
+    <Stack mx={20}>
+      <Textarea
+        ref={ref}
+        id="calendar-id-input"
+        label="Existing Google Calendar ID"
+        description="ID of the Google Calendar where events will be added. It's in your Google Calendar settings."
+        placeholder="64-long-random-characters-text@group.calendar.google.com"
+        required
+        error={error.value}
+        rows={3}
+      />
 
       <Button
         onClick={async () => {
-          loading.value = true
-
-          if (!textInputRef.current?.value) return
-          const calendarId = textInputRef.current?.value
+          const value = ref.current?.value
+          if (!value) return
 
           if (!providerTokenSignal.value) {
             console.error('Provider token is not set')
-            loading.value = false
             return
           }
 
-          const calendarExists = await validateGoogleCalendar(calendarId, providerTokenSignal.value)
-          if (calendarExists) calendarIdSignal.value = calendarId
+          loading.value = true
+
+          const isNewCalendarValid = await validateGoogleCalendar(value, providerTokenSignal.value)
+
+          if (isNewCalendarValid) calendarIdSignal.value = value
+          else
+            error.value =
+              'It is not a valid Google Calendar ID! Provide ID to your existing Google Calendar!'
 
           loading.value = false
         }}

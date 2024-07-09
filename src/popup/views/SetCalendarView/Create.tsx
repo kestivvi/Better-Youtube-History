@@ -15,7 +15,7 @@ export default function () {
   const loading = signal(false)
 
   return (
-    <Stack>
+    <Stack px={20} w="100%">
       {/* TODO: Input cannot be empty and max lenght is 20 chars or sth */}
       <TextInput
         ref={textInputRef}
