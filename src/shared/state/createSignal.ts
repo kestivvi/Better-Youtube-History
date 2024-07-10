@@ -6,7 +6,7 @@ type ReturnedSignalObj<T, K extends string> = {
 
 type Options<T> =
   | {
-      useChromeLocalStorage: boolean
+      useChromeLocalStorage?: boolean
       callbackAfterInitFromStorage?: (value: T) => void
     }
   | undefined
@@ -18,6 +18,9 @@ export function createSignal<T, K extends string>(
     useChromeLocalStorage: true,
   },
 ): ReturnedSignalObj<T, K> {
+  // Set default options (I amnot sure how default options work in TypeScript, so I am setting them manually)
+  if (options.useChromeLocalStorage === undefined) options.useChromeLocalStorage = true
+
   // Initialize a signal
   const signalObject = signal<T>(initialValue)
 
