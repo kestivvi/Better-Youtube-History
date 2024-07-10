@@ -1,4 +1,4 @@
-export type SessionStateType = 'LOADING' | 'LOGGED_IN' | 'NOT_LOGGED_IN'
+export type SessionStateType = 'LOGGED_IN' | 'NOT_LOGGED_IN'
 
 export type SessionType = {
   access_token: string

@@ -14,29 +14,24 @@ export type View = 'HOME' | 'SETTINGS' | 'DEV'
 export default function () {
   const [view, setView] = useState<View>('HOME')
 
-  if (sessionStateSignal.value === 'LOADING') {
+  if (sessionStateSignal.value === 'NOT_LOGGED_IN') return <LoginView />
+  if (calendarIdSignal.value === null) return <SetCalendarView />
+
+  if (sessionStateSignal.value === 'LOGGED_IN' && calendarIdSignal.value !== null) {
     return (
-      <Flex align="center" justify="center" style={{ height: '100vh' }}>
-        <Loader />
-      </Flex>
+      <>
+        <Header view={view} setView={setView} />
+        {view === 'HOME' && <Home />}
+        {view === 'SETTINGS' && <Settings />}
+        {view === 'DEV' && <Dev />}
+      </>
     )
   }
 
-  if (sessionStateSignal.value === 'NOT_LOGGED_IN') {
-    return <LoginView />
-  }
-
-  // TODO: Check if user has calendar ID in supabase, if no then prompt to set it
-  if (calendarIdSignal.value === null) {
-    return <SetCalendarView />
-  }
-
+  // This should never happen
   return (
-    <>
-      <Header view={view} setView={setView} />
-      {view === 'HOME' && <Home />}
-      {view === 'SETTINGS' && <Settings />}
-      {view === 'DEV' && <Dev />}
-    </>
+    <Flex align="center" justify="center" style={{ height: '100vh' }}>
+      <Loader />
+    </Flex>
   )
 }

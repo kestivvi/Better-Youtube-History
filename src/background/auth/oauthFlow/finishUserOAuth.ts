@@ -4,6 +4,8 @@ import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
 import { providerRefreshTokenSignal } from '@/shared/state/auth/tokens/providerRefreshToken'
 import { supabaseSignal } from '@/shared/state/supabase'
 import { SessionType } from '@/shared/state/auth/session/types'
+import { fetchSupabaseForCalendarId } from '@/shared/calendar/fetchSupabaseForCalendarId'
+import { calendarIdSignal } from '@/shared/state/calendarId'
 
 /**
  * Method used to finish OAuth callback for a user authentication.
@@ -43,7 +45,6 @@ export async function finishUserOAuth(url: string) {
     sessionSignal.value = data.session as SessionType
     providerTokenSignal.value = provider_token
     providerRefreshTokenSignal.value = provider_refresh_token
-    sessionStateSignal.value = 'LOGGED_IN'
 
     console.debug('[finishUserOAuth] session', data.session)
 
@@ -54,6 +55,11 @@ export async function finishUserOAuth(url: string) {
     // fetch and save provider token info
     await fetchAndSaveTokenInfo(provider_token)
 
+    // fetch calendar id
+    const calendarId = await fetchSupabaseForCalendarId(supabaseSignal.value)
+    calendarIdSignal.value = calendarId
+
+    sessionStateSignal.value = 'LOGGED_IN'
     console.debug(`[finishUserOAuth] finished handling user OAuth callback`)
   } catch (error) {
     console.error(error)
