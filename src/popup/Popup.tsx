@@ -26,6 +26,7 @@ export default function () {
     return <LoginView />
   }
 
+  // TODO: Check if user has calendar ID in supabase, if no then prompt to set it
   if (calendarIdSignal.value === null) {
     return <SetCalendarView />
   }
