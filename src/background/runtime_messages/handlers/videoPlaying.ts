@@ -5,8 +5,8 @@ const TIME_DIFFERENCE_THRESHOLD_MINUTES = 5
 
 export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async (
   message,
-  sender,
-  sendResponse,
+  _sender,
+  _sendResponse,
 ) => {
   if (!database) {
     console.error('Database not initialized.')

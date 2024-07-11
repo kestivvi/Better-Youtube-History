@@ -34,9 +34,9 @@ export type VideoInfo = {
 export type Message = VideoPlayingMessage
 
 const dummyOnMessageListener = <MessageType>(
-  message: MessageType,
-  sender: chrome.runtime.MessageSender,
-  sendResponse: (response?: any) => void,
+  _message: MessageType,
+  _sender: chrome.runtime.MessageSender,
+  _sendResponse: (response?: any) => void,
 ): void => {}
 
 export type OnMessageListener<MessageType> = typeof dummyOnMessageListener<MessageType>

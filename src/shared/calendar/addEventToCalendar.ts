@@ -5,7 +5,7 @@ type EventInfo = {
   endTime: string
 }
 
-export async function addEventToGoogleCalendar(
+export async function addEventToCalendar(
   calendarId: string,
   eventInfo: EventInfo,
   providerToken: string,
@@ -48,16 +48,3 @@ export async function addEventToGoogleCalendar(
 
   return true
 }
-
-// body: JSON.stringify({
-//   summary: `${googleCalendarEventPrefix}${videoEvent.title}`,
-//   description: `https://www.youtube.com/watch?v=${videoEvent.videoId}\nChannel: ${videoEvent.channel}`,
-//   start: {
-//     dateTime: videoEvent.startTime,
-//     timeZone: 'UTC',
-//   },
-//   end: {
-//     dateTime: videoEvent.endTime,
-//     timeZone: 'UTC',
-//   },
-// })

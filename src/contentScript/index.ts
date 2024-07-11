@@ -13,7 +13,7 @@ const VideoBlobSrcVideoInfoMap: Map<string, VideoInfo> = new Map()
 
 const addEventsListenersToVideo = (video: HTMLVideoElement) => {
   console.log('Adding events listeners to video')
-  video.addEventListener('timeupdate', (ev) => {
+  video.addEventListener('timeupdate', (_ev) => {
     const videoInfo = checkVideoInfo()
     if (videoInfo === null) return
 

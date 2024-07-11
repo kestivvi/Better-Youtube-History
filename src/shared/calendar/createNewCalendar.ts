@@ -1,4 +1,4 @@
-export async function createNewGoogleCalendar(
+export async function createNewCalendar(
   calendarName: string,
   providerToken: string,
 ): Promise<{ newCalendarId: string }> {

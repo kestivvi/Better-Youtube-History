@@ -7,7 +7,12 @@ import { SessionType, SessionStateType } from './types'
 import { providerTokenInfoSignal } from '../tokens/providerTokenInfo'
 import { effect } from '@preact/signals-react'
 
-const { sessionStateSignal } = createSignal('sessionState', 'LOADING' as SessionStateType)
+export const DEFAULT_SESSION_STATE: SessionStateType = 'NOT_LOGGED_IN'
+
+const { sessionStateSignal } = createSignal(
+  'sessionState',
+  DEFAULT_SESSION_STATE as SessionStateType,
+)
 
 const { sessionSignal } = createSignal('session', null as SessionType | null, {
   useChromeLocalStorage: true,

@@ -5,7 +5,7 @@ import { useRef } from 'react'
 import { setCalendarViewStage } from '.'
 import { IconCaretLeftFilled } from '@tabler/icons-react'
 import { signal } from '@preact/signals-react'
-import { createNewGoogleCalendar } from '@/shared/calendar/createGoogleCalendar'
+import { createNewCalendar } from '@/shared/calendar/createNewCalendar'
 
 const DEFAULT_CALENDAR_NAME = 'Youtube History'
 
@@ -32,7 +32,7 @@ export default function () {
 
           loading.value = true
 
-          const { newCalendarId } = await createNewGoogleCalendar(
+          const { newCalendarId } = await createNewCalendar(
             textInputRef.current?.value || DEFAULT_CALENDAR_NAME,
             providerTokenSignal.value,
           )
