@@ -1,13 +1,13 @@
 import { effect, signal, Signal } from '@preact/signals-react'
 
-type ReturnedSignalObj<T, K extends string> = {
+export type ReturnedSignalObj<T, K extends string> = {
   [P in `${K}Signal`]: Signal<T>
 }
 
 type Options<T> =
   | {
       useChromeLocalStorage?: boolean
-      callbackAfterInitFromStorage?: (value: T) => void
+      callbackAfterInitFromStorage?: (signal: Signal<T>) => void
     }
   | undefined
 
@@ -44,7 +44,7 @@ export function createSignal<T, K extends string>(
       })
 
       // Call the callback function after the value has been set
-      options.callbackAfterInitFromStorage?.(signalObject.value)
+      options.callbackAfterInitFromStorage?.(signalObject)
     })
 
     // Listen for changes to the value in chrome's local storage
