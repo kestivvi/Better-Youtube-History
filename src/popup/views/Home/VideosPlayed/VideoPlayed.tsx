@@ -41,6 +41,7 @@ export default function ({ videoPlayed, last }: Props) {
       bullet={bullet.value}
       lineVariant={last ? 'dashed' : 'solid'}
     >
+      {/* TODO: Hardcoded color */}
       <Text size="xs" fw={600} c="#999" fs="italic" mb={5}>
         by {videoPlayed.channel}
       </Text>
