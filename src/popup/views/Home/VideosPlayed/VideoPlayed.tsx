@@ -1,83 +1,52 @@
 import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
 import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
-import { Group, Text, ThemeIcon, Timeline, Tooltip } from '@mantine/core'
-import { useComputed } from '@preact/signals-react'
-import { Icon, IconClock, IconProps, IconVideo } from '@tabler/icons-react'
+import { Group, Text, Timeline, Tooltip } from '@mantine/core'
+import { effect, useComputed, useSignal } from '@preact/signals-react'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { IconCalendarCheck } from '@tabler/icons-react'
+import { getBullet } from './getBullet'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { IconHourglassFilled } from '@tabler/icons-react'
+
 dayjs.extend(duration)
+dayjs.extend(relativeTime)
 
 type Props = {
   videoPlayed: CurrentlyPlayedVideoType
   last: boolean
 }
 
-type State = 'UNDER_MIN_DURATION' | 'MIN_DURATION_FULLFILLED' | 'UPLOADED'
+export type State = 'UNDER_MIN_DURATION' | 'MIN_DURATION_FULLFILLED' | 'UPLOADED'
 
-const secondsToHms = (d: number) => {
-  const duration = dayjs.duration(d, 'seconds')
-  const hours = duration.hours()
-  const minutes = duration.minutes()
-  const seconds = duration.seconds()
-
-  return [hours > 0 ? `${hours}h` : '', minutes > 0 ? `${minutes}m` : '', `${seconds}s`]
-    .filter(Boolean)
-    .join('')
-}
-
-const Bullet = ({
-  label,
-  Icon,
-  color,
-}: {
-  label: string
-  Icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>
-  color: string
-}) => {
-  return (
-    <Tooltip multiline label={<Text size="xs">{label}</Text>} withArrow>
-      <ThemeIcon size={25} color={color} radius="xl">
-        <Icon size={15} />
-      </ThemeIcon>
-    </Tooltip>
-  )
-}
+const secondsToHms = (timeInSeconds: number) => dayjs.duration(timeInSeconds, 'seconds').humanize()
 
 export default function ({ videoPlayed, last }: Props) {
   const state = useComputed<State>(() => {
     if (videoPlayed.uploaded) return 'UPLOADED'
+
     const timeWatched = dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), 'seconds')
     const minDurationExceeded = timeWatched >= minVideoWatchDurationSignal.value
+
     if (minDurationExceeded) return 'MIN_DURATION_FULLFILLED'
+
     return 'UNDER_MIN_DURATION'
   })
 
-  const bullet = useComputed(() => {
-    if (state.value === 'UNDER_MIN_DURATION')
-      return (
-        <Bullet
-          label="You haven't watched this video for the minimum duration yet. Keep watching and an event will end up in your calendar."
-          Icon={IconClock}
-          color="blue"
-        />
-      )
-    if (state.value === 'MIN_DURATION_FULLFILLED')
-      return (
-        <Bullet
-          label="You've been watching this video for more than the minimum duration. When you stop watching, the event will be created in your calendar."
-          Icon={IconVideo}
-          color="green"
-        />
-      )
-    return (
-      <Bullet
-        label="Event has been created in your calendar."
-        Icon={IconCalendarCheck}
-        color="blue"
-      />
-    )
+  const howLongAgoSeconds = useSignal(dayjs().diff(dayjs(videoPlayed.endTime), 'second'))
+
+  effect(() => {
+    const interval = setInterval(() => {
+      howLongAgoSeconds.value = dayjs().diff(dayjs(videoPlayed.endTime), 'second')
+    }, 1000)
+
+    return () => clearInterval(interval)
   })
+
+  const howLongAgoFormatted = useComputed(() =>
+    dayjs.duration(howLongAgoSeconds.value, 'seconds').humanize(),
+  )
+
+  const bullet = useComputed(() => getBullet(state.value))
 
   return (
     <Timeline.Item
@@ -91,16 +60,22 @@ export default function ({ videoPlayed, last }: Props) {
 
       <Group justify="space-between">
         <Text size="xs" mt={4}>
-          {dayjs(dayjs()).diff(videoPlayed.endTime, 'seconds') < 10 ? (
-            'Now'
-          ) : (
-            <>{secondsToHms(dayjs().diff(dayjs(videoPlayed.endTime), 'second'))} ago</>
-          )}
+          {howLongAgoSeconds.value < 10 ? 'Now' : <>{howLongAgoFormatted} ago</>}
         </Text>
 
-        <Text size="xs" mt={4}>
-          {secondsToHms(dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), 'seconds'))}
-        </Text>
+        <Tooltip
+          label={<Text size="xs">Having watched this video for this amount of time</Text>}
+          withArrow
+        >
+          <Group align="center" gap={3}>
+            <IconHourglassFilled size={12} />
+            <Text size="xs">
+              {secondsToHms(
+                dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), 'seconds'),
+              )}
+            </Text>
+          </Group>
+        </Tooltip>
       </Group>
     </Timeline.Item>
   )
