@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import { MyDatabase } from '../database'
 import { flushEventsToCalendar } from './flushEventsToCalendar'
+import { Signal } from '@preact/signals-react'
+import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
 
 export const triggerCalendarEventFlush = (
   database: MyDatabase | null,
@@ -10,6 +12,7 @@ export const triggerCalendarEventFlush = (
   calendarEventPrefix: string,
   calendarId: string | null,
   providerToken: string | null,
+  currentlyPlayedVideosSignal: Signal<CurrentlyPlayedVideoType[]>,
 ) => {
   console.debug('[calendarIntervalFn] Triggering calendar event flush...')
 
@@ -28,5 +31,6 @@ export const triggerCalendarEventFlush = (
     calendarEventPrefix,
     calendarId,
     providerToken,
+    currentlyPlayedVideosSignal,
   )
 }

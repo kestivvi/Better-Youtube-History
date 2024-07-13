@@ -1,5 +1,6 @@
 import { type OnMessageListener, type VideoPlayingMessage } from '../types'
 import { database } from '../../database'
+import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
 
 const TIME_DIFFERENCE_THRESHOLD_MINUTES = 5
 
@@ -35,6 +36,19 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
       startTime: message.data.timestamp,
       endTime: message.data.timestamp,
     })
+
+    currentlyPlayedVideosSignal.value = [
+      ...currentlyPlayedVideosSignal.value,
+      {
+        id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
+        title: message.data.videoInfo.title,
+        channel: message.data.videoInfo.channel,
+        channelUrl: message.data.videoInfo.channelUrl,
+        startTime: message.data.timestamp,
+        endTime: message.data.timestamp,
+        uploaded: false,
+      },
+    ]
   } else if (foundVideos.length > 0) {
     let foundVideo = foundVideos[0]!
 
@@ -53,11 +67,35 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
         startTime: message.data.timestamp,
         endTime: message.data.timestamp,
       })
+
+      currentlyPlayedVideosSignal.value = [
+        ...currentlyPlayedVideosSignal.value,
+        {
+          id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
+          title: message.data.videoInfo.title,
+          channel: message.data.videoInfo.channel,
+          channelUrl: message.data.videoInfo.channelUrl,
+          startTime: message.data.timestamp,
+          endTime: message.data.timestamp,
+          uploaded: false,
+        },
+      ]
     } else {
       console.log(`Patching video event with endTime.`)
       const video = foundVideo
       await video.patch({
         endTime: message.data.timestamp,
+      })
+
+      currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map((v) => {
+        if (v.id === video.primary) {
+          return {
+            ...v,
+            endTime: message.data.timestamp,
+          }
+        } else {
+          return v
+        }
       })
     }
   }

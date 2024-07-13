@@ -10,6 +10,7 @@ import { activityRetentionPeriodSignal } from '@/shared/state/calendar/activityR
 import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
 import { calendarEventPrefixSignal } from '@/shared/state/calendar/calendarEventPrefix'
 import { calendarSyncFrequencySignal } from '@/shared/state/calendar/calendarSyncFrequency'
+import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
 
 export function setupCalendarSync() {
   const calendarSync = computed(
@@ -22,6 +23,7 @@ export function setupCalendarSync() {
         calendarEventPrefixSignal.value,
         calendarIdSignal.value,
         providerTokenSignal.value,
+        currentlyPlayedVideosSignal,
       ),
   )
 

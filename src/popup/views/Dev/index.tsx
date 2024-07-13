@@ -4,6 +4,8 @@ import { sessionStateSignal } from '@/shared/state/auth/session'
 import { useState } from 'react'
 import CalendarCheck from './components/CalendarCheck'
 import LoginSection from './components/LoginSection'
+import Videos from './components/Videos'
+import { Space } from '@mantine/core'
 
 export default function () {
   const homePage = chrome.runtime.getURL('home.html')
@@ -48,11 +50,16 @@ export default function () {
 
           {videosEvents.map((videoEvent) => (
             <div key={videoEvent.id}>
-              {videoEvent.title} - {videoEvent.startTime} - {videoEvent.endTime}
+              {videoEvent.title} - {videoEvent.startTime} - {videoEvent.endTime} -{' '}
+              {videoEvent.uploaded && 'uploaded'}
             </div>
           ))}
         </>
       )}
+
+      <Space h="md" />
+
+      <Videos />
     </>
   )
 }
