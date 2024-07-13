@@ -140,6 +140,7 @@ export default function () {
             disabled={isSubmitting}
             loading={isSubmitting}
           >
+            {/* TODO: Text should be different for more states like failed submission */}
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </Box>
