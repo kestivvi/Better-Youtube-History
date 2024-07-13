@@ -1,12 +1,13 @@
 import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
 import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
 import { Group, Text, Timeline, Tooltip } from '@mantine/core'
-import { effect, useComputed, useSignal } from '@preact/signals-react'
+import { useComputed } from '@preact/signals-react'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { getBullet } from './getBullet'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { IconHourglassFilled } from '@tabler/icons-react'
+import VideoWatchTime from './VideoWatchTime'
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
@@ -32,20 +33,6 @@ export default function ({ videoPlayed, last }: Props) {
     return 'UNDER_MIN_DURATION'
   })
 
-  const howLongAgoSeconds = useSignal(dayjs().diff(dayjs(videoPlayed.endTime), 'second'))
-
-  effect(() => {
-    const interval = setInterval(() => {
-      howLongAgoSeconds.value = dayjs().diff(dayjs(videoPlayed.endTime), 'second')
-    }, 1000)
-
-    return () => clearInterval(interval)
-  })
-
-  const howLongAgoFormatted = useComputed(() =>
-    dayjs.duration(howLongAgoSeconds.value, 'seconds').humanize(),
-  )
-
   const bullet = useComputed(() => getBullet(state.value))
 
   return (
@@ -59,9 +46,7 @@ export default function ({ videoPlayed, last }: Props) {
       </Text>
 
       <Group justify="space-between">
-        <Text size="xs" mt={4}>
-          {howLongAgoSeconds.value < 10 ? 'Now' : <>{howLongAgoFormatted} ago</>}
-        </Text>
+        <VideoWatchTime startTime={videoPlayed.startTime} endTime={videoPlayed.endTime} />
 
         <Tooltip
           label={<Text size="xs">Having watched this video for this amount of time</Text>}
