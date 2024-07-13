@@ -23,6 +23,7 @@
     "zip": "npm run build && node src/zip.js"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@mantine/core": "^7.11.1",
     "@mantine/hooks": "^7.11.1",
     "@preact/signals-react": "^2.1.0",
@@ -31,8 +32,10 @@
     "dayjs": "1.11.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "7.52.1",
     "rxdb": "^15.18.4",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "valibot": "^0.36.0"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.19",

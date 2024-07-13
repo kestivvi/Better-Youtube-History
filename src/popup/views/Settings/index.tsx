@@ -1,10 +1,10 @@
 import { Box } from '@mantine/core'
-import CalendarSettings from './CalendarSettings'
+import Form from './Form'
 
 export default function () {
   return (
     <Box mx={20}>
-      <CalendarSettings />
+      <Form />
     </Box>
   )
 }
