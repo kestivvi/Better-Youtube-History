@@ -1,11 +1,10 @@
 import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
 import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
-import { Group, Text, Timeline } from '@mantine/core'
+import { Group, Text, ThemeIcon, Timeline, Tooltip } from '@mantine/core'
 import { useComputed } from '@preact/signals-react'
-import { IconClock, IconVideo } from '@tabler/icons-react'
+import { Icon, IconClock, IconProps, IconVideo } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { useMemo } from 'react'
 import { IconCalendarCheck } from '@tabler/icons-react'
 dayjs.extend(duration)
 
@@ -27,34 +26,67 @@ const secondsToHms = (d: number) => {
     .join('')
 }
 
+const Bullet = ({
+  label,
+  Icon,
+  color,
+}: {
+  label: string
+  Icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>
+  color: string
+}) => {
+  return (
+    <Tooltip multiline label={<Text size="xs">{label}</Text>} withArrow>
+      <ThemeIcon size={25} color={color} radius="xl">
+        <Icon size={15} />
+      </ThemeIcon>
+    </Tooltip>
+  )
+}
+
 export default function ({ videoPlayed, last }: Props) {
   const state = useComputed<State>(() => {
+    if (videoPlayed.uploaded) return 'UPLOADED'
     const timeWatched = dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), 'seconds')
     const minDurationExceeded = timeWatched >= minVideoWatchDurationSignal.value
     if (minDurationExceeded) return 'MIN_DURATION_FULLFILLED'
-    if (videoPlayed.uploaded) return 'UPLOADED'
     return 'UNDER_MIN_DURATION'
   })
 
-  const bullet = useMemo(() => {
-    if (state.value === 'UNDER_MIN_DURATION') return <IconClock size="0.8rem" />
-    if (state.value === 'MIN_DURATION_FULLFILLED') return <IconVideo size="0.8rem" />
-    return <IconCalendarCheck size="0.8rem" />
-  }, [])
+  const bullet = useComputed(() => {
+    if (state.value === 'UNDER_MIN_DURATION')
+      return (
+        <Bullet
+          label="You haven't watched this video for the minimum duration yet. Keep watching and an event will end up in your calendar."
+          Icon={IconClock}
+          color="blue"
+        />
+      )
+    if (state.value === 'MIN_DURATION_FULLFILLED')
+      return (
+        <Bullet
+          label="You've been watching this video for more than the minimum duration. When you stop watching, the event will be created in your calendar."
+          Icon={IconVideo}
+          color="green"
+        />
+      )
+    return (
+      <Bullet
+        label="Event has been created in your calendar."
+        Icon={IconCalendarCheck}
+        color="blue"
+      />
+    )
+  })
 
   return (
     <Timeline.Item
       title={videoPlayed.title}
-      bullet={bullet}
+      bullet={bullet.value}
       lineVariant={last ? 'dashed' : 'solid'}
     >
       <Text size="xs" fw={600} c="#999" fs="italic" mb={5}>
         by {videoPlayed.channel}
-      </Text>
-
-      <Text c="dimmed" size="sm">
-        {videoPlayed.uploaded && <>Uploaded</>}
-        {state}
       </Text>
 
       <Group justify="space-between">
@@ -73,7 +105,3 @@ export default function ({ videoPlayed, last }: Props) {
     </Timeline.Item>
   )
 }
-
-// <ThemeIcon size={22} color="blue" radius="xl">
-//   <IconVideo size="0.8rem" />
-// </ThemeIcon>
