@@ -1,6 +1,6 @@
 import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
 import VideoPlayed from './VideoPlayed'
-import { Stack, Timeline, Text } from '@mantine/core'
+import { Stack, Timeline, Text, Tooltip } from '@mantine/core'
 import { computed } from '@preact/signals-react'
 import dayjs from 'dayjs'
 import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
@@ -25,6 +25,26 @@ const videosFiltered = computed(() =>
 export default function () {
   // TODO: I have no clue why this is needed, but without it the component does not update
   useSignals()
+
+  if (videosFiltered.value.length === 0) {
+    return (
+      <Tooltip
+        position="bottom"
+        multiline
+        withArrow
+        label={
+          <Text size="xs">
+            You have not watched any videos since installation of this extension. Give it a try and
+            watch some videos!
+          </Text>
+        }
+      >
+        <Text size="sm" fw={500} c="dimmed">
+          No videos played yet...
+        </Text>
+      </Tooltip>
+    )
+  }
 
   return (
     <Stack>
