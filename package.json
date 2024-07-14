@@ -43,13 +43,16 @@
     "@types/chrome": "0.0.268",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
+    "@typescript-eslint/parser": "7.16.0",
     "@vitejs/plugin-react": "4.3.1",
+    "eslint": "8.57.0",
     "gulp": "5.0.0",
     "gulp-zip": "6.0.0",
     "postcss": "8.4.39",
     "postcss-preset-mantine": "1.15.0",
     "postcss-simple-vars": "7.0.1",
     "prettier": "3.3.3",
+    "prettier-eslint": "16.3.0",
     "typescript": "5.5.3",
     "vite": "5.3.3"
   }
