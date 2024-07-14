@@ -19,7 +19,7 @@ const videoEventSchemaLiteral = {
     title: {
       type: 'string',
     },
-    channel: {
+    channelName: {
       type: 'string',
     },
     channelUrl: {
@@ -37,7 +37,7 @@ const videoEventSchemaLiteral = {
       type: 'boolean',
     },
   },
-  required: ['id', 'videoId', 'title', 'channel', 'channelUrl', 'startTime', 'endTime'],
+  required: ['id', 'videoId', 'title', 'channelName', 'channelUrl', 'startTime', 'endTime'],
 } as const
 
 const schemaTyped = toTypedRxJsonSchema(videoEventSchemaLiteral)

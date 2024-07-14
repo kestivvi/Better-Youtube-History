@@ -1,6 +1,8 @@
 ////////////////////////////////////////////////////////////////////
 // Runtime General Message
 
+import { VideoEventDocType } from '../database/collections/VideoEvent/schema'
+
 export type MessageType = 'OPEN_IN_TAB' | 'VIDEO_PLAYING'
 
 interface GeneralMessage<T extends MessageType> {
@@ -20,13 +22,7 @@ export interface VideoPlayingMessage extends GeneralMessage<'VIDEO_PLAYING'> {
   }
 }
 
-export type VideoInfo = {
-  videoId: string
-  videoBlobId: string
-  title: string
-  channel: string
-  channelUrl: string
-}
+export type VideoInfo = Pick<VideoEventDocType, 'channelName' | 'channelUrl' | 'title' | 'videoId'>
 
 ////////////////////////////////////////////////////////////////////
 // Final Message Type

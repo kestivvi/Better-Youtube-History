@@ -1,8 +1,7 @@
 import { type OnMessageListener, type VideoPlayingMessage } from '../types'
 import { database } from '../../database'
 import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
-
-const TIME_DIFFERENCE_THRESHOLD_MINUTES = 5
+import { videoResumeThresholdSignal } from '@/shared/state/calendar/videoResumeThreshold'
 
 export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async (
   message,
@@ -25,13 +24,18 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
     })
     .exec()
 
+  console.log(
+    'foundVideos',
+    foundVideos.flatMap((v) => v.toJSON()),
+  )
+
   if (foundVideos.length === 0) {
     console.log('Inserting new video event, because no video found.')
     await database.videos_events.insert({
       id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
       videoId: message.data.videoInfo.videoId,
       title: message.data.videoInfo.title,
-      channel: message.data.videoInfo.channel,
+      channelName: message.data.videoInfo.channelName,
       channelUrl: message.data.videoInfo.channelUrl,
       startTime: message.data.timestamp,
       endTime: message.data.timestamp,
@@ -42,7 +46,7 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
       {
         id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
         title: message.data.videoInfo.title,
-        channel: message.data.videoInfo.channel,
+        channel: message.data.videoInfo.channelName,
         channelUrl: message.data.videoInfo.channelUrl,
         startTime: message.data.timestamp,
         endTime: message.data.timestamp,
@@ -56,13 +60,13 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
       new Date(foundVideo.endTime).getTime() - new Date(message.data.timestamp).getTime(),
     )
 
-    if (time_difference_ms > TIME_DIFFERENCE_THRESHOLD_MINUTES * 60 * 1000) {
+    if (time_difference_ms > videoResumeThresholdSignal.value * 1000) {
       console.log(`Inserting new video event, because time difference is big.`)
       await database.videos_events.insert({
         id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
         videoId: message.data.videoInfo.videoId,
         title: message.data.videoInfo.title,
-        channel: message.data.videoInfo.channel,
+        channelName: message.data.videoInfo.channelName,
         channelUrl: message.data.videoInfo.channelUrl,
         startTime: message.data.timestamp,
         endTime: message.data.timestamp,
@@ -73,7 +77,7 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
         {
           id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
           title: message.data.videoInfo.title,
-          channel: message.data.videoInfo.channel,
+          channel: message.data.videoInfo.channelName,
           channelUrl: message.data.videoInfo.channelUrl,
           startTime: message.data.timestamp,
           endTime: message.data.timestamp,
