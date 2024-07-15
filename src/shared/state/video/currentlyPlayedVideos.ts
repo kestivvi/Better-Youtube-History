@@ -1,14 +1,7 @@
+import { VideoEventDocType } from '@/background/database/collections/VideoEvent/schema'
 import { createSignal } from '../createSignal'
 
-export type CurrentlyPlayedVideoType = {
-  id: string
-  title: string
-  channel: string
-  channelUrl: string
-  startTime: string
-  endTime: string
-  uploaded: boolean
-}
+export type CurrentlyPlayedVideoType = VideoEventDocType
 
 export const DEFAULT_CURRENTLY_PLAYED_VIDEOS: CurrentlyPlayedVideoType[] = []
 

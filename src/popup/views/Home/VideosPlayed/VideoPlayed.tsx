@@ -43,7 +43,7 @@ export default function ({ videoPlayed, last }: Props) {
     >
       {/* TODO: Hardcoded color */}
       <Text size="xs" fw={600} c="#999" fs="italic" mb={5}>
-        by {videoPlayed.channel}
+        by {videoPlayed.channelName}
       </Text>
 
       <Group justify="space-between">
