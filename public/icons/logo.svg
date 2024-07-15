@@ -1,2 +1,68 @@
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1656468723058" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3824" width="256" height="256" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }
-</style></defs><path d="M512 0C228.266667 0 0 228.266667 0 512s228.266667 512 512 512 512-228.266667 512-512S795.733333 0 512 0z m224 727.466667c0 23.466667-17.066667 40.533333-40.533333 40.533333H328.533333c-21.333333 0-40.533333-19.2-40.533333-40.533333V296.533333c0-23.466667 17.066667-40.533333 40.533333-40.533333h366.933334c21.333333 0 40.533333 19.2 40.533333 40.533333v430.933334z" fill="#61dafb" p-id="3825" data-spm-anchor-id="a313x.7781069.0.i0" class=""></path><path d="M473.6 727.466667h221.866667V411.733333H473.6v315.733334zM328.533333 727.466667h106.666667V411.733333h-106.666667v315.733334zM328.533333 296.533333v74.666667h369.066667V298.666667H328.533333z" fill="#61dafb" p-id="3826" data-spm-anchor-id="a313x.7781069.0.i2" class=""></path></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 135.46666 135.46667"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="BYH-logo.svg"
+   inkscape:export-filename="BYH-logo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.4627806"
+     inkscape:cx="171.93283"
+     inkscape:cy="256.70289"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:export-bgcolor="#ffffff00" /><defs
+     id="defs1" /><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"><rect
+       style="fill:#ffffff;stroke-width:0.303097"
+       id="rect1"
+       width="60.711475"
+       height="48.442257"
+       x="39.511292"
+       y="51.080936" /><path
+       d="M 54.108311,92.441673 V 54.431764 C 67.602223,60.781756 78.053201,66.914999 90.41358,73.527819 80.218965,79.181518 67.602223,85.524738 54.108311,92.441673 M 129.30972,35.525348 c -2.32772,-3.066954 -6.29493,-5.45118 -10.51851,-6.241622 -12.41436,-2.357116 -89.862492,-2.363898 -102.270084,0 -3.386938,0.636689 -6.402831,2.168143 -8.9936985,4.553035 -10.9165133,10.132233 -7.4958437,64.467917 -4.8645402,73.269849 1.1064922,3.80933 2.5368843,6.55862 4.3383203,8.36235 2.3209488,2.38423 5.4987264,4.02541 9.1488064,4.76166 10.221636,2.11464 62.881536,3.29659 102.425326,0.31834 3.64331,-0.63668 6.86837,-2.33001 9.41195,-4.81583 10.09341,-10.09226 9.40525,-67.481358 1.32243,-80.207097"
+       id="youtube-[#168]"
+       style="fill:#ff0000;fill-rule:evenodd;stroke:none;stroke-width:6.77331" /><g
+       style="fill:#ffffff"
+       id="g1"
+       transform="matrix(8.6823931,0,0,10.397848,0.32167099,46.068046)"
+       inkscape:export-filename=".\g1.webp"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><path
+         d="m 3.6394481,-3.0457408 v 1.6539431 m 8.2697159,-1.6539431 v 1.6539431"
+         stroke="#000000"
+         stroke-width="1.65394"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         id="path1"
+         style="fill:#ffffff;stroke:#ffffff;stroke-opacity:1"
+         sodipodi:nodetypes="cccc"
+         inkscape:export-filename="BYH-logo.webp"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96" /></g></g></svg>
