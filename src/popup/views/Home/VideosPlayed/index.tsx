@@ -19,7 +19,15 @@ const videosFiltered = computed(() =>
         minVideoWatchDurationSignal.value
       return inTheLast12Hours && (!resumeThresholdExceeded || minDurationExceeded || video.uploaded)
     })
-    .sort((a, b) => dayjs(b.endTime).diff(dayjs(a.endTime))),
+    .sort((a, b) => {
+      const endTimesAlmostTheSame = dayjs(a.endTime).diff(dayjs(b.endTime), 'seconds') < 11
+
+      if (endTimesAlmostTheSame) {
+        return dayjs(a.startTime).diff(dayjs(b.startTime))
+      } else {
+        return dayjs(b.endTime).diff(dayjs(a.endTime))
+      }
+    }),
 )
 
 export default function () {

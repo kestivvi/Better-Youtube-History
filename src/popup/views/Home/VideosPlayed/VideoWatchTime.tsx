@@ -20,7 +20,7 @@ export default function VideoWatchTime({ startTime, endTime }: Props) {
   )
 
   const howLongAgoSeconds = useComputed(() => dayjs().diff(dayjs(endTime), 'second'))
-  const watchingNow = useComputed(() => howLongAgoSeconds.value < 10)
+  const watchingNow = useComputed(() => howLongAgoSeconds.value < 20)
 
   const howLongAgoFormatted = useComputed(() =>
     watchingNow.value
