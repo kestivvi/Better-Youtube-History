@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           home: 'home.html',
+          redirectPage: 'redirectPage.html',
         },
         output: {
           chunkFileNames: 'assets/chunk-[hash].js',

@@ -49,8 +49,8 @@ export async function finishUserOAuth(url: string) {
     console.debug('[finishUserOAuth] session', data.session)
 
     // finally redirect to a post oauth page
-    const homePage = chrome.runtime.getURL('home.html')
-    chrome.tabs.update({ url: homePage })
+    const redirectPage = chrome.runtime.getURL('redirectPage.html')
+    chrome.tabs.update({ url: redirectPage })
 
     // fetch and save provider token info
     await fetchAndSaveTokenInfo(provider_token)

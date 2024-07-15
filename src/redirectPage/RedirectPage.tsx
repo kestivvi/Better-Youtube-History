@@ -1,6 +1,11 @@
+import { useEffect } from 'react'
 import { Container, Title } from '@mantine/core'
 
-export const Home = () => {
+export default function () {
+  useEffect(() => {
+    window.location.href = 'https://www.youtube.com/'
+  }, [])
+
   return (
     <Container
       style={{
@@ -13,9 +18,7 @@ export const Home = () => {
         justifyContent: 'center',
       }}
     >
-      <Title order={1}>Better Youtube History</Title>
+      <Title order={1}>Redirecting to Youtube...</Title>
     </Container>
   )
 }
-
-export default Home
