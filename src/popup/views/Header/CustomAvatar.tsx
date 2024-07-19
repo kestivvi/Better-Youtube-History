@@ -1,7 +1,7 @@
-import { Text, Box, Avatar, Popover, Button } from "@mantine/core"
-import { IconLogout2 } from "@tabler/icons-react"
-import { sessionSignal } from "@/shared/state/auth/session"
 import { logout } from "@/shared/auth/logout"
+import { sessionSignal } from "@/shared/state/auth/session"
+import { Avatar, Box, Button, Popover, Text } from "@mantine/core"
+import { IconLogout2 } from "@tabler/icons-react"
 
 export default function () {
   return (

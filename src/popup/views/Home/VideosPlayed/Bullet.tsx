@@ -1,4 +1,4 @@
-import { Tooltip, Text, ThemeIcon } from "@mantine/core"
+import { Text, ThemeIcon, Tooltip } from "@mantine/core"
 import type { Icon, IconProps } from "@tabler/icons-react"
 
 export const Bullet = ({

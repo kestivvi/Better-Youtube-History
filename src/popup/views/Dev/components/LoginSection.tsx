@@ -1,13 +1,13 @@
-import { useEffect } from "react"
-import { sessionSignal } from "@/shared/state/auth/session"
-import { supabaseSignal } from "@/shared/state/supabase"
 import { refreshSession } from "@/shared/auth/session/refreshSession"
-import { refreshProviderToken } from "@/shared/auth/tokens/refreshProviderToken"
-import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
 import { fetchTokenInfo } from "@/shared/auth/tokens/fetchTokenInfo"
-import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
-import { type Signal, signal } from "@preact/signals-react"
+import { refreshProviderToken } from "@/shared/auth/tokens/refreshProviderToken"
+import { sessionSignal } from "@/shared/state/auth/session"
 import type { SessionType } from "@/shared/state/auth/session/types"
+import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
+import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
+import { supabaseSignal } from "@/shared/state/supabase"
+import { type Signal, signal, useSignalEffect } from "@preact/signals-react"
+import { useSignals } from "@preact/signals-react/runtime"
 
 const secondsTokenExpiresIn = signal(
   sessionSignal.value !== null
@@ -27,18 +27,21 @@ const updateSecondsTokenExpiresIn = (sessionSignal: Signal<SessionType | null>) 
 }
 
 export default function () {
-  useEffect(() => {
+  useSignals()
+
+  useSignalEffect(() => {
     updateSecondsTokenExpiresIn(sessionSignal)
     const interval = setInterval(() => updateSecondsTokenExpiresIn(sessionSignal), 1000)
 
     return () => clearInterval(interval)
-  }, [sessionSignal.value])
+  })
 
   return (
     <>
       <p>Token expires in {secondsTokenExpiresIn} seconds</p>
 
       <button
+        type="button"
         onClick={async () => {
           if (!providerTokenSignal.value) {
             console.error("No token to verify")
@@ -61,6 +64,7 @@ export default function () {
       </button>
 
       <button
+        type="button"
         onClick={async () => {
           if (!sessionSignal.value) return
 

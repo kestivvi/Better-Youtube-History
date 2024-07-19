@@ -1,29 +1,29 @@
-import { Controller, type SubmitHandler, useForm } from "react-hook-form"
-import { valibotResolver } from "@hookform/resolvers/valibot"
-import * as v from "valibot"
-import { Box, Button, Stack } from "@mantine/core"
-import CalendarIdField, { calendarIdFieldSchema } from "./Fields/CalendarIdField"
-import { calendarIdSignal } from "@/shared/state/calendarId"
-import CalendarEventPrefixField, {
-  calendarEventPrefixFieldSchema,
-} from "./Fields/CalendarEventPrefixField"
+import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
 import { calendarEventPrefixSignal } from "@/shared/state/calendar/calendarEventPrefix"
 import { calendarSyncFrequencySignal } from "@/shared/state/calendar/calendarSyncFrequency"
-import CalendarSyncFrequencyField, {
-  calendarSyncFrequencyFieldSchema,
-} from "./Fields/CalendarSyncFrequencyField"
-import VideoResumeThresholdField, {
-  videoResumeThresholdFieldSchema,
-} from "./Fields/VideoResumeThresholdField"
-import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
-import MinVideoWatchDurationField, {
-  minVideoWatchDurationFieldSchema,
-} from "./Fields/MinVideoWatchDurationField"
 import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
+import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
+import { calendarIdSignal } from "@/shared/state/calendarId"
+import { valibotResolver } from "@hookform/resolvers/valibot"
+import { Box, Button, Stack } from "@mantine/core"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
+import * as v from "valibot"
 import ActivityRetentionPeriodField, {
   activityRetentionPeriodFieldSchema,
 } from "./Fields/ActivityRetentionPeriodField"
-import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
+import CalendarEventPrefixField, {
+  calendarEventPrefixFieldSchema,
+} from "./Fields/CalendarEventPrefixField"
+import CalendarIdField, { calendarIdFieldSchema } from "./Fields/CalendarIdField"
+import CalendarSyncFrequencyField, {
+  calendarSyncFrequencyFieldSchema,
+} from "./Fields/CalendarSyncFrequencyField"
+import MinVideoWatchDurationField, {
+  minVideoWatchDurationFieldSchema,
+} from "./Fields/MinVideoWatchDurationField"
+import VideoResumeThresholdField, {
+  videoResumeThresholdFieldSchema,
+} from "./Fields/VideoResumeThresholdField"
 
 // TODO: Maybe there is a way to generate this from JSON Schema?
 const formSchema = v.objectAsync({

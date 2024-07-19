@@ -1,7 +1,7 @@
 import {
-  toTypedRxJsonSchema,
   type ExtractDocumentTypeFromTypedRxJsonSchema,
   type RxJsonSchema,
+  toTypedRxJsonSchema,
 } from "rxdb"
 
 export const videoRecordSchemaLiteral = {

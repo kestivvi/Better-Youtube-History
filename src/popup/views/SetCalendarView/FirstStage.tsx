@@ -18,7 +18,9 @@ export default function () {
       </Button>
 
       <Button
-        onClick={() => (setCalendarViewStage.value = "USE_EXISTING")}
+        onClick={() => {
+          setCalendarViewStage.value = "USE_EXISTING"
+        }}
         leftSection={<IconCalendarShare />}
         variant="default"
       >

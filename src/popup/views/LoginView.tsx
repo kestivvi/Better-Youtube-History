@@ -1,7 +1,7 @@
+import { loginWithGoogle } from "@/shared/auth/login/loginWithGoogle"
+import { supabaseSignal } from "@/shared/state/supabase"
 import { Button, Flex, Text } from "@mantine/core"
 import { IconBrandGoogleFilled } from "@tabler/icons-react"
-import { supabaseSignal } from "@/shared/state/supabase"
-import { loginWithGoogle } from "@/shared/auth/login/loginWithGoogle"
 
 export default function () {
   return (

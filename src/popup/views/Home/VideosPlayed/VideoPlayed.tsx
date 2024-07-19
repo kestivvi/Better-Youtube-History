@@ -2,12 +2,12 @@ import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWat
 import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 import { Group, Text, Timeline, Tooltip } from "@mantine/core"
 import { useComputed } from "@preact/signals-react"
+import { IconHourglassFilled } from "@tabler/icons-react"
 import dayjs from "dayjs"
 import duration from "dayjs/plugin/duration"
-import { getBullet } from "./getBullet"
 import relativeTime from "dayjs/plugin/relativeTime"
-import { IconHourglassFilled } from "@tabler/icons-react"
 import VideoWatchTime from "./VideoWatchTime"
+import { getBullet } from "./getBullet"
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)

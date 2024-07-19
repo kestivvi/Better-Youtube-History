@@ -1,11 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
-import { willSessionBeValid } from "./session/willSessionBeValid"
-import { willProviderTokenBeValid } from "./tokens/willProviderTokenBeValid"
-import { refreshSession } from "./session/refreshSession"
-import { refreshProviderToken } from "./tokens/refreshProviderToken"
-import type { SessionType } from "../state/auth/session/types"
 import { sessionStateSignal } from "../state/auth/session"
+import type { SessionType } from "../state/auth/session/types"
 import type { ProviderTokenInfo } from "../state/auth/tokens/providerTokenInfo"
+import { refreshSession } from "./session/refreshSession"
+import { willSessionBeValid } from "./session/willSessionBeValid"
+import { refreshProviderToken } from "./tokens/refreshProviderToken"
+import { willProviderTokenBeValid } from "./tokens/willProviderTokenBeValid"
 
 export async function validateAndRefreshSessionTokens(
   session: SessionType | null,

@@ -1,4 +1,4 @@
-import { Tooltip, Text } from "@mantine/core"
+import { Text, Tooltip } from "@mantine/core"
 import { useComputed } from "@preact/signals-react"
 import dayjs from "dayjs"
 

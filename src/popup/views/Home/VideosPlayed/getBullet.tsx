@@ -1,10 +1,10 @@
-import type { State } from "./VideoPlayed"
-import { Bullet } from "./Bullet"
 import { IconCalendarCheck, IconClock, IconVideo } from "@tabler/icons-react"
+import { Bullet } from "./Bullet"
+import type { State } from "./VideoPlayed"
 
 // Helper function for exhaustive checks
 function assertNever(x: never): never {
-  throw new Error("Unexpected object: " + x)
+  throw new Error(`Unexpected object: ${x}`)
 }
 
 export const getBullet = (state: State) => {

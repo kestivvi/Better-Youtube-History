@@ -1,11 +1,11 @@
 import { database } from "@/background/database"
 import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
 import { sessionStateSignal } from "@/shared/state/auth/session"
+import { Space } from "@mantine/core"
 import { useState } from "react"
 import CalendarCheck from "./components/CalendarCheck"
 import LoginSection from "./components/LoginSection"
 import Videos from "./components/Videos"
-import { Space } from "@mantine/core"
 
 export default function () {
   const homePage = chrome.runtime.getURL("home.html")
@@ -28,6 +28,7 @@ export default function () {
           <br />
 
           <button
+            type="button"
             onClick={async () => {
               if (database) {
                 const videosEvents = (await database.videos_events.find().exec()).flatMap(

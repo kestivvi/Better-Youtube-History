@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 
-import Popup from "./Popup"
 import Providers from "@/components/Providers"
+import Popup from "./Popup"
 
 import "@mantine/core/styles.css"
 import "./index.css"

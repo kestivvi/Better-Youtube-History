@@ -1,11 +1,11 @@
-import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
-import VideoPlayed from "./VideoPlayed"
-import { Stack, Timeline, Text, Tooltip } from "@mantine/core"
-import { computed } from "@preact/signals-react"
-import dayjs from "dayjs"
 import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
+import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
+import { Stack, Text, Timeline, Tooltip } from "@mantine/core"
+import { computed } from "@preact/signals-react"
 import { useSignals } from "@preact/signals-react/runtime"
+import dayjs from "dayjs"
+import VideoPlayed from "./VideoPlayed"
 
 const videosFiltered = computed(() =>
   currentlyPlayedVideosSignal.value
@@ -28,9 +28,9 @@ const videosFiltered = computed(() =>
 
       if (endTimesAlmostTheSame) {
         return dayjs(a.startTime).diff(dayjs(b.startTime))
-      } else {
-        return dayjs(b.endTime).diff(dayjs(a.endTime))
       }
+
+      return dayjs(b.endTime).diff(dayjs(a.endTime))
     }),
 )
 

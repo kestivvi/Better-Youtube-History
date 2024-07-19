@@ -1,5 +1,5 @@
-import { useEffect } from "react"
 import { Container, Title } from "@mantine/core"
+import { useEffect } from "react"
 
 export default function () {
   useEffect(() => {

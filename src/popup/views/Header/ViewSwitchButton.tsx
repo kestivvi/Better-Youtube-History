@@ -1,8 +1,8 @@
-import type { Dispatch, ReactNode, SetStateAction } from "react"
 import { Button, Group, Text, useMantineTheme } from "@mantine/core"
 import { IconSettings } from "@tabler/icons-react"
 import { IconChevronLeft } from "@tabler/icons-react"
 import { IconCode } from "@tabler/icons-react"
+import type { Dispatch, ReactNode, SetStateAction } from "react"
 
 import type { View } from "../../Popup"
 
@@ -11,8 +11,7 @@ type Props = {
   setView: Dispatch<SetStateAction<View>>
 }
 
-// @ts-expect-error
-const isDev = process.env.NODE_ENV == "development"
+const isDev = process.env.NODE_ENV === "development"
 
 export default function ({ view, setView }: Props) {
   const theme = useMantineTheme()

@@ -1,6 +1,6 @@
-import { createSignal, type ReturnedSignalObj } from "./createSignal"
-import { supabaseSignal } from "./supabase"
 import { sessionSignal } from "./auth/session"
+import { type ReturnedSignalObj, createSignal } from "./createSignal"
+import { supabaseSignal } from "./supabase"
 
 export function createSignalSupabaseSynced<T, K extends string>(
   variableName: K,

@@ -1,7 +1,7 @@
+import { sessionStateSignal } from "@/shared/state/auth/session"
 import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { fetchAndSaveTokenInfo } from "./fetchAndSaveTokenInfo"
-import { sessionStateSignal } from "@/shared/state/auth/session"
 
 export async function refreshProviderToken(
   supabase: SupabaseClient,
@@ -32,7 +32,7 @@ export async function refreshProviderToken(
       return
     }
 
-    if (data && data.access_token) {
+    if (data?.access_token) {
       console.log("[refreshProviderToken] Provider token refreshed:", data.access_token)
       providerTokenSignal.value = data.access_token
 

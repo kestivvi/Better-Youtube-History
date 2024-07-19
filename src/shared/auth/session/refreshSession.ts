@@ -13,7 +13,7 @@ export async function refreshSession(supabase: SupabaseClient, session: SessionT
       return
     }
 
-    if (data && data.session) {
+    if (data?.session) {
       console.log("[refreshSession] Session refreshed:", data.session)
       sessionSignal.value = data.session as SessionType
       sessionStateSignal.value = "LOGGED_IN"

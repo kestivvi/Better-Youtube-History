@@ -1,9 +1,9 @@
 import { Center, Flex, Text } from "@mantine/core"
 import { signal } from "@preact/signals-react"
-import FirstStage from "./FirstStage"
-import Create from "./Create"
-import UseExisting from "./UseExisting"
 import { useSignals } from "@preact/signals-react/runtime"
+import Create from "./Create"
+import FirstStage from "./FirstStage"
+import UseExisting from "./UseExisting"
 
 export const setCalendarViewStage = signal<"FIRST_STAGE" | "CREATE" | "USE_EXISTING">(
   "FIRST_STAGE",

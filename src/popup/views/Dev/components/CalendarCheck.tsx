@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
 import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
-import { supabaseSignal } from "@/shared/state/supabase"
 import { calendarIdSignal } from "@/shared/state/calendarId"
+import { supabaseSignal } from "@/shared/state/supabase"
+import { useEffect, useState } from "react"
 
 export default function () {
   const [calendarExists, setCalendarExists] = useState<"YES" | "NO" | "LOADING">(
@@ -63,6 +63,7 @@ export default function () {
       <p>Youtube History Calendar does not exist</p>
       <p>Create automatically new one: </p>
       <button
+        type="button"
         onClick={async () => {
           const response = await fetch(
             "https://www.googleapis.com/calendar/v3/calendars",
@@ -94,6 +95,7 @@ export default function () {
       <p>Or type in ID of existing calendar here:</p>
       <input type="text" id="calendarId" />
       <button
+        type="button"
         onClick={async () => {
           const calendarId = (document.getElementById("calendarId") as HTMLInputElement)
             .value

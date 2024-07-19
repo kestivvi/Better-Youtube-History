@@ -7,16 +7,16 @@ import { providerRefreshTokenSignal } from "./auth/tokens/providerRefreshToken"
 import { providerTokenSignal } from "./auth/tokens/providerToken"
 import { providerTokenInfoSignal } from "./auth/tokens/providerTokenInfo"
 import {
-  activityRetentionPeriodSignal,
   DEFAULT_ACTIVITY_RETENTION_PERIOD,
+  activityRetentionPeriodSignal,
 } from "./calendar/activityRetentionPeriod"
 import {
-  calendarEventPrefixSignal,
   DEFAULT_CALENDAR_EVENT_PREFIX,
+  calendarEventPrefixSignal,
 } from "./calendar/calendarEventPrefix"
 import {
-  calendarSyncFrequencySignal,
   DEFAULT_CALENDAR_SYNC_FREQUENCY,
+  calendarSyncFrequencySignal,
 } from "./calendar/calendarSyncFrequency"
 import {
   DEFAULT_MIN_VIDEO_WATCH_DURATION,

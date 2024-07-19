@@ -1,11 +1,11 @@
 import { fetchAndSaveTokenInfo } from "@/shared/auth/tokens/fetchAndSaveTokenInfo"
-import { sessionSignal, sessionStateSignal } from "@/shared/state/auth/session"
-import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
-import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
-import { supabaseSignal } from "@/shared/state/supabase"
-import type { SessionType } from "@/shared/state/auth/session/types"
 import { fetchSupabaseForCalendarId } from "@/shared/calendar/fetchSupabaseForCalendarId"
+import { sessionSignal, sessionStateSignal } from "@/shared/state/auth/session"
+import type { SessionType } from "@/shared/state/auth/session/types"
+import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
+import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
 import { calendarIdSignal } from "@/shared/state/calendarId"
+import { supabaseSignal } from "@/shared/state/supabase"
 
 /**
  * Method used to finish OAuth callback for a user authentication.
@@ -13,7 +13,7 @@ import { calendarIdSignal } from "@/shared/state/calendarId"
  */
 export async function finishUserOAuth(url: string) {
   try {
-    console.debug(`[finishUserOAuth] handling user OAuth callback. Url: `, url)
+    console.debug("[finishUserOAuth] handling user OAuth callback. Url: ", url)
 
     // extract tokens from hash
     const hashMap = parseUrlHash(url)
@@ -30,7 +30,7 @@ export async function finishUserOAuth(url: string) {
     console.debug("[finishUserOAuth] provider_refresh_token", provider_refresh_token)
 
     if (!access_token || !refresh_token || !provider_token || !provider_refresh_token) {
-      throw new Error(`no tokens found in URL hash`)
+      throw new Error("no tokens found in URL hash")
     }
 
     // check if they work
@@ -60,7 +60,7 @@ export async function finishUserOAuth(url: string) {
     calendarIdSignal.value = calendarId
 
     sessionStateSignal.value = "LOGGED_IN"
-    console.debug(`[finishUserOAuth] finished handling user OAuth callback`)
+    console.debug("[finishUserOAuth] finished handling user OAuth callback")
   } catch (error) {
     console.error(error)
   }

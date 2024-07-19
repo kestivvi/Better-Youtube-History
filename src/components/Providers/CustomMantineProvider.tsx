@@ -1,8 +1,8 @@
 import {
   ColorSchemeScript,
+  MantineProvider,
   colorsTuple,
   createTheme,
-  MantineProvider,
 } from "@mantine/core"
 import type { ReactNode } from "react"
 

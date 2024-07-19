@@ -1,12 +1,12 @@
-import { setupOAuthFlow } from "./auth/oauthFlow/setupOAuthFlow"
-import { setupHandlingRuntimeMessages } from "./runtime_messages/setupHandlingRuntimeMessages"
-import { supabaseSignal } from "@/shared/state/supabase"
 import { validateAndRefreshSessionTokens } from "@/shared/auth/validateAndRefreshSessionTokens"
 import { sessionSignal } from "@/shared/state/auth/session"
-import { providerTokenInfoSignal } from "@/shared/state/auth/tokens/providerTokenInfo"
-import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
 import { sessionExpirationThresholdSecondsSignal } from "@/shared/state/auth/sessionExpirationThreshold"
+import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
+import { providerTokenInfoSignal } from "@/shared/state/auth/tokens/providerTokenInfo"
+import { supabaseSignal } from "@/shared/state/supabase"
+import { setupOAuthFlow } from "./auth/oauthFlow/setupOAuthFlow"
 import { setupCalendarSync } from "./calendar/setupCalendarSync"
+import { setupHandlingRuntimeMessages } from "./runtime_messages/setupHandlingRuntimeMessages"
 
 console.log("background is running")
 

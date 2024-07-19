@@ -1,10 +1,10 @@
-import type { MyDatabase } from "../database"
-import { queryEventsInBounds } from "./queryEventsInBounds"
-import { isEventLongEnough } from "./isEventLongEnough"
-import { prepareEventInfo } from "./prepareEventInfo"
 import { addEventToCalendar } from "@/shared/calendar/addEventToCalendar"
 import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 import type { Signal } from "@preact/signals-react"
+import type { MyDatabase } from "../database"
+import { isEventLongEnough } from "./isEventLongEnough"
+import { prepareEventInfo } from "./prepareEventInfo"
+import { queryEventsInBounds } from "./queryEventsInBounds"
 
 export const flushEventsToCalendar = async (
   database: MyDatabase,

@@ -8,11 +8,14 @@ import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
 export const calendarIdFieldSchema = v.pipeAsync(
   v.string("value is required"),
   v.trim(),
+
   v.check(() => {
     console.debug("providerTokenSignal.value", providerTokenSignal.value)
     return providerTokenSignal.value !== null
   }, "Cannot validate Google Calendar ID without provider token!"),
+
   v.checkAsync(async (value) => {
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     return await validateGoogleCalendar(value, providerTokenSignal.value!)
   }, "It is not a valid Google Calendar ID! Provide ID to your existing Google Calendar!"),
 )

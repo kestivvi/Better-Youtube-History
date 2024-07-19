@@ -1,6 +1,6 @@
 import type { VideoInfo } from "@/background/runtime_messages/types"
-import getVideoInfoFromMiniPlayer from "./getVideoInfoFromMiniPlayer"
 import getVideoInfoFromHiddenJson from "./getVideoInfoFromHiddenJson"
+import getVideoInfoFromMiniPlayer from "./getVideoInfoFromMiniPlayer"
 
 export default function (): Partial<VideoInfo> {
   const videoInfoFromMiniPlayer = getVideoInfoFromMiniPlayer()

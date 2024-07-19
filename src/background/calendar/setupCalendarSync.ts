@@ -4,12 +4,12 @@ import { database } from "../database"
 import { triggerCalendarEventFlush } from "./triggerCalendarEventFlush"
 
 import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
-import { calendarIdSignal } from "@/shared/state/calendarId"
-import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
-import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
 import { calendarEventPrefixSignal } from "@/shared/state/calendar/calendarEventPrefix"
 import { calendarSyncFrequencySignal } from "@/shared/state/calendar/calendarSyncFrequency"
+import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
+import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
+import { calendarIdSignal } from "@/shared/state/calendarId"
 import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
 
 export function setupCalendarSync() {

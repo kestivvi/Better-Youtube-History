@@ -7,7 +7,7 @@ export type MessageType = "OPEN_IN_TAB" | "VIDEO_PLAYING"
 
 interface GeneralMessage<T extends MessageType> {
   type: T
-  data?: any
+  data?: unknown
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ export type Message = VideoPlayingMessage
 const dummyOnMessageListener = <MessageType>(
   _message: MessageType,
   _sender: chrome.runtime.MessageSender,
-  _sendResponse: (response?: any) => void,
+  _sendResponse: (response?: unknown) => void,
 ): void => {}
 
 export type OnMessageListener<MessageType> = typeof dummyOnMessageListener<MessageType>

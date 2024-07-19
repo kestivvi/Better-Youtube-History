@@ -39,18 +39,18 @@ export default function () {
           const value = ref.current?.value
           if (!value) return
 
-          if (isNaN(Number(value))) {
+          if (Number.isNaN(Number(value))) {
             error.value = "Please enter a valid number"
             return
-          } else {
-            loading.value = true
-
-            const days = Number(value)
-            const seconds = daysToSeconds(days)
-            activityRetentionPeriodSignal.value = seconds
-
-            loading.value = false
           }
+
+          loading.value = true
+
+          const days = Number(value)
+          const seconds = daysToSeconds(days)
+          activityRetentionPeriodSignal.value = seconds
+
+          loading.value = false
         }}
       >
         Save
