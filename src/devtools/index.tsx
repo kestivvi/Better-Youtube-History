@@ -9,6 +9,6 @@ ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(
   </React.StrictMode>,
 )
 
-chrome.devtools.panels.create("ReactCrx", "", "../../devtools.html", function () {
+chrome.devtools.panels.create("ReactCrx", "", "../../devtools.html", () => {
   console.log("devtools panel create")
 })

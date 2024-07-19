@@ -1,8 +1,8 @@
 export default function (fn: () => void, delay: number): () => Promise<void> {
-  let initialCallTime: number = 0
+  let initialCallTime = 0
   let timeoutId: NodeJS.Timeout | null = null
 
-  return async function () {
+  return async () => {
     const now = Date.now()
 
     if (now - initialCallTime > delay) {

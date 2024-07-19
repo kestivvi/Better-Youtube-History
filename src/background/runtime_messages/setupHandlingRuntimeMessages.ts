@@ -1,5 +1,5 @@
 import { videoPlayingHandler } from "./handlers/videoPlaying"
-import { Message } from "./types"
+import type { Message } from "./types"
 
 export function setupHandlingRuntimeMessages() {
   chrome.runtime.onMessage.addListener(async (_message, sender, sendResponse) => {

@@ -3,7 +3,7 @@ import { setupSessionAndTokens } from "@/shared/auth/setupSessionAndTokens"
 import { providerRefreshTokenSignal } from "../tokens/providerRefreshToken"
 import { sessionExpirationThresholdSecondsSignal } from "../sessionExpirationThreshold"
 import { createSignal } from "../../createSignal"
-import { SessionType, SessionStateType } from "./types"
+import type { SessionType, SessionStateType } from "./types"
 import { providerTokenInfoSignal } from "../tokens/providerTokenInfo"
 import { effect } from "@preact/signals-react"
 

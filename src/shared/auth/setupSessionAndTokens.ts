@@ -1,7 +1,7 @@
-import { SupabaseClient } from "@supabase/supabase-js"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import { validateAndRefreshSessionTokens } from "./validateAndRefreshSessionTokens"
-import { SessionType } from "../state/auth/session/types"
-import { ProviderTokenInfo } from "../state/auth/tokens/providerTokenInfo"
+import type { SessionType } from "../state/auth/session/types"
+import type { ProviderTokenInfo } from "../state/auth/tokens/providerTokenInfo"
 
 export async function setupSessionAndTokens(
   session: SessionType | null,

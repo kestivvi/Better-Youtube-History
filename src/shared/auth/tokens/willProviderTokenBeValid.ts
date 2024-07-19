@@ -1,4 +1,4 @@
-import { ProviderTokenInfo } from "@/shared/state/auth/tokens/providerTokenInfo"
+import type { ProviderTokenInfo } from "@/shared/state/auth/tokens/providerTokenInfo"
 
 export async function willProviderTokenBeValid(
   providerTokenInfo: ProviderTokenInfo | null,

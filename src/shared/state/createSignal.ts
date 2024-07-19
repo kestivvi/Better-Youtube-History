@@ -1,4 +1,4 @@
-import { effect, signal, Signal } from "@preact/signals-react"
+import { effect, signal, type Signal } from "@preact/signals-react"
 
 export type ReturnedSignalObj<T, K extends string> = {
   [P in `${K}Signal`]: Signal<T>

@@ -1,5 +1,5 @@
-import { TextInput, TextInputProps } from "@mantine/core"
-import { ForwardedRef, forwardRef } from "react"
+import { TextInput, type TextInputProps } from "@mantine/core"
+import { type ForwardedRef, forwardRef } from "react"
 import * as v from "valibot"
 
 export const calendarEventPrefixFieldSchema = v.string()

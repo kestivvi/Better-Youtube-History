@@ -1,5 +1,5 @@
-import { Textarea, TextareaProps } from "@mantine/core"
-import { ForwardedRef, forwardRef } from "react"
+import { Textarea, type TextareaProps } from "@mantine/core"
+import { type ForwardedRef, forwardRef } from "react"
 import * as v from "valibot"
 
 import { validateGoogleCalendar } from "@/shared/calendar/validateGoogleCalendarId"

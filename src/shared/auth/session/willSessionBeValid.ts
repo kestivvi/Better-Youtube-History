@@ -1,4 +1,4 @@
-import { SessionType } from "@/shared/state/auth/session/types"
+import type { SessionType } from "@/shared/state/auth/session/types"
 
 export function willSessionBeValid(
   session: SessionType,

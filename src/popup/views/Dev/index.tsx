@@ -1,5 +1,5 @@
 import { database } from "@/background/database"
-import { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
+import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
 import { sessionStateSignal } from "@/shared/state/auth/session"
 import { useState } from "react"
 import CalendarCheck from "./components/CalendarCheck"
@@ -15,7 +15,7 @@ export default function () {
 
   return (
     <>
-      <a href={homePage} target="_blank">
+      <a href={homePage} target="_blank" rel="noreferrer">
         Strona Główna
       </a>
       <br />

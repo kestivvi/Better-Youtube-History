@@ -1,5 +1,5 @@
 import { Tooltip, Text, ThemeIcon } from "@mantine/core"
-import { Icon, IconProps } from "@tabler/icons-react"
+import type { Icon, IconProps } from "@tabler/icons-react"
 
 export const Bullet = ({
   label,

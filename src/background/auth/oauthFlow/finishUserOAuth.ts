@@ -3,7 +3,7 @@ import { sessionSignal, sessionStateSignal } from "@/shared/state/auth/session"
 import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
 import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
 import { supabaseSignal } from "@/shared/state/supabase"
-import { SessionType } from "@/shared/state/auth/session/types"
+import type { SessionType } from "@/shared/state/auth/session/types"
 import { fetchSupabaseForCalendarId } from "@/shared/calendar/fetchSupabaseForCalendarId"
 import { calendarIdSignal } from "@/shared/state/calendarId"
 

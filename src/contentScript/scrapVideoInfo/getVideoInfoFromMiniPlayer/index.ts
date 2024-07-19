@@ -1,4 +1,4 @@
-import { VideoInfo } from "@/background/runtime_messages/types"
+import type { VideoInfo } from "@/background/runtime_messages/types"
 import extractVideoIdFromStyle from "./extractVideoIdFromStyle"
 
 export default function (): Partial<VideoInfo> {

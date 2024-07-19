@@ -1,6 +1,6 @@
 import { sessionSignal, sessionStateSignal } from "@/shared/state/auth/session"
-import { SessionType } from "@/shared/state/auth/session/types"
-import { type SupabaseClient } from "@supabase/supabase-js"
+import type { SessionType } from "@/shared/state/auth/session/types"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 export async function refreshSession(supabase: SupabaseClient, session: SessionType) {
   try {

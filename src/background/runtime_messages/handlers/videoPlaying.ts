@@ -1,8 +1,8 @@
-import { type OnMessageListener, type VideoPlayingMessage } from "../types"
+import type { OnMessageListener, VideoPlayingMessage } from "../types"
 import { database } from "../../database"
 import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
-import { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
+import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
 
 export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async (
   message,
@@ -45,9 +45,9 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
     await database.videos_events.insert(newVideo)
     currentlyPlayedVideosSignal.value.push(newVideo)
   } else if (foundVideos.length > 0) {
-    let foundVideo = foundVideos[0]!
+    const foundVideo = foundVideos[0]!
 
-    let time_difference_ms = Math.abs(
+    const time_difference_ms = Math.abs(
       new Date(foundVideo.endTime).getTime() - new Date(message.data.timestamp).getTime(),
     )
 

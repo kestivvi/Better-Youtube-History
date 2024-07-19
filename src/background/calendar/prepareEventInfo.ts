@@ -1,4 +1,4 @@
-import { VideoEventDocType } from "../database/collections/VideoEvent/schema"
+import type { VideoEventDocType } from "../database/collections/VideoEvent/schema"
 
 export const prepareEventInfo = (
   event: VideoEventDocType,

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////
 // Runtime General Message
 
-import { VideoEventDocType } from "../database/collections/VideoEvent/schema"
+import type { VideoEventDocType } from "../database/collections/VideoEvent/schema"
 
 export type MessageType = "OPEN_IN_TAB" | "VIDEO_PLAYING"
 

@@ -1,5 +1,5 @@
 import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
-import { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
+import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 import { Group, Text, Timeline, Tooltip } from "@mantine/core"
 import { useComputed } from "@preact/signals-react"
 import dayjs from "dayjs"

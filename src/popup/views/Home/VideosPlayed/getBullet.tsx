@@ -1,4 +1,4 @@
-import { State } from "./VideoPlayed"
+import type { State } from "./VideoPlayed"
 import { Bullet } from "./Bullet"
 import { IconCalendarCheck, IconClock, IconVideo } from "@tabler/icons-react"
 

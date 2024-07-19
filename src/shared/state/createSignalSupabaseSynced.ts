@@ -1,4 +1,4 @@
-import { createSignal, ReturnedSignalObj } from "./createSignal"
+import { createSignal, type ReturnedSignalObj } from "./createSignal"
 import { supabaseSignal } from "./supabase"
 import { sessionSignal } from "./auth/session"
 

@@ -1,4 +1,4 @@
-import { VideoInfo } from "@/background/runtime_messages/types"
+import type { VideoInfo } from "@/background/runtime_messages/types"
 
 export default function (): Partial<VideoInfo> {
   const videoInfoScript =

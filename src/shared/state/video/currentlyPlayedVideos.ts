@@ -1,4 +1,4 @@
-import { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
+import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
 import { createSignal } from "../createSignal"
 
 export type CurrentlyPlayedVideoType = VideoEventDocType

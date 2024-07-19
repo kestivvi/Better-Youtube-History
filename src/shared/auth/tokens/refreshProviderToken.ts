@@ -1,5 +1,5 @@
 import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
-import { type SupabaseClient } from "@supabase/supabase-js"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import { fetchAndSaveTokenInfo } from "./fetchAndSaveTokenInfo"
 import { sessionStateSignal } from "@/shared/state/auth/session"
 

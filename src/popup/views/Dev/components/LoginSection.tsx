@@ -6,8 +6,8 @@ import { refreshProviderToken } from "@/shared/auth/tokens/refreshProviderToken"
 import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
 import { fetchTokenInfo } from "@/shared/auth/tokens/fetchTokenInfo"
 import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
-import { Signal, signal } from "@preact/signals-react"
-import { SessionType } from "@/shared/state/auth/session/types"
+import { type Signal, signal } from "@preact/signals-react"
+import type { SessionType } from "@/shared/state/auth/session/types"
 
 const secondsTokenExpiresIn = signal(
   sessionSignal.value !== null

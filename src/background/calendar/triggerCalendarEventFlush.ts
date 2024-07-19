@@ -1,8 +1,8 @@
 import dayjs from "dayjs"
-import { MyDatabase } from "../database"
+import type { MyDatabase } from "../database"
 import { flushEventsToCalendar } from "./flushEventsToCalendar"
-import { Signal } from "@preact/signals-react"
-import { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
+import type { Signal } from "@preact/signals-react"
+import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 
 export const triggerCalendarEventFlush = (
   database: MyDatabase | null,

@@ -1,4 +1,4 @@
-import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { valibotResolver } from "@hookform/resolvers/valibot"
 import * as v from "valibot"
 import { Box, Button, Stack } from "@mantine/core"

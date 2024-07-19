@@ -1,10 +1,10 @@
-import { Dispatch, ReactNode, SetStateAction } from "react"
+import type { Dispatch, ReactNode, SetStateAction } from "react"
 import { Button, Group, Text, useMantineTheme } from "@mantine/core"
 import { IconSettings } from "@tabler/icons-react"
 import { IconChevronLeft } from "@tabler/icons-react"
 import { IconCode } from "@tabler/icons-react"
 
-import { View } from "../../Popup"
+import type { View } from "../../Popup"
 
 type Props = {
   view: View

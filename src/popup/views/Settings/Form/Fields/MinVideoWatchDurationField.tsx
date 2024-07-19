@@ -1,5 +1,5 @@
-import { NumberInput, NumberInputProps } from "@mantine/core"
-import { ForwardedRef, forwardRef } from "react"
+import { NumberInput, type NumberInputProps } from "@mantine/core"
+import { type ForwardedRef, forwardRef } from "react"
 import * as v from "valibot"
 
 export const minVideoWatchDurationFieldSchema = v.pipe(

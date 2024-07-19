@@ -3,11 +3,11 @@ export function createDelayedFunction(
   initialDelay: number,
   idleTime: number,
 ): () => Promise<void> {
-  let lastCallTime: number = 0
-  let initialCallTime: number = 0
+  let lastCallTime = 0
+  let initialCallTime = 0
   let timeoutId: NodeJS.Timeout | null = null
 
-  return async function () {
+  return async () => {
     const now = Date.now()
 
     if (now - lastCallTime > idleTime) {

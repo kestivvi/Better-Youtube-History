@@ -1,4 +1,4 @@
-import { VideoInfo } from "@/background/runtime_messages/types"
+import type { VideoInfo } from "@/background/runtime_messages/types"
 import getVideoInfoFromMiniPlayer from "./getVideoInfoFromMiniPlayer"
 import getVideoInfoFromHiddenJson from "./getVideoInfoFromHiddenJson"
 
@@ -12,7 +12,7 @@ export default function (): Partial<VideoInfo> {
 function mergeVideoInfoObjectsArray(
   videoInfoObjects: Partial<VideoInfo>[],
 ): Partial<VideoInfo> {
-  let mergedVideoInfo: Partial<VideoInfo> = {}
+  const mergedVideoInfo: Partial<VideoInfo> = {}
 
   for (const videoInfo of videoInfoObjects) {
     for (const [key, value] of Object.entries(videoInfo)) {
