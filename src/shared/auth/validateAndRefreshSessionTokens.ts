@@ -1,11 +1,11 @@
-import { SupabaseClient } from '@supabase/supabase-js'
-import { willSessionBeValid } from './session/willSessionBeValid'
-import { willProviderTokenBeValid } from './tokens/willProviderTokenBeValid'
-import { refreshSession } from './session/refreshSession'
-import { refreshProviderToken } from './tokens/refreshProviderToken'
-import { SessionType } from '../state/auth/session/types'
-import { sessionStateSignal } from '../state/auth/session'
-import { ProviderTokenInfo } from '../state/auth/tokens/providerTokenInfo'
+import { SupabaseClient } from "@supabase/supabase-js"
+import { willSessionBeValid } from "./session/willSessionBeValid"
+import { willProviderTokenBeValid } from "./tokens/willProviderTokenBeValid"
+import { refreshSession } from "./session/refreshSession"
+import { refreshProviderToken } from "./tokens/refreshProviderToken"
+import { SessionType } from "../state/auth/session/types"
+import { sessionStateSignal } from "../state/auth/session"
+import { ProviderTokenInfo } from "../state/auth/tokens/providerTokenInfo"
 
 export async function validateAndRefreshSessionTokens(
   session: SessionType | null,
@@ -16,20 +16,26 @@ export async function validateAndRefreshSessionTokens(
 ) {
   if (session === null) {
     console.debug(
-      '[validateAndRefreshSessionTokens] No session found. Setting session state to NOT_LOGGED_IN.',
+      "[validateAndRefreshSessionTokens] No session found. Setting session state to NOT_LOGGED_IN.",
     )
-    sessionStateSignal.value = 'NOT_LOGGED_IN'
+    sessionStateSignal.value = "NOT_LOGGED_IN"
     return
   }
 
   const isSessionValid = willSessionBeValid(session, secondsIntoFuture)
-  console.debug('[validateAndRefreshSessionTokens] isSessionValid:', isSessionValid)
+  console.debug("[validateAndRefreshSessionTokens] isSessionValid:", isSessionValid)
 
-  const isProviderTokenValid = await willProviderTokenBeValid(providerTokenInfo, secondsIntoFuture)
-  console.debug('[validateAndRefreshSessionTokens] isProviderTokenValid:', isProviderTokenValid)
+  const isProviderTokenValid = await willProviderTokenBeValid(
+    providerTokenInfo,
+    secondsIntoFuture,
+  )
+  console.debug(
+    "[validateAndRefreshSessionTokens] isProviderTokenValid:",
+    isProviderTokenValid,
+  )
 
   if (isSessionValid && isProviderTokenValid) {
-    sessionStateSignal.value = 'LOGGED_IN'
+    sessionStateSignal.value = "LOGGED_IN"
   }
 
   if (!isSessionValid || !isProviderTokenValid) {

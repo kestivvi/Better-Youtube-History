@@ -1,29 +1,29 @@
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { valibotResolver } from '@hookform/resolvers/valibot'
-import * as v from 'valibot'
-import { Box, Button, Stack } from '@mantine/core'
-import CalendarIdField, { calendarIdFieldSchema } from './Fields/CalendarIdField'
-import { calendarIdSignal } from '@/shared/state/calendarId'
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { valibotResolver } from "@hookform/resolvers/valibot"
+import * as v from "valibot"
+import { Box, Button, Stack } from "@mantine/core"
+import CalendarIdField, { calendarIdFieldSchema } from "./Fields/CalendarIdField"
+import { calendarIdSignal } from "@/shared/state/calendarId"
 import CalendarEventPrefixField, {
   calendarEventPrefixFieldSchema,
-} from './Fields/CalendarEventPrefixField'
-import { calendarEventPrefixSignal } from '@/shared/state/calendar/calendarEventPrefix'
-import { calendarSyncFrequencySignal } from '@/shared/state/calendar/calendarSyncFrequency'
+} from "./Fields/CalendarEventPrefixField"
+import { calendarEventPrefixSignal } from "@/shared/state/calendar/calendarEventPrefix"
+import { calendarSyncFrequencySignal } from "@/shared/state/calendar/calendarSyncFrequency"
 import CalendarSyncFrequencyField, {
   calendarSyncFrequencyFieldSchema,
-} from './Fields/CalendarSyncFrequencyField'
+} from "./Fields/CalendarSyncFrequencyField"
 import VideoResumeThresholdField, {
   videoResumeThresholdFieldSchema,
-} from './Fields/VideoResumeThresholdField'
-import { videoResumeThresholdSignal } from '@/shared/state/calendar/videoResumeThreshold'
+} from "./Fields/VideoResumeThresholdField"
+import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import MinVideoWatchDurationField, {
   minVideoWatchDurationFieldSchema,
-} from './Fields/MinVideoWatchDurationField'
-import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
+} from "./Fields/MinVideoWatchDurationField"
+import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
 import ActivityRetentionPeriodField, {
   activityRetentionPeriodFieldSchema,
-} from './Fields/ActivityRetentionPeriodField'
-import { activityRetentionPeriodSignal } from '@/shared/state/calendar/activityRetentionPeriod'
+} from "./Fields/ActivityRetentionPeriodField"
+import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
 
 // TODO: Maybe there is a way to generate this from JSON Schema?
 const formSchema = v.objectAsync({
@@ -46,7 +46,7 @@ export default function () {
   } = useForm<FormType>({
     resolver: valibotResolver(formSchema),
     defaultValues: {
-      calendarId: calendarIdSignal.value ?? '',
+      calendarId: calendarIdSignal.value ?? "",
       calendarEventPrefix: calendarEventPrefixSignal.value,
       // TODO: I think those transformations should be defined in the fields themselves
       calendarSyncFrequency: calendarSyncFrequencySignal.value / 60,
@@ -81,27 +81,27 @@ export default function () {
   // TODO: This should be typed
   const fields = [
     {
-      name: 'calendarId',
+      name: "calendarId",
       Component: CalendarIdField,
     },
     {
-      name: 'calendarEventPrefix',
+      name: "calendarEventPrefix",
       Component: CalendarEventPrefixField,
     },
     {
-      name: 'calendarSyncFrequency',
+      name: "calendarSyncFrequency",
       Component: CalendarSyncFrequencyField,
     },
     {
-      name: 'videoResumeThreshold',
+      name: "videoResumeThreshold",
       Component: VideoResumeThresholdField,
     },
     {
-      name: 'minVideoWatchDuration',
+      name: "minVideoWatchDuration",
       Component: MinVideoWatchDurationField,
     },
     {
-      name: 'activityRetentionPeriod',
+      name: "activityRetentionPeriod",
       Component: ActivityRetentionPeriodField,
     },
   ] as const
@@ -125,7 +125,7 @@ export default function () {
       {isDirty && (
         <Box
           style={{
-            position: 'sticky',
+            position: "sticky",
             bottom: 0,
             left: 0,
             right: 0,
@@ -141,7 +141,7 @@ export default function () {
             loading={isSubmitting}
           >
             {/* TODO: Text should be different for more states like failed submission */}
-            {isSubmitting ? 'Saving...' : 'Save'}
+            {isSubmitting ? "Saving..." : "Save"}
           </Button>
         </Box>
       )}

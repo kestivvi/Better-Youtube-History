@@ -1,7 +1,7 @@
-import './DevTools.css'
+import "./DevTools.css"
 
 export const DevTools = () => {
-  const link = 'https://github.com/guocaoyi/create-chrome-ext'
+  const link = "https://github.com/guocaoyi/create-chrome-ext"
 
   return (
     <main>

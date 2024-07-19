@@ -1,11 +1,11 @@
-import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
-import { calendarIdSignal } from '@/shared/state/calendarId'
-import { Button, Stack, Textarea } from '@mantine/core'
-import { useRef } from 'react'
-import { setCalendarViewStage } from '.'
-import { IconCaretLeftFilled } from '@tabler/icons-react'
-import { signal } from '@preact/signals-react'
-import { validateGoogleCalendar } from '@/shared/calendar/validateGoogleCalendarId'
+import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
+import { calendarIdSignal } from "@/shared/state/calendarId"
+import { Button, Stack, Textarea } from "@mantine/core"
+import { useRef } from "react"
+import { setCalendarViewStage } from "."
+import { IconCaretLeftFilled } from "@tabler/icons-react"
+import { signal } from "@preact/signals-react"
+import { validateGoogleCalendar } from "@/shared/calendar/validateGoogleCalendarId"
 
 const loading = signal(false)
 const error = signal<string | null>(null)
@@ -32,18 +32,21 @@ export default function () {
           if (!value) return
 
           if (!providerTokenSignal.value) {
-            console.error('Provider token is not set')
+            console.error("Provider token is not set")
             return
           }
 
           loading.value = true
 
-          const isNewCalendarValid = await validateGoogleCalendar(value, providerTokenSignal.value)
+          const isNewCalendarValid = await validateGoogleCalendar(
+            value,
+            providerTokenSignal.value,
+          )
 
           if (isNewCalendarValid) calendarIdSignal.value = value
           else
             error.value =
-              'It is not a valid Google Calendar ID! Provide ID to your existing Google Calendar!'
+              "It is not a valid Google Calendar ID! Provide ID to your existing Google Calendar!"
 
           loading.value = false
         }}
@@ -52,7 +55,7 @@ export default function () {
       </Button>
 
       <Button
-        onClick={() => (setCalendarViewStage.value = 'FIRST_STAGE')}
+        onClick={() => (setCalendarViewStage.value = "FIRST_STAGE")}
         leftSection={<IconCaretLeftFilled />}
         variant="transparent"
       >

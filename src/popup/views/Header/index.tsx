@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction } from 'react'
-import { View } from '../../Popup'
-import { Group } from '@mantine/core'
-import ViewSwitchButton from './ViewSwitchButton'
-import CustomAvatar from './CustomAvatar'
+import { Dispatch, SetStateAction } from "react"
+import { View } from "../../Popup"
+import { Group } from "@mantine/core"
+import ViewSwitchButton from "./ViewSwitchButton"
+import CustomAvatar from "./CustomAvatar"
 
 type Props = {
   view: View

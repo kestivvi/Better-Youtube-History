@@ -6,5 +6,5 @@ export default function (input: string): string | undefined {
   const match = input.match(videoIdRegex)
 
   // If match found, return the videoId (first capturing group), otherwise return undefined
-  return match ? (match[1] ?? undefined) : undefined
+  return match ? match[1] ?? undefined : undefined
 }

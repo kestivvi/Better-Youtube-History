@@ -1,8 +1,8 @@
-import { createSignalSupabaseSynced } from '../createSignalSupabaseSynced'
+import { createSignalSupabaseSynced } from "../createSignalSupabaseSynced"
 
 export const DEFAULT_VIDEO_RESUME_THRESHOLD = 15 * 60 // 15 minutes
 
 export const { videoResumeThresholdSignal } = createSignalSupabaseSynced(
-  'videoResumeThreshold',
+  "videoResumeThreshold",
   DEFAULT_VIDEO_RESUME_THRESHOLD,
 )

@@ -1,8 +1,8 @@
-import dayjs from 'dayjs'
-import { MyDatabase } from '../database'
-import { flushEventsToCalendar } from './flushEventsToCalendar'
-import { Signal } from '@preact/signals-react'
-import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
+import dayjs from "dayjs"
+import { MyDatabase } from "../database"
+import { flushEventsToCalendar } from "./flushEventsToCalendar"
+import { Signal } from "@preact/signals-react"
+import { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 
 export const triggerCalendarEventFlush = (
   database: MyDatabase | null,
@@ -14,14 +14,18 @@ export const triggerCalendarEventFlush = (
   providerToken: string | null,
   currentlyPlayedVideosSignal: Signal<CurrentlyPlayedVideoType[]>,
 ) => {
-  console.debug('[calendarIntervalFn] Triggering calendar event flush...')
+  console.debug("[calendarIntervalFn] Triggering calendar event flush...")
 
-  if (!database) return console.error('[calendarIntervalFn] Database not set.')
-  if (!calendarId) return console.error('[calendarIntervalFn] Calendar ID not set.')
-  if (!providerToken) return console.error('[calendarIntervalFn] Provider token not set.')
+  if (!database) return console.error("[calendarIntervalFn] Database not set.")
+  if (!calendarId) return console.error("[calendarIntervalFn] Calendar ID not set.")
+  if (!providerToken) return console.error("[calendarIntervalFn] Provider token not set.")
 
-  const queryStartTime = dayjs().subtract(activityRetentionPeriodSeconds, 'second').toISOString()
-  const queryEndTime = dayjs().subtract(videoResumeThresholdSeconds, 'second').toISOString()
+  const queryStartTime = dayjs()
+    .subtract(activityRetentionPeriodSeconds, "second")
+    .toISOString()
+  const queryEndTime = dayjs()
+    .subtract(videoResumeThresholdSeconds, "second")
+    .toISOString()
 
   flushEventsToCalendar(
     database,

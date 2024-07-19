@@ -1,20 +1,20 @@
-import { supabaseSignal } from '../../supabase'
-import { setupSessionAndTokens } from '@/shared/auth/setupSessionAndTokens'
-import { providerRefreshTokenSignal } from '../tokens/providerRefreshToken'
-import { sessionExpirationThresholdSecondsSignal } from '../sessionExpirationThreshold'
-import { createSignal } from '../../createSignal'
-import { SessionType, SessionStateType } from './types'
-import { providerTokenInfoSignal } from '../tokens/providerTokenInfo'
-import { effect } from '@preact/signals-react'
+import { supabaseSignal } from "../../supabase"
+import { setupSessionAndTokens } from "@/shared/auth/setupSessionAndTokens"
+import { providerRefreshTokenSignal } from "../tokens/providerRefreshToken"
+import { sessionExpirationThresholdSecondsSignal } from "../sessionExpirationThreshold"
+import { createSignal } from "../../createSignal"
+import { SessionType, SessionStateType } from "./types"
+import { providerTokenInfoSignal } from "../tokens/providerTokenInfo"
+import { effect } from "@preact/signals-react"
 
-export const DEFAULT_SESSION_STATE: SessionStateType = 'NOT_LOGGED_IN'
+export const DEFAULT_SESSION_STATE: SessionStateType = "NOT_LOGGED_IN"
 
 const { sessionStateSignal } = createSignal(
-  'sessionState',
+  "sessionState",
   DEFAULT_SESSION_STATE as SessionStateType,
 )
 
-const { sessionSignal } = createSignal('session', null as SessionType | null, {
+const { sessionSignal } = createSignal("session", null as SessionType | null, {
   useChromeLocalStorage: true,
   callbackAfterInitFromStorage: () => {
     setupSessionAndTokens(

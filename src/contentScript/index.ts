@@ -1,5 +1,5 @@
-import checkVideoElement from './checkVideoElement'
+import checkVideoElement from "./checkVideoElement"
 
-console.info('contentScript is running')
+console.info("contentScript is running")
 
 setInterval(checkVideoElement, 5000)

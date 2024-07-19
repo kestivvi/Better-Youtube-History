@@ -6,7 +6,7 @@ export default function (fn: () => void, delay: number): () => Promise<void> {
     const now = Date.now()
 
     if (now - initialCallTime > delay) {
-      console.log('Initial call')
+      console.log("Initial call")
       initialCallTime = now
       timeoutId = setTimeout(fn, delay)
     } else {
@@ -14,7 +14,7 @@ export default function (fn: () => void, delay: number): () => Promise<void> {
 
       const remainingTime = delay - (now - initialCallTime)
 
-      console.log('Remaining time:', remainingTime)
+      console.log("Remaining time:", remainingTime)
 
       if (remainingTime > 50) timeoutId = setTimeout(fn, remainingTime)
       else fn()

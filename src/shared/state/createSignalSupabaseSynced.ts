@@ -1,6 +1,6 @@
-import { createSignal, ReturnedSignalObj } from './createSignal'
-import { supabaseSignal } from './supabase'
-import { sessionSignal } from './auth/session'
+import { createSignal, ReturnedSignalObj } from "./createSignal"
+import { supabaseSignal } from "./supabase"
+import { sessionSignal } from "./auth/session"
 
 export function createSignalSupabaseSynced<T, K extends string>(
   variableName: K,
@@ -8,7 +8,9 @@ export function createSignalSupabaseSynced<T, K extends string>(
 ): ReturnedSignalObj<T, K> {
   const signalObject = createSignal(variableName, initialValue, {
     callbackAfterInitFromStorage: async (signal) => {
-      const queryResponse = await supabaseSignal.value.from('user_config').select(variableName)
+      const queryResponse = await supabaseSignal.value
+        .from("user_config")
+        .select(variableName)
       const firstItem = queryResponse.data?.[0]
       // @ts-expect-error
       const valueFromSupabase = variableName in firstItem ? firstItem[variableName] : null
@@ -27,27 +29,31 @@ export function createSignalSupabaseSynced<T, K extends string>(
     if (!userId) return console.error(`[${variableName}Signal] User is not logged in`)
 
     const response = await supabaseSignal.value
-      .from('user_config')
+      .from("user_config")
       .update([{ [variableName]: value }])
-      .eq('user_id', userId)
+      .eq("user_id", userId)
 
     console.debug(`[${variableName}Signal] Updated value in supabase`, response)
   })
 
   // Listen for changes to the value in the supabase database
   supabaseSignal.value
-    .channel('userConfigChanged')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'user_config' }, (payload) => {
-      if (!(variableName in payload.new)) return
-      // @ts-expect-error
-      if (payload.new[variableName] === innerSignalObject.value) return
-
-      // @ts-expect-error
-      if (innerSignalObject.value !== payload.new[variableName]) {
+    .channel("userConfigChanged")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "user_config" },
+      (payload) => {
+        if (!(variableName in payload.new)) return
         // @ts-expect-error
-        innerSignalObject.value = payload.new[variableName]
-      }
-    })
+        if (payload.new[variableName] === innerSignalObject.value) return
+
+        // @ts-expect-error
+        if (innerSignalObject.value !== payload.new[variableName]) {
+          // @ts-expect-error
+          innerSignalObject.value = payload.new[variableName]
+        }
+      },
+    )
     .subscribe()
 
   return signalObject

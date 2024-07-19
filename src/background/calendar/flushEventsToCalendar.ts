@@ -1,10 +1,10 @@
-import { MyDatabase } from '../database'
-import { queryEventsInBounds } from './queryEventsInBounds'
-import { isEventLongEnough } from './isEventLongEnough'
-import { prepareEventInfo } from './prepareEventInfo'
-import { addEventToCalendar } from '@/shared/calendar/addEventToCalendar'
-import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
-import { Signal } from '@preact/signals-react'
+import { MyDatabase } from "../database"
+import { queryEventsInBounds } from "./queryEventsInBounds"
+import { isEventLongEnough } from "./isEventLongEnough"
+import { prepareEventInfo } from "./prepareEventInfo"
+import { addEventToCalendar } from "@/shared/calendar/addEventToCalendar"
+import { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
+import { Signal } from "@preact/signals-react"
 
 export const flushEventsToCalendar = async (
   database: MyDatabase,
@@ -23,17 +23,20 @@ export const flushEventsToCalendar = async (
   )
 
   const longEnoughEvents = events.filter((event) =>
-    isEventLongEnough(event, 'seconds', minEventDurationSeconds),
+    isEventLongEnough(event, "seconds", minEventDurationSeconds),
   )
-  console.debug(`Found ${longEnoughEvents.length} events to flush to Calendar`, longEnoughEvents)
+  console.debug(
+    `Found ${longEnoughEvents.length} events to flush to Calendar`,
+    longEnoughEvents,
+  )
 
   for (const videoEvent of longEnoughEvents) {
     const eventInfo = prepareEventInfo(videoEvent, calendarEventPrefix)
     const added = await addEventToCalendar(calendarId, eventInfo, providerToken)
     if (added) {
       await videoEvent.patch({ uploaded: true })
-      currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map((video) =>
-        video.id === videoEvent.id ? { ...video, uploaded: true } : video,
+      currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map(
+        (video) => (video.id === videoEvent.id ? { ...video, uploaded: true } : video),
       )
     }
   }

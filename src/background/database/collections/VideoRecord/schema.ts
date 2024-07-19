@@ -2,7 +2,7 @@ import {
   toTypedRxJsonSchema,
   type ExtractDocumentTypeFromTypedRxJsonSchema,
   type RxJsonSchema,
-} from "rxdb";
+} from "rxdb"
 
 export const videoRecordSchemaLiteral = {
   version: 0,
@@ -34,15 +34,15 @@ export const videoRecordSchemaLiteral = {
     },
   },
   required: ["id", "type", "videoId", "timestamp"],
-} as const;
+} as const
 
-const schemaTyped = toTypedRxJsonSchema(videoRecordSchemaLiteral);
+const schemaTyped = toTypedRxJsonSchema(videoRecordSchemaLiteral)
 
 // aggregate the document type from the schema
 export type VideoRecordDocType = ExtractDocumentTypeFromTypedRxJsonSchema<
   typeof schemaTyped
->;
+>
 
 // create the typed RxJsonSchema from the literal typed object.
 export const videoRecordSchema: RxJsonSchema<VideoRecordDocType> =
-  videoRecordSchemaLiteral;
+  videoRecordSchemaLiteral

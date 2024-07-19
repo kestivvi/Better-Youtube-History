@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////
 // Runtime General Message
 
-import { VideoEventDocType } from '../database/collections/VideoEvent/schema'
+import { VideoEventDocType } from "../database/collections/VideoEvent/schema"
 
-export type MessageType = 'OPEN_IN_TAB' | 'VIDEO_PLAYING'
+export type MessageType = "OPEN_IN_TAB" | "VIDEO_PLAYING"
 
 interface GeneralMessage<T extends MessageType> {
   type: T
@@ -15,14 +15,17 @@ interface GeneralMessage<T extends MessageType> {
 
 // Video Playing Message
 
-export interface VideoPlayingMessage extends GeneralMessage<'VIDEO_PLAYING'> {
+export interface VideoPlayingMessage extends GeneralMessage<"VIDEO_PLAYING"> {
   data: {
     videoInfo: VideoInfo
     timestamp: string
   }
 }
 
-export type VideoInfo = Pick<VideoEventDocType, 'channelName' | 'channelUrl' | 'title' | 'videoId'>
+export type VideoInfo = Pick<
+  VideoEventDocType,
+  "channelName" | "channelUrl" | "title" | "videoId"
+>
 
 ////////////////////////////////////////////////////////////////////
 // Final Message Type

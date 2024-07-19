@@ -1,30 +1,30 @@
-import { defineConfig } from 'vite'
-import { crx } from '@crxjs/vite-plugin'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from "vite"
+import { crx } from "@crxjs/vite-plugin"
+import react from "@vitejs/plugin-react"
+import path from "path"
 
-import manifest from './src/manifest'
+import manifest from "./src/manifest"
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   return {
     build: {
       emptyOutDir: true,
-      outDir: 'build',
+      outDir: "build",
       rollupOptions: {
         input: {
-          home: 'home.html',
-          redirectPage: 'redirectPage.html',
+          home: "home.html",
+          redirectPage: "redirectPage.html",
         },
         output: {
-          chunkFileNames: 'assets/chunk-[hash].js',
+          chunkFileNames: "assets/chunk-[hash].js",
         },
       },
     },
 
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src'),
+        "@": path.resolve(__dirname, "src"),
       },
     },
 
@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
       crx({ manifest }),
       react({
         babel: {
-          plugins: [['module:@preact/signals-react-transform']],
+          plugins: [["module:@preact/signals-react-transform"]],
         },
       }),
     ],

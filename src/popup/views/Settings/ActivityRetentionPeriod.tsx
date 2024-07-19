@@ -1,7 +1,7 @@
-import { activityRetentionPeriodSignal } from '@/shared/state/calendar/activityRetentionPeriod'
-import { Button, NumberInput, Space } from '@mantine/core'
-import { computed, signal } from '@preact/signals-react'
-import { useRef } from 'react'
+import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
+import { Button, NumberInput, Space } from "@mantine/core"
+import { computed, signal } from "@preact/signals-react"
+import { useRef } from "react"
 
 const loading = signal(false)
 const error = signal<string | null>(null)
@@ -40,7 +40,7 @@ export default function () {
           if (!value) return
 
           if (isNaN(Number(value))) {
-            error.value = 'Please enter a valid number'
+            error.value = "Please enter a valid number"
             return
           } else {
             loading.value = true

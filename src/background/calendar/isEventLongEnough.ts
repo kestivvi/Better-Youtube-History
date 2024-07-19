@@ -1,5 +1,5 @@
-import dayjs from 'dayjs'
-import { VideoEventDocType } from '../database/collections/VideoEvent/schema'
+import dayjs from "dayjs"
+import { VideoEventDocType } from "../database/collections/VideoEvent/schema"
 
 export function isEventLongEnough(
   event: VideoEventDocType,

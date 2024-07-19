@@ -1,31 +1,36 @@
-import { useEffect, useState } from 'react'
-import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
-import { supabaseSignal } from '@/shared/state/supabase'
-import { calendarIdSignal } from '@/shared/state/calendarId'
+import { useEffect, useState } from "react"
+import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
+import { supabaseSignal } from "@/shared/state/supabase"
+import { calendarIdSignal } from "@/shared/state/calendarId"
 
 export default function () {
-  const [calendarExists, setCalendarExists] = useState<'YES' | 'NO' | 'LOADING'>('LOADING')
+  const [calendarExists, setCalendarExists] = useState<"YES" | "NO" | "LOADING">(
+    "LOADING",
+  )
 
   useEffect(() => {
     ;(async () => {
-      const query = await supabaseSignal.value.from('user_calendar_ids').select()
-      console.log('[CalendarCheck] user_calendar_ids', query)
+      const query = await supabaseSignal.value.from("user_calendar_ids").select()
+      console.log("[CalendarCheck] user_calendar_ids", query)
 
       if (query.data && query.data?.length > 0) {
         calendarIdSignal.value = query.data[0].calendar_id
-        console.log('[CalendarCheck] set calendarId chrome storage', query.data[0].calendar_id)
+        console.log(
+          "[CalendarCheck] set calendarId chrome storage",
+          query.data[0].calendar_id,
+        )
       }
 
       if (!calendarIdSignal.value) {
-        setCalendarExists('NO')
+        setCalendarExists("NO")
         return
       }
 
       if (query.data && query.data.length === 0) {
         const y = await supabaseSignal.value
-          .from('user_calendar_ids')
+          .from("user_calendar_ids")
           .insert([{ calendar_id: calendarIdSignal.value }])
-        console.log('[CalendarCheck] inserted calendar_id', y)
+        console.log("[CalendarCheck] inserted calendar_id", y)
       }
 
       const response = await fetch(
@@ -38,18 +43,18 @@ export default function () {
       )
 
       if (response.status === 200) {
-        setCalendarExists('YES')
+        setCalendarExists("YES")
       } else {
-        setCalendarExists('NO')
+        setCalendarExists("NO")
       }
     })()
   }, [])
 
-  if (calendarExists === 'LOADING') {
+  if (calendarExists === "LOADING") {
     return <p>Loading calendar state...</p>
   }
 
-  if (calendarExists === 'YES') {
+  if (calendarExists === "YES") {
     return <p>Youtube History Calendar exists</p>
   }
 
@@ -59,23 +64,27 @@ export default function () {
       <p>Create automatically new one: </p>
       <button
         onClick={async () => {
-          const response = await fetch('https://www.googleapis.com/calendar/v3/calendars', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${providerTokenSignal.value}`,
+          const response = await fetch(
+            "https://www.googleapis.com/calendar/v3/calendars",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${providerTokenSignal.value}`,
+              },
+              body: JSON.stringify({
+                summary: "Youtube History",
+                description:
+                  "Calendar for Better Youtube History Extension\n\nDo not delete!",
+              }),
             },
-            body: JSON.stringify({
-              summary: 'Youtube History',
-              description: 'Calendar for Better Youtube History Extension\n\nDo not delete!',
-            }),
-          })
+          )
 
           const data = await response.json()
-          console.log('[CalendarCheck] Create Youtube History Calendar', data)
+          console.log("[CalendarCheck] Create Youtube History Calendar", data)
 
           calendarIdSignal.value = data.id
 
-          setCalendarExists('YES')
+          setCalendarExists("YES")
         }}
       >
         Create Youtube History Calendar
@@ -86,18 +95,19 @@ export default function () {
       <input type="text" id="calendarId" />
       <button
         onClick={async () => {
-          const calendarId = (document.getElementById('calendarId') as HTMLInputElement).value
+          const calendarId = (document.getElementById("calendarId") as HTMLInputElement)
+            .value
           calendarIdSignal.value = calendarId
-          setCalendarExists('YES')
+          setCalendarExists("YES")
 
           const session = await supabaseSignal.value.auth.getSession()
 
-          console.log('[CalendarCheck] session', session)
+          console.log("[CalendarCheck] session", session)
 
           const y = await supabaseSignal.value
-            .from('user_calendar_ids')
+            .from("user_calendar_ids")
             .insert([{ calendar_id: calendarId }])
-          console.log('[CalendarCheck] inserted calendar_id', y)
+          console.log("[CalendarCheck] inserted calendar_id", y)
         }}
       >
         Use existing calendar
