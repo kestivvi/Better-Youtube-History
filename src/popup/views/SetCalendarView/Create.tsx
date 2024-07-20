@@ -1,13 +1,13 @@
-import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
-import { calendarIdSignal } from '@/shared/state/calendarId'
-import { Button, Stack, TextInput } from '@mantine/core'
-import { useRef } from 'react'
-import { setCalendarViewStage } from '.'
-import { IconCaretLeftFilled } from '@tabler/icons-react'
-import { signal } from '@preact/signals-react'
-import { createNewCalendar } from '@/shared/calendar/createNewCalendar'
+import { createNewCalendar } from "@/shared/calendar/createNewCalendar"
+import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
+import { calendarIdSignal } from "@/shared/state/calendarId"
+import { Button, Stack, TextInput } from "@mantine/core"
+import { signal } from "@preact/signals-react"
+import { IconCaretLeftFilled } from "@tabler/icons-react"
+import { useRef } from "react"
+import { setCalendarViewStage } from "."
 
-const DEFAULT_CALENDAR_NAME = 'Youtube History'
+const DEFAULT_CALENDAR_NAME = "Youtube History"
 
 export default function () {
   const textInputRef = useRef<HTMLInputElement>(null)
@@ -26,7 +26,7 @@ export default function () {
       <Button
         onClick={async () => {
           if (!providerTokenSignal.value) {
-            console.error('Provider token is not set')
+            console.error("Provider token is not set")
             return
           }
 
@@ -47,7 +47,9 @@ export default function () {
       </Button>
 
       <Button
-        onClick={() => (setCalendarViewStage.value = 'FIRST_STAGE')}
+        onClick={() => {
+          setCalendarViewStage.value = "FIRST_STAGE"
+        }}
         leftSection={<IconCaretLeftFilled />}
         variant="transparent"
       >

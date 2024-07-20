@@ -1,7 +1,7 @@
-import { Text, Box, Avatar, Popover, Button } from '@mantine/core'
-import { IconLogout2 } from '@tabler/icons-react'
-import { sessionSignal } from '@/shared/state/auth/session'
-import { logout } from '@/shared/auth/logout'
+import { logout } from "@/shared/auth/logout"
+import { sessionSignal } from "@/shared/state/auth/session"
+import { Avatar, Box, Button, Popover, Text } from "@mantine/core"
+import { IconLogout2 } from "@tabler/icons-react"
 
 export default function () {
   return (
@@ -10,12 +10,13 @@ export default function () {
         <Popover.Target>
           <Avatar
             src={
-              sessionSignal.value?.user?.user_metadata?.avatar_url || 'https://i.pravatar.cc/300'
+              sessionSignal.value?.user?.user_metadata?.avatar_url ||
+              "https://i.pravatar.cc/300"
             }
             alt="Avatar"
             radius="xl"
             size="md"
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           />
         </Popover.Target>
         <Popover.Dropdown p={4}>

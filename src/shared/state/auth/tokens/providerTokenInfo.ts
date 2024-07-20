@@ -1,4 +1,4 @@
-import { createSignal } from '../../createSignal'
+import { createSignal } from "../../signals/StandardSignal/createSignal"
 
 export type ProviderTokenInfo = {
   azp: string
@@ -13,6 +13,6 @@ export type ProviderTokenInfo = {
 }
 
 export const { providerTokenInfoSignal } = createSignal(
-  'providerTokenInfo',
+  "providerTokenInfo",
   null as ProviderTokenInfo | null,
 )

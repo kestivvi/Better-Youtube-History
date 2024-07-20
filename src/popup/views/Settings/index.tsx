@@ -1,5 +1,5 @@
-import { Box } from '@mantine/core'
-import Form from './Form'
+import { Box } from "@mantine/core"
+import Form from "./Form"
 
 export default function () {
   return (

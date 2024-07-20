@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////
 // Runtime General Message
 
-import { VideoEventDocType } from '../database/collections/VideoEvent/schema'
+import type { VideoEventDocType } from "../database/collections/VideoEvent/schema"
 
-export type MessageType = 'OPEN_IN_TAB' | 'VIDEO_PLAYING'
+export type MessageType = "OPEN_IN_TAB" | "VIDEO_PLAYING"
 
 interface GeneralMessage<T extends MessageType> {
   type: T
-  data?: any
+  data?: unknown
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -15,14 +15,17 @@ interface GeneralMessage<T extends MessageType> {
 
 // Video Playing Message
 
-export interface VideoPlayingMessage extends GeneralMessage<'VIDEO_PLAYING'> {
+export interface VideoPlayingMessage extends GeneralMessage<"VIDEO_PLAYING"> {
   data: {
     videoInfo: VideoInfo
     timestamp: string
   }
 }
 
-export type VideoInfo = Pick<VideoEventDocType, 'channelName' | 'channelUrl' | 'title' | 'videoId'>
+export type VideoInfo = Pick<
+  VideoEventDocType,
+  "channelName" | "channelUrl" | "title" | "videoId"
+>
 
 ////////////////////////////////////////////////////////////////////
 // Final Message Type
@@ -32,7 +35,7 @@ export type Message = VideoPlayingMessage
 const dummyOnMessageListener = <MessageType>(
   _message: MessageType,
   _sender: chrome.runtime.MessageSender,
-  _sendResponse: (response?: any) => void,
+  _sendResponse: (response?: unknown) => void,
 ): void => {}
 
 export type OnMessageListener<MessageType> = typeof dummyOnMessageListener<MessageType>

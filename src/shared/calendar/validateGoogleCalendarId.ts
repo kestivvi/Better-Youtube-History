@@ -1,4 +1,4 @@
-import { fetchGoogleCalendar } from './fetchGoogleCalendar'
+import { fetchGoogleCalendar } from "./fetchGoogleCalendar"
 
 export async function validateGoogleCalendar(
   calendarId: string,

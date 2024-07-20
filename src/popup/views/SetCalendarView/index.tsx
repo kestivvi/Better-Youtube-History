@@ -1,11 +1,13 @@
-import { Center, Flex, Text } from '@mantine/core'
-import { signal } from '@preact/signals-react'
-import FirstStage from './FirstStage'
-import Create from './Create'
-import UseExisting from './UseExisting'
-import { useSignals } from '@preact/signals-react/runtime'
+import { Center, Flex, Text } from "@mantine/core"
+import { signal } from "@preact/signals-react"
+import { useSignals } from "@preact/signals-react/runtime"
+import Create from "./Create"
+import FirstStage from "./FirstStage"
+import UseExisting from "./UseExisting"
 
-export const setCalendarViewStage = signal<'FIRST_STAGE' | 'CREATE' | 'USE_EXISTING'>('FIRST_STAGE')
+export const setCalendarViewStage = signal<"FIRST_STAGE" | "CREATE" | "USE_EXISTING">(
+  "FIRST_STAGE",
+)
 
 export default function () {
   useSignals()
@@ -16,7 +18,7 @@ export default function () {
         <Text
           fw={900}
           variant="gradient"
-          gradient={{ from: 'red', to: 'MyYellow', deg: 60 }}
+          gradient={{ from: "red", to: "MyYellow", deg: 60 }}
           style={{
             fontSize: 25,
             marginTop: 20,
@@ -28,15 +30,15 @@ export default function () {
       </Center>
       <Flex
         style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
           gap: 20,
         }}
       >
-        {setCalendarViewStage.value === 'FIRST_STAGE' && <FirstStage />}
-        {setCalendarViewStage.value === 'CREATE' && <Create />}
-        {setCalendarViewStage.value === 'USE_EXISTING' && <UseExisting />}
+        {setCalendarViewStage.value === "FIRST_STAGE" && <FirstStage />}
+        {setCalendarViewStage.value === "CREATE" && <Create />}
+        {setCalendarViewStage.value === "USE_EXISTING" && <UseExisting />}
       </Flex>
     </>
   )

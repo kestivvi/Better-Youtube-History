@@ -1,16 +1,16 @@
-import { Button, Stack } from '@mantine/core'
-import { IconPlus } from '@tabler/icons-react'
-import { IconCalendarShare } from '@tabler/icons-react'
-import { setCalendarViewStage } from '.'
+import { Button, Stack } from "@mantine/core"
+import { IconPlus } from "@tabler/icons-react"
+import { IconCalendarShare } from "@tabler/icons-react"
+import { setCalendarViewStage } from "."
 
 export default function () {
   return (
     <Stack>
       <Button
         onClick={() => {
-          console.log('setCalendarViewStage.value', setCalendarViewStage.value)
-          setCalendarViewStage.value = 'CREATE'
-          console.log('setCalendarViewStage.value', setCalendarViewStage.value)
+          console.log("setCalendarViewStage.value", setCalendarViewStage.value)
+          setCalendarViewStage.value = "CREATE"
+          console.log("setCalendarViewStage.value", setCalendarViewStage.value)
         }}
         leftSection={<IconPlus stroke={3} />}
       >
@@ -18,7 +18,9 @@ export default function () {
       </Button>
 
       <Button
-        onClick={() => (setCalendarViewStage.value = 'USE_EXISTING')}
+        onClick={() => {
+          setCalendarViewStage.value = "USE_EXISTING"
+        }}
         leftSection={<IconCalendarShare />}
         variant="default"
       >

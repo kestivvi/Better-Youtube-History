@@ -1,5 +1,5 @@
-import { Container } from '@mantine/core'
-import VideosPlayed from './VideosPlayed'
+import { Container } from "@mantine/core"
+import VideosPlayed from "./VideosPlayed"
 
 export default function () {
   return (

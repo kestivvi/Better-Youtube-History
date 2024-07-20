@@ -1,4 +1,4 @@
-import { MyDatabase } from '../database'
+import type { MyDatabase } from "../database"
 
 export const queryEventsInBounds = async (
   database: MyDatabase,

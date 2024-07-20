@@ -1,7 +1,7 @@
-import { SupabaseClient } from '@supabase/supabase-js'
-import { validateAndRefreshSessionTokens } from './validateAndRefreshSessionTokens'
-import { SessionType } from '../state/auth/session/types'
-import { ProviderTokenInfo } from '../state/auth/tokens/providerTokenInfo'
+import type { SupabaseClient } from "@supabase/supabase-js"
+import type { SessionType } from "../state/auth/session/types"
+import type { ProviderTokenInfo } from "../state/auth/tokens/providerTokenInfo"
+import { validateAndRefreshSessionTokens } from "./validateAndRefreshSessionTokens"
 
 export async function setupSessionAndTokens(
   session: SessionType | null,
@@ -10,10 +10,10 @@ export async function setupSessionAndTokens(
   supabase: SupabaseClient,
   secondsIntoFuture: number = 60 * 10,
 ) {
-  console.debug('[setupSessionAndTokens] Setting up session and tokens...')
-  console.debug('[setupSessionAndTokens] Session:', session)
-  console.debug('[setupSessionAndTokens] Provider token info:', providerTokenInfo)
-  console.debug('[setupSessionAndTokens] Provider refresh token:', providerRefreshToken)
+  console.debug("[setupSessionAndTokens] Setting up session and tokens...")
+  console.debug("[setupSessionAndTokens] Session:", session)
+  console.debug("[setupSessionAndTokens] Provider token info:", providerTokenInfo)
+  console.debug("[setupSessionAndTokens] Provider refresh token:", providerRefreshToken)
 
   validateAndRefreshSessionTokens(
     session,

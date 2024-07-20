@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
-import CustomMantineProvider from './CustomMantineProvider'
+import type { ReactNode } from "react"
+import CustomMantineProvider from "./CustomMantineProvider"
 
 type Props = {
   children: ReactNode

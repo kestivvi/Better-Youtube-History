@@ -1,49 +1,59 @@
 import {
-  toTypedRxJsonSchema,
   type ExtractDocumentTypeFromTypedRxJsonSchema,
   type RxJsonSchema,
-} from 'rxdb'
+  toTypedRxJsonSchema,
+} from "rxdb"
 
 const videoEventSchemaLiteral = {
   version: 0,
-  primaryKey: 'id',
-  type: 'object',
+  primaryKey: "id",
+  type: "object",
   properties: {
     id: {
-      type: 'string',
+      type: "string",
       maxLength: 100,
     },
     videoId: {
-      type: 'string',
+      type: "string",
     },
     title: {
-      type: 'string',
+      type: "string",
     },
     channelName: {
-      type: 'string',
+      type: "string",
     },
     channelUrl: {
-      type: 'string',
+      type: "string",
     },
     startTime: {
-      type: 'string',
-      format: 'date-time',
+      type: "string",
+      format: "date-time",
     },
     endTime: {
-      type: 'string',
-      format: 'date-time',
+      type: "string",
+      format: "date-time",
     },
     uploaded: {
-      type: 'boolean',
+      type: "boolean",
     },
   },
-  required: ['id', 'videoId', 'title', 'channelName', 'channelUrl', 'startTime', 'endTime'],
+  required: [
+    "id",
+    "videoId",
+    "title",
+    "channelName",
+    "channelUrl",
+    "startTime",
+    "endTime",
+  ],
 } as const
 
 const schemaTyped = toTypedRxJsonSchema(videoEventSchemaLiteral)
 
 // aggregate the document type from the schema
-export type VideoEventDocType = ExtractDocumentTypeFromTypedRxJsonSchema<typeof schemaTyped>
+export type VideoEventDocType = ExtractDocumentTypeFromTypedRxJsonSchema<
+  typeof schemaTyped
+>
 
 // create the typed RxJsonSchema from the literal typed object.
 export const videoEventSchema: RxJsonSchema<VideoEventDocType> = videoEventSchemaLiteral

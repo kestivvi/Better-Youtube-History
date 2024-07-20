@@ -1,13 +1,13 @@
-import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
-import { CurrentlyPlayedVideoType } from '@/shared/state/video/currentlyPlayedVideos'
-import { Group, Text, Timeline, Tooltip } from '@mantine/core'
-import { useComputed } from '@preact/signals-react'
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
-import { getBullet } from './getBullet'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import { IconHourglassFilled } from '@tabler/icons-react'
-import VideoWatchTime from './VideoWatchTime'
+import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
+import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
+import { Group, Text, Timeline, Tooltip } from "@mantine/core"
+import { useComputed } from "@preact/signals-react"
+import { IconHourglassFilled } from "@tabler/icons-react"
+import dayjs from "dayjs"
+import duration from "dayjs/plugin/duration"
+import relativeTime from "dayjs/plugin/relativeTime"
+import VideoWatchTime from "./VideoWatchTime"
+import { getBullet } from "./getBullet"
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
@@ -17,20 +17,24 @@ type Props = {
   last: boolean
 }
 
-export type State = 'UNDER_MIN_DURATION' | 'MIN_DURATION_FULLFILLED' | 'UPLOADED'
+export type State = "UNDER_MIN_DURATION" | "MIN_DURATION_FULLFILLED" | "UPLOADED"
 
-const secondsToHms = (timeInSeconds: number) => dayjs.duration(timeInSeconds, 'seconds').humanize()
+const secondsToHms = (timeInSeconds: number) =>
+  dayjs.duration(timeInSeconds, "seconds").humanize()
 
 export default function ({ videoPlayed, last }: Props) {
   const state = useComputed<State>(() => {
-    if (videoPlayed.uploaded) return 'UPLOADED'
+    if (videoPlayed.uploaded) return "UPLOADED"
 
-    const timeWatched = dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), 'seconds')
+    const timeWatched = dayjs(videoPlayed.endTime).diff(
+      dayjs(videoPlayed.startTime),
+      "seconds",
+    )
     const minDurationExceeded = timeWatched >= minVideoWatchDurationSignal.value
 
-    if (minDurationExceeded) return 'MIN_DURATION_FULLFILLED'
+    if (minDurationExceeded) return "MIN_DURATION_FULLFILLED"
 
-    return 'UNDER_MIN_DURATION'
+    return "UNDER_MIN_DURATION"
   })
 
   const bullet = useComputed(() => getBullet(state.value))
@@ -39,7 +43,7 @@ export default function ({ videoPlayed, last }: Props) {
     <Timeline.Item
       title={videoPlayed.title}
       bullet={bullet.value}
-      lineVariant={last ? 'dashed' : 'solid'}
+      lineVariant={last ? "dashed" : "solid"}
     >
       {/* TODO: Hardcoded color */}
       <Text size="xs" fw={600} c="#999" fs="italic" mb={5}>
@@ -57,7 +61,7 @@ export default function ({ videoPlayed, last }: Props) {
             <IconHourglassFilled size={12} />
             <Text size="xs">
               {secondsToHms(
-                dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), 'seconds'),
+                dayjs(videoPlayed.endTime).diff(dayjs(videoPlayed.startTime), "seconds"),
               )}
             </Text>
           </Group>

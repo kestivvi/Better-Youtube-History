@@ -1,16 +1,16 @@
-import { computed, effect } from '@preact/signals-react'
+import { computed, effect } from "@preact/signals-react"
 
-import { database } from '../database'
-import { triggerCalendarEventFlush } from './triggerCalendarEventFlush'
+import { database } from "../database"
+import { triggerCalendarEventFlush } from "./triggerCalendarEventFlush"
 
-import { providerTokenSignal } from '@/shared/state/auth/tokens/providerToken'
-import { calendarIdSignal } from '@/shared/state/calendarId'
-import { videoResumeThresholdSignal } from '@/shared/state/calendar/videoResumeThreshold'
-import { activityRetentionPeriodSignal } from '@/shared/state/calendar/activityRetentionPeriod'
-import { minVideoWatchDurationSignal } from '@/shared/state/calendar/minVideoWatchDuration'
-import { calendarEventPrefixSignal } from '@/shared/state/calendar/calendarEventPrefix'
-import { calendarSyncFrequencySignal } from '@/shared/state/calendar/calendarSyncFrequency'
-import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
+import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
+import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
+import { calendarEventPrefixSignal } from "@/shared/state/calendar/calendarEventPrefix"
+import { calendarSyncFrequencySignal } from "@/shared/state/calendar/calendarSyncFrequency"
+import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
+import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
+import { calendarIdSignal } from "@/shared/state/calendarId"
+import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
 
 export function setupCalendarSync() {
   const calendarSync = computed(
@@ -28,7 +28,7 @@ export function setupCalendarSync() {
   )
 
   effect(() => {
-    console.debug('Setting up Calendar sync')
+    console.debug("Setting up Calendar sync")
 
     const calendarSyncImmediateTimeout = setTimeout(() => calendarSync.value(), 1000)
 

@@ -1,4 +1,4 @@
-import { finishUserOAuth } from './finishUserOAuth'
+import { finishUserOAuth } from "./finishUserOAuth"
 
 export function setupOAuthFlow() {
   chrome.tabs.onUpdated.addListener((_tabId, changeInfo, _tab) => {

@@ -1,5 +1,5 @@
-import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
-import { useSignals } from '@preact/signals-react/runtime'
+import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
+import { useSignals } from "@preact/signals-react/runtime"
 
 export default function () {
   useSignals()

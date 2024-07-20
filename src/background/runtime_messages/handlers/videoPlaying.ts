@@ -1,8 +1,8 @@
-import { type OnMessageListener, type VideoPlayingMessage } from '../types'
-import { database } from '../../database'
-import { currentlyPlayedVideosSignal } from '@/shared/state/video/currentlyPlayedVideos'
-import { videoResumeThresholdSignal } from '@/shared/state/calendar/videoResumeThreshold'
-import { VideoEventDocType } from '@/background/database/collections/VideoEvent/schema'
+import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
+import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
+import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
+import { database } from "../../database"
+import type { OnMessageListener, VideoPlayingMessage } from "../types"
 
 export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async (
   message,
@@ -10,7 +10,7 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
   _sendResponse,
 ) => {
   if (!database) {
-    console.error('Database not initialized.')
+    console.error("Database not initialized.")
     return
   }
 
@@ -21,18 +21,18 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
           $eq: message.data.videoInfo.videoId,
         },
       },
-      sort: [{ startTime: 'desc' }],
+      sort: [{ startTime: "desc" }],
       limit: 1,
     })
     .exec()
 
   console.log(
-    'foundVideos',
+    "foundVideos",
     foundVideos.flatMap((v) => v.toJSON()),
   )
 
   if (foundVideos.length === 0) {
-    console.log('Inserting new video event, because no video found.')
+    console.log("Inserting new video event, because no video found.")
 
     const newVideo: VideoEventDocType = {
       id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
@@ -45,14 +45,19 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
     await database.videos_events.insert(newVideo)
     currentlyPlayedVideosSignal.value.push(newVideo)
   } else if (foundVideos.length > 0) {
-    let foundVideo = foundVideos[0]!
+    const foundVideo = foundVideos[0]
 
-    let time_difference_ms = Math.abs(
+    if (foundVideo === undefined) {
+      console.error("No video found.")
+      return
+    }
+
+    const time_difference_ms = Math.abs(
       new Date(foundVideo.endTime).getTime() - new Date(message.data.timestamp).getTime(),
     )
 
     if (time_difference_ms > videoResumeThresholdSignal.value * 1000) {
-      console.log(`Inserting new video event, because time difference is big.`)
+      console.log("Inserting new video event, because time difference is big.")
 
       const newVideo: VideoEventDocType = {
         id: `${message.data.timestamp}__${message.data.videoInfo.videoId}`,
@@ -65,16 +70,16 @@ export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async
       await database.videos_events.insert(newVideo)
       currentlyPlayedVideosSignal.value.push(newVideo)
     } else {
-      console.log(`Patching video event with endTime.`)
+      console.log("Patching video event with endTime.")
 
       await foundVideo.patch({ endTime: message.data.timestamp })
 
       currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map((v) => {
         if (v.id === foundVideo.primary) {
           return { ...v, endTime: message.data.timestamp }
-        } else {
-          return v
         }
+
+        return v
       })
     }
   }

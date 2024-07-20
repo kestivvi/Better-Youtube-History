@@ -1,18 +1,17 @@
-import { Dispatch, ReactNode, SetStateAction } from 'react'
-import { Button, Group, Text, useMantineTheme } from '@mantine/core'
-import { IconSettings } from '@tabler/icons-react'
-import { IconChevronLeft } from '@tabler/icons-react'
-import { IconCode } from '@tabler/icons-react'
+import { Button, Group, Text, useMantineTheme } from "@mantine/core"
+import { IconSettings } from "@tabler/icons-react"
+import { IconChevronLeft } from "@tabler/icons-react"
+import { IconCode } from "@tabler/icons-react"
+import type { Dispatch, ReactNode, SetStateAction } from "react"
 
-import { View } from '../../Popup'
+import type { View } from "../../Popup"
 
 type Props = {
   view: View
   setView: Dispatch<SetStateAction<View>>
 }
 
-// @ts-expect-error
-const isDev = process.env.NODE_ENV == 'development'
+const isDev = process.env.NODE_ENV === "development"
 
 export default function ({ view, setView }: Props) {
   const theme = useMantineTheme()
@@ -39,9 +38,9 @@ export default function ({ view, setView }: Props) {
     </Button>
   )
 
-  if (view !== 'HOME') {
+  if (view !== "HOME") {
     return (
-      <NavigationButton viewToSet={'HOME'} Icon={<IconChevronLeft />}>
+      <NavigationButton viewToSet={"HOME"} Icon={<IconChevronLeft />}>
         Back
       </NavigationButton>
     )
@@ -49,12 +48,12 @@ export default function ({ view, setView }: Props) {
 
   return (
     <Group>
-      <NavigationButton viewToSet={'SETTINGS'} Icon={<IconSettings />}>
+      <NavigationButton viewToSet={"SETTINGS"} Icon={<IconSettings />}>
         Settings
       </NavigationButton>
 
       {isDev && (
-        <NavigationButton viewToSet={'DEV'} Icon={<IconCode />}>
+        <NavigationButton viewToSet={"DEV"} Icon={<IconCode />}>
           Dev
         </NavigationButton>
       )}
