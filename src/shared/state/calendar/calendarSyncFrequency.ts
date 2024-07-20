@@ -1,4 +1,4 @@
-import { createSignalSupabaseSynced } from "../createSignalSupabaseSynced"
+import { createSignalSupabaseSynced } from "../signals/SupabaseSignal/createSignalSupabaseSynced"
 
 export const DEFAULT_CALENDAR_SYNC_FREQUENCY = 10 * 60 // 10 minutes
 

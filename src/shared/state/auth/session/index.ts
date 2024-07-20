@@ -1,6 +1,6 @@
 import { setupSessionAndTokens } from "@/shared/auth/setupSessionAndTokens"
 import { effect } from "@preact/signals-react"
-import { createSignal } from "../../createSignal"
+import { createSignal } from "../../signals/StandardSignal/createSignal"
 import { supabaseSignal } from "../../supabase"
 import { sessionExpirationThresholdSecondsSignal } from "../sessionExpirationThreshold"
 import { providerRefreshTokenSignal } from "../tokens/providerRefreshToken"

@@ -1,4 +1,4 @@
-import { createSignal } from "@/shared/state/createSignal"
+import { createSignal } from "@/shared/state/signals/StandardSignal/createSignal"
 
 export const { videoElementSignal } = createSignal(
   "videoElement",

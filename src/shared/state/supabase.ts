@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
 import secrets from "../../secrets"
-import { createSignal } from "./createSignal"
+import { createSignal } from "./signals/StandardSignal/createSignal"
 
 const supabase = createClient(secrets.supabase.url, secrets.supabase.key)
 

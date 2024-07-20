@@ -1,4 +1,4 @@
-import { createSignalSupabaseSynced } from "./createSignalSupabaseSynced"
+import { createSignalSupabaseSynced } from "./signals/SupabaseSignal/createSignalSupabaseSynced"
 
 export const { calendarIdSignal } = createSignalSupabaseSynced(
   "calendarId",

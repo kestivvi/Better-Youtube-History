@@ -1,4 +1,4 @@
-import { createSignal } from "../../createSignal"
+import { createSignal } from "../../signals/StandardSignal/createSignal"
 
 export const { providerTokenSignal } = createSignal(
   "providerToken",
