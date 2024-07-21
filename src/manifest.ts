@@ -39,7 +39,7 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ["storage", "tabs", "identity"],
+  permissions: ["storage", "tabs", "identity", "alarms"],
   oauth2: {
     client_id: "499463732095-s87itm7psq38rntkvvkgl0fl1e2n0lit.apps.googleusercontent.com",
     scopes: ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"],

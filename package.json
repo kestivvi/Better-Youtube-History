@@ -1,7 +1,7 @@
 {
   "name": "better-youtube-history",
   "displayName": "Better Youtube History",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "author": "kestivvi",
   "description": "Better YouTube History is a Chrome extension that seamlessly integrates your YouTube activity with Google Calendar. Each video you watch is automatically added as a calendar event, allowing you to effortlessly track your YouTube viewing history.",
   "type": "module",
