@@ -68,7 +68,7 @@ export default function () {
         onClick={async () => {
           if (!sessionSignal.value) return
 
-          refreshSession(supabaseSignal.value, sessionSignal.value)
+          refreshSession(supabaseSignal.value)
           refreshProviderToken(supabaseSignal.value, providerRefreshTokenSignal.value)
         }}
       >
