@@ -32,7 +32,7 @@ export default function () {
   effect(() => {
     console.debug(`[${ALARM_NAME}] Setting up Calendar sync alarm`)
 
-    const periodInMinutes = calendarSyncFrequencySignal.value * 60
+    const periodInMinutes = calendarSyncFrequencySignal.value / 60
 
     const calendarSyncSetupFn = async () => {
       console.debug(`[${ALARM_NAME}] Creating Calendar sync alarm`)
