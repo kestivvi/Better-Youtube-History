@@ -39,7 +39,7 @@ export async function validateAndRefreshSessionTokens(
   }
 
   if (!isSessionValid || !isProviderTokenValid) {
-    await refreshSession(supabase, session)
+    await refreshSession(supabase)
     await refreshProviderToken(supabase, providerRefreshToken)
   }
 }

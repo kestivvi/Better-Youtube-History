@@ -2,9 +2,9 @@ import { sessionSignal, sessionStateSignal } from "@/shared/state/auth/session"
 import type { SessionType } from "@/shared/state/auth/session/types"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-export async function refreshSession(supabase: SupabaseClient, session: SessionType) {
+export async function refreshSession(supabase: SupabaseClient) {
   try {
-    const { data, error } = await supabase.auth.refreshSession(session)
+    const { data, error } = await supabase.auth.refreshSession()
 
     if (error) {
       // TODO: Somehow there is a case where in a session there is no refresh token
@@ -14,7 +14,7 @@ export async function refreshSession(supabase: SupabaseClient, session: SessionT
     }
 
     if (data?.session) {
-      console.log("[refreshSession] Session refreshed:", data.session)
+      console.debug("[refreshSession] Session refreshed:", data.session)
       sessionSignal.value = data.session as SessionType
       sessionStateSignal.value = "LOGGED_IN"
     } else {
