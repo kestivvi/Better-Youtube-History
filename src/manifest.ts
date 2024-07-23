@@ -8,6 +8,7 @@ export default defineManifest({
   description: packageData.description,
   version: packageData.version,
   manifest_version: 3,
+  minimum_chrome_version: "92",
   icons: {
     16: "img/logo-16.png",
     32: "img/logo-34.png",
