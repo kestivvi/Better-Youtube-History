@@ -13,7 +13,10 @@ export default function () {
 
   chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === ALARM_NAME) {
-      console.debug(`[${ALARM_NAME}] Alarm triggered`)
+      console.debug(
+        `[${ALARM_NAME}] Alarm triggered, sessionRefreshToken`,
+        sessionSignal.value?.refresh_token,
+      )
       validateAndRefreshSessionTokens(
         sessionSignal.value,
         providerTokenInfoSignal.value,

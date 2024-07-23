@@ -2,9 +2,11 @@ import { sessionSignal, sessionStateSignal } from "@/shared/state/auth/session"
 import type { SessionType } from "@/shared/state/auth/session/types"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-export async function refreshSession(supabase: SupabaseClient) {
+export async function refreshSession(supabase: SupabaseClient, refreshToken: string) {
   try {
-    const { data, error } = await supabase.auth.refreshSession()
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token: refreshToken,
+    })
 
     if (error) {
       // TODO: Somehow there is a case where in a session there is no refresh token
