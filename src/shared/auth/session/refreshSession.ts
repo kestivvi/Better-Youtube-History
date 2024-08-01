@@ -16,7 +16,14 @@ export async function refreshSession(supabase: SupabaseClient, refreshToken: str
     }
 
     if (data?.session) {
-      console.debug("[refreshSession] Session refreshed:", data.session)
+      console.debug("[refreshSession] Got session data:", data.session)
+
+      if (!data?.session.refresh_token) {
+        console.error("[refreshSession] No refresh token found in session.")
+        sessionStateSignal.value = "NOT_LOGGED_IN"
+        return
+      }
+
       sessionSignal.value = data.session as SessionType
       sessionStateSignal.value = "LOGGED_IN"
     } else {

@@ -34,6 +34,10 @@ export async function finishUserOAuth(url: string) {
     refresh_token,
   })
 
+  supabaseSignal.value.auth.onAuthStateChange((event, session) => {
+    console.debug("[finishUserOAuth] onAuthStateChange", event, session)
+  })
+
   if (error) {
     console.error("[finishUserOAuth] error setting session", error)
     return
