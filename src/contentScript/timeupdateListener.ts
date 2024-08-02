@@ -1,5 +1,5 @@
 import type { Message, VideoInfo } from "@/background/runtime_messages/types"
-import scrapVideoInfo from "./scrapVideoInfo/getVideoInfoFromHiddenJson"
+import scrapVideoInfo from "./scrapVideoInfo"
 import throttle from "./throttle"
 
 function isVideoInfoComplete(videoInfo: Partial<VideoInfo>): videoInfo is VideoInfo {

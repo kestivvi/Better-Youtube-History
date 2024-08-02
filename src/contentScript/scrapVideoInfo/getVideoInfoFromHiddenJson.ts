@@ -12,7 +12,7 @@ function getVideoInfoScript(): string {
 // Example input: "https://www.youtube.com/embed/doFowk4xj7Q?enablejsapi=1"
 // Example output: "doFowk4xj7Q"
 function extractVideoId(embedUrl: string): string | undefined {
-  return embedUrl.split("/").pop()?.split("?").shift() ?? undefined
+  return embedUrl?.split("/")?.pop()?.split("?")?.shift() ?? undefined
 }
 
 // This function scrapes video information from the hidden JSON in the DOM
