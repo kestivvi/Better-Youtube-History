@@ -1,4 +1,4 @@
-export default function (fn: () => void, delay: number): () => Promise<void> {
+export default function throttle(fn: () => void, delay: number): () => Promise<void> {
   let initialCallTime = 0
   let timeoutId: NodeJS.Timeout | null = null
 

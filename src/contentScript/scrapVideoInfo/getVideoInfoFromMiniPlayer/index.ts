@@ -1,37 +1,50 @@
 import type { VideoInfo } from "@/background/runtime_messages/types"
 import extractVideoIdFromStyle from "./extractVideoIdFromStyle"
 
-export default function (): Partial<VideoInfo> {
-  const stringWithVideoId =
-    document.querySelector(".miniplayer .ytp-tooltip-bg")?.getAttribute("style") ??
+// Selectors to scrape video information from the mini player
+const VIDEO_ID_SELECTOR = ".miniplayer .ytp-tooltip-bg"
+const TITLE_SELECTOR_1 = ".miniplayer #info-bar .title"
+const TITLE_SELECTOR_2 = '.miniplayer .title[role="heading"]'
+const CHANNEL_NAME_SELECTOR_1 = ".miniplayer .ytp-ce-channel-title"
+const CHANNEL_NAME_SELECTOR_2 = ".miniplayer #owner-name"
+const CHANNEL_URL_SELECTOR = ".miniplayer .ytp-ce-channel-title"
+
+// Functions to scrape video information from the mini player
+function getVideoId(): string | undefined {
+  const styleWithVideoId = document
+    .querySelector(VIDEO_ID_SELECTOR)
+    ?.getAttribute("style")
+  console.log("getVideoId", styleWithVideoId)
+  if (!styleWithVideoId) return undefined
+  return extractVideoIdFromStyle(styleWithVideoId)
+}
+
+function getTitle(): string | undefined {
+  return (
+    document.querySelector(TITLE_SELECTOR_1)?.getAttribute("aria-label") ||
+    document.querySelector(TITLE_SELECTOR_2)?.getAttribute("aria-label") ||
     undefined
+  )
+}
 
-  const videoId = stringWithVideoId
-    ? extractVideoIdFromStyle(stringWithVideoId)
-    : undefined
-
-  const title =
-    document.querySelector(".miniplayer #info-bar .title")?.getAttribute("aria-label") ??
-    document
-      .querySelector('.miniplayer .title[role="heading"]')
-      ?.getAttribute("aria-label") ??
+function getChannelName(): string | undefined {
+  return (
+    document.querySelector(CHANNEL_NAME_SELECTOR_1)?.textContent ||
+    document.querySelector(CHANNEL_NAME_SELECTOR_2)?.textContent ||
     undefined
+  )
+}
 
-  let channelName =
-    document.querySelector(".miniplayer .ytp-ce-channel-title")?.textContent ??
-    document.querySelector(".miniplayer #owner-name")?.textContent ??
-    undefined
+function getChannelUrl(): string | undefined {
+  return document.querySelector(CHANNEL_URL_SELECTOR)?.getAttribute("href") || undefined
+}
 
-  if (channelName === "") channelName = undefined
-
-  const channelUrl =
-    document.querySelector(".miniplayer .ytp-ce-channel-title")?.getAttribute("href") ??
-    undefined
-
+// This function aggregates scraped video information from the mini player
+export default function getVideoInfoFromMiniPlayer(): Partial<VideoInfo> {
   return {
-    videoId,
-    title,
-    channelName,
-    channelUrl,
+    videoId: getVideoId(),
+    title: getTitle(),
+    channelName: getChannelName(),
+    channelUrl: getChannelUrl(),
   }
 }

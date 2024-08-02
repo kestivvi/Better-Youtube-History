@@ -1,23 +1,43 @@
-import reverseDebounce from "./reverseDebounce"
-import scrapVideoInfo from "./scrapVideoInfo"
+import type { Message, VideoInfo } from "@/background/runtime_messages/types"
+import scrapVideoInfo from "./scrapVideoInfo/getVideoInfoFromHiddenJson"
+import throttle from "./throttle"
 
-function timeUpdateListener() {
-  const videoInfo = scrapVideoInfo()
+function isVideoInfoComplete(videoInfo: Partial<VideoInfo>): videoInfo is VideoInfo {
+  const requiredFields: (keyof VideoInfo)[] = [
+    "videoId",
+    "title",
+    "channelName",
+    "channelUrl",
+  ]
 
-  console.log("Video info:", videoInfo)
-
-  if (Object.values(videoInfo).some((value) => value === null || value === undefined)) {
-    console.log("Video info is incomplete, skipping.")
-    return
-  }
-
-  chrome.runtime.sendMessage({
-    type: "VIDEO_PLAYING",
-    data: {
-      timestamp: new Date().toISOString(),
-      videoInfo,
-    },
-  })
+  return requiredFields.every(
+    (field) => videoInfo[field] !== null && videoInfo[field] !== undefined,
+  )
 }
 
-export default reverseDebounce(timeUpdateListener, 5000)
+function timeUpdateListener() {
+  // Scrape video information from DOM
+  const videoInfo = scrapVideoInfo()
+
+  // We don't want to send incomplete video info
+  if (!isVideoInfoComplete(videoInfo)) return
+
+  const timestamp = new Date().toISOString()
+
+  const message: Message = {
+    type: "VIDEO_PLAYING",
+    data: {
+      timestamp,
+      videoInfo,
+    },
+  }
+
+  // Send message to background script
+  chrome.runtime.sendMessage(message)
+}
+
+const THROTTLE_DELAY = 5000
+
+// Throttle the timeupdate listener to avoid sending too many messages
+// In normal conditions, the timeupdate event fire count per second is around 4-5
+export default throttle(timeUpdateListener, THROTTLE_DELAY)
