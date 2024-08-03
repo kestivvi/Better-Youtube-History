@@ -1,4 +1,4 @@
-type EventInfo = {
+export type EventInfo = {
   summary: string
   description: string
   startTime: string
