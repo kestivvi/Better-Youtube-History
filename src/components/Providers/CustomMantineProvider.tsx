@@ -11,8 +11,9 @@ const theme = createTheme({
     MyRed: colorsTuple("#bc3908"),
     MyYellow: colorsTuple("#f6aa1c"),
     ytBg: colorsTuple("#282828"),
+    white: colorsTuple("#ffffff"),
   },
-  primaryColor: "MyRed",
+  primaryColor: "red",
 })
 
 type Props = {

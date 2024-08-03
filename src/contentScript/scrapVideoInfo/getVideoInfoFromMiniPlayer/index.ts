@@ -14,7 +14,6 @@ function getVideoId(): string | undefined {
   const styleWithVideoId = document
     .querySelector(VIDEO_ID_SELECTOR)
     ?.getAttribute("style")
-  console.log("getVideoId", styleWithVideoId)
   if (!styleWithVideoId) return undefined
   return extractVideoIdFromStyle(styleWithVideoId)
 }
