@@ -4,40 +4,39 @@ import { sessionExpirationThresholdSecondsSignal } from "@/shared/state/auth/ses
 import { providerRefreshTokenSignal } from "@/shared/state/auth/tokens/providerRefreshToken"
 import { providerTokenInfoSignal } from "@/shared/state/auth/tokens/providerTokenInfo"
 import { supabaseSignal } from "@/shared/state/supabase"
+import { effect } from "@preact/signals-react"
 
 const ALARM_NAME = "SESSION_REFRESH_ALARM"
 const INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES = 10
 
-export default function () {
-  console.debug(`[${ALARM_NAME}] Setting up Session Refresh alarm`)
+function handleSessionRefreshAlarm(alarm: chrome.alarms.Alarm) {
+  if (alarm.name !== ALARM_NAME) return
 
-  chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === ALARM_NAME) {
-      console.debug(
-        `[${ALARM_NAME}] Alarm triggered, sessionRefreshToken`,
-        sessionSignal.value?.refresh_token,
-      )
-      validateAndRefreshSessionTokens(
-        sessionSignal.value,
-        providerTokenInfoSignal.value,
-        providerRefreshTokenSignal.value,
-        supabaseSignal.value,
-        sessionExpirationThresholdSecondsSignal.value,
-      )
-    }
+  validateAndRefreshSessionTokens(
+    sessionSignal.value,
+    providerTokenInfoSignal.value,
+    providerRefreshTokenSignal.value,
+    supabaseSignal.value,
+    sessionExpirationThresholdSecondsSignal.value,
+  )
+}
+
+async function createSessionRefreshAlarm() {
+  const existingAlarm = await chrome.alarms.get(ALARM_NAME)
+  if (existingAlarm) return
+
+  chrome.alarms.create(ALARM_NAME, {
+    periodInMinutes: INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES,
   })
+}
 
-  const asyncFn = async () => {
-    console.debug(`[${ALARM_NAME}] Creating Session Refresh alarm`)
+export default function setupSessionRefresh() {
+  chrome.alarms.onAlarm.addListener(handleSessionRefreshAlarm)
 
-    const alarm = await chrome.alarms.get(ALARM_NAME)
-    if (alarm === undefined) {
-      console.debug(`[${ALARM_NAME}] Indeed creating Session Refresh alarm`)
-      chrome.alarms.create(ALARM_NAME, {
-        periodInMinutes: INTERVAL_TO_CHECK_SESSION_AND_REFRESH_TOKENS_MINUTES,
-      })
-    }
-  }
-
-  asyncFn()
+  // Signal effect is not actually needed here
+  // but maybe in the future interval can be signal
+  effect(() => {
+    createSessionRefreshAlarm()
+    return () => chrome.alarms.clear(ALARM_NAME)
+  })
 }

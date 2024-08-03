@@ -1,4 +1,7 @@
-import { type EventInfo, addEventToCalendar } from "@/shared/calendar/addEventToCalendar"
+import {
+  type EventInfo,
+  addEventToGoogleCalendar,
+} from "@/shared/calendar/addEventToGoogleCalendar"
 import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 import type { Signal } from "@preact/signals-react"
 import dayjs from "dayjs"
@@ -74,7 +77,7 @@ export default async function flushEventsToCalendar(
 
   for (const videoEvent of longEnoughEvents) {
     const eventInfo = prepareEventInfo(videoEvent, calendarEventPrefix)
-    const added = await addEventToCalendar(calendarId, eventInfo, providerToken)
+    const added = await addEventToGoogleCalendar(calendarId, eventInfo, providerToken)
 
     if (added) {
       // Mark the event in the database as uploaded
