@@ -12,34 +12,26 @@ export async function validateAndRefreshSessionTokens(
   providerTokenInfo: ProviderTokenInfo | null,
   providerRefreshToken: string | null,
   supabase: SupabaseClient,
-  secondsIntoFuture = 60,
+  secondsIntoFuture: number,
 ) {
+  // If no session is found, we have no way to refresh the session
+  // so we set the session state to NOT_LOGGED_IN
   if (session === null) {
-    console.debug(
+    sessionStateSignal.value = "NOT_LOGGED_IN"
+    return console.error(
       "[validateAndRefreshSessionTokens] No session found. Setting session state to NOT_LOGGED_IN.",
     )
-    sessionStateSignal.value = "NOT_LOGGED_IN"
-    return
   }
 
   const isSessionValid = willSessionBeValid(session, secondsIntoFuture)
-  console.debug("[validateAndRefreshSessionTokens] isSessionValid:", isSessionValid)
-
   const isProviderTokenValid = await willProviderTokenBeValid(
     providerTokenInfo,
     secondsIntoFuture,
   )
-  console.debug(
-    "[validateAndRefreshSessionTokens] isProviderTokenValid:",
-    isProviderTokenValid,
-  )
-
-  if (isSessionValid && isProviderTokenValid) {
-    sessionStateSignal.value = "LOGGED_IN"
-  }
 
   if (!isSessionValid || !isProviderTokenValid) {
-    await refreshSession(supabase, session)
+    // Refresh both session and provider token
+    await refreshSession(supabase, session.refresh_token)
     await refreshProviderToken(supabase, providerRefreshToken)
   }
 }

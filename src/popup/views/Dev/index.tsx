@@ -3,7 +3,6 @@ import type { VideoEventDocType } from "@/background/database/collections/VideoE
 import { sessionStateSignal } from "@/shared/state/auth/session"
 import { Space } from "@mantine/core"
 import { useState } from "react"
-import CalendarCheck from "./components/CalendarCheck"
 import LoginSection from "./components/LoginSection"
 import Videos from "./components/Videos"
 
@@ -24,7 +23,6 @@ export default function () {
 
       {sessionStateSignal.value === "LOGGED_IN" && (
         <>
-          <CalendarCheck />
           <br />
 
           <button

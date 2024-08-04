@@ -17,8 +17,7 @@ export default function () {
       <Center>
         <Text
           fw={900}
-          variant="gradient"
-          gradient={{ from: "red", to: "MyYellow", deg: 60 }}
+          c="white"
           style={{
             fontSize: 25,
             marginTop: 20,

@@ -1,5 +1,5 @@
 import { refreshSession } from "@/shared/auth/session/refreshSession"
-import { fetchTokenInfo } from "@/shared/auth/tokens/fetchTokenInfo"
+import { fetchProviderTokenInfo } from "@/shared/auth/tokens/fetchProviderTokenInfo"
 import { refreshProviderToken } from "@/shared/auth/tokens/refreshProviderToken"
 import { sessionSignal } from "@/shared/state/auth/session"
 import type { SessionType } from "@/shared/state/auth/session/types"
@@ -47,17 +47,11 @@ export default function () {
             console.error("No token to verify")
             return
           }
-          const response = await fetchTokenInfo(providerTokenSignal.value)
+          const providerTokenInfo = await fetchProviderTokenInfo(
+            providerTokenSignal.value,
+          )
 
-          if (!response) {
-            console.error("No response")
-            return
-          }
-
-          console.log("Response:", response)
-
-          const json = await response.json()
-          console.log("Token Info:", json)
+          console.log("Token Info:", providerTokenInfo)
         }}
       >
         Verify current token
@@ -68,7 +62,7 @@ export default function () {
         onClick={async () => {
           if (!sessionSignal.value) return
 
-          refreshSession(supabaseSignal.value, sessionSignal.value)
+          refreshSession(supabaseSignal.value, sessionSignal.value.refresh_token)
           refreshProviderToken(supabaseSignal.value, providerRefreshTokenSignal.value)
         }}
       >

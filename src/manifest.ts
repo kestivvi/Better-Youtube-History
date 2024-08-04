@@ -8,6 +8,7 @@ export default defineManifest({
   description: packageData.description,
   version: packageData.version,
   manifest_version: 3,
+  minimum_chrome_version: "92",
   icons: {
     16: "img/logo-16.png",
     32: "img/logo-34.png",
@@ -39,7 +40,7 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ["storage", "tabs", "identity"],
+  permissions: ["storage", "tabs", "identity", "alarms"],
   oauth2: {
     client_id: "499463732095-s87itm7psq38rntkvvkgl0fl1e2n0lit.apps.googleusercontent.com",
     scopes: ["openid", "email", "profile", "https://www.googleapis.com/auth/calendar"],

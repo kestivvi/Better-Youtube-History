@@ -1,9 +1,9 @@
 {
   "name": "better-youtube-history",
   "displayName": "Better Youtube History",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "kestivvi",
-  "description": "",
+  "description": "Better YouTube History is a Chrome extension that seamlessly integrates your YouTube activity with Google Calendar. Each video you watch is automatically added as a calendar event, allowing you to effortlessly track your YouTube viewing history.",
   "type": "module",
   "license": "MIT",
   "keywords": ["chrome-extension", "react", "vite", "create-chrome-ext"],
@@ -23,21 +23,22 @@
     "@mantine/core": "7.11.2",
     "@mantine/hooks": "7.11.2",
     "@preact/signals-react": "2.1.0",
-    "@supabase/supabase-js": "2.44.4",
+    "@supabase/supabase-js": "2.45.0",
     "@tabler/icons-react": "3.11.0",
     "dayjs": "1.11.12",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-hook-form": "7.52.1",
-    "rxdb": "15.28.1",
+    "react-hook-form": "7.52.2",
+    "rxdb": "15.30.1",
     "rxjs": "7.8.1",
-    "valibot": "0.36.0"
+    "valibot": "0.37.0",
+    "ts-deepmerge": "7.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@crxjs/vite-plugin": "2.0.0-beta.25",
-    "@preact/signals-react-transform": "0.3.2",
-    "@types/chrome": "0.0.268",
+    "@preact/signals-react-transform": "0.4.0",
+    "@types/chrome": "0.0.269",
     "@types/gulp": "^4.0.17",
     "@types/gulp-zip": "^4.0.4",
     "@types/react": "18.3.3",
@@ -45,10 +46,10 @@
     "@vitejs/plugin-react": "4.3.1",
     "gulp": "5.0.0",
     "gulp-zip": "6.0.0",
-    "postcss": "8.4.39",
-    "postcss-preset-mantine": "1.16.0",
+    "postcss": "8.4.40",
+    "postcss-preset-mantine": "1.17.0",
     "postcss-simple-vars": "7.0.1",
-    "typescript": "5.5.3",
-    "vite": "5.3.4"
+    "typescript": "5.5.4",
+    "vite": "5.3.5"
   }
 }

@@ -14,7 +14,7 @@ export const getBullet = (state: State) => {
         <Bullet
           label="You haven't watched this video for the minimum duration yet. Keep watching and an event will end up in your calendar."
           Icon={IconClock}
-          color="yellow"
+          color="grey"
         />
       )
     case "MIN_DURATION_FULLFILLED":
@@ -22,7 +22,7 @@ export const getBullet = (state: State) => {
         <Bullet
           label="You've been watching this video for more than the minimum duration. When you stop watching, the event will be created in your calendar."
           Icon={IconVideo}
-          color="green"
+          color="red"
         />
       )
 

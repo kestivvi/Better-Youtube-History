@@ -1,26 +1,26 @@
 import type { VideoInfo } from "@/background/runtime_messages/types"
+import { merge } from "ts-deepmerge"
 import getVideoInfoFromHiddenJson from "./getVideoInfoFromHiddenJson"
 import getVideoInfoFromMiniPlayer from "./getVideoInfoFromMiniPlayer"
+import scrapChannelUrl from "./scrapChannelUrl"
 
-export default function (): Partial<VideoInfo> {
-  const videoInfoFromMiniPlayer = getVideoInfoFromMiniPlayer()
-  const videoInfoFromScript = getVideoInfoFromHiddenJson()
-
-  return mergeVideoInfoObjectsArray([videoInfoFromMiniPlayer, videoInfoFromScript])
+// This function merges multiple video info objects into a single object
+// making sure not to override any existing values with undefined
+function mergeVideoInfos(videoInfos: Partial<VideoInfo>[]): Partial<VideoInfo> {
+  const mergeOptions = { allowUndefinedOverrides: false }
+  return merge.withOptions(mergeOptions, ...videoInfos)
 }
 
-function mergeVideoInfoObjectsArray(
-  videoInfoObjects: Partial<VideoInfo>[],
-): Partial<VideoInfo> {
-  const mergedVideoInfo: Partial<VideoInfo> = {}
+// This function is used to scrape video information from 3 different sources
+// and merge them into a single object
+export default function scrapVideoInfo(): Partial<VideoInfo> {
+  const videoInfoFromMiniPlayer = getVideoInfoFromMiniPlayer()
+  const videoInfoFromScript = getVideoInfoFromHiddenJson()
+  const objWithChannelUrl = scrapChannelUrl()
 
-  for (const videoInfo of videoInfoObjects) {
-    for (const [key, value] of Object.entries(videoInfo)) {
-      if (value !== undefined) {
-        mergedVideoInfo[key as keyof Partial<VideoInfo>] = value
-      }
-    }
-  }
-
-  return mergedVideoInfo
+  return mergeVideoInfos([
+    videoInfoFromMiniPlayer,
+    videoInfoFromScript,
+    objWithChannelUrl,
+  ])
 }
