@@ -3,7 +3,6 @@ import { providerTokenSignal } from "@/shared/state/auth/tokens/providerToken"
 import { calendarIdSignal } from "@/shared/state/calendarId"
 import { Button, Stack, Textarea } from "@mantine/core"
 import { signal } from "@preact/signals-react"
-import { IconCaretLeftFilled } from "@tabler/icons-react"
 import { useRef } from "react"
 import { setCalendarViewStage } from "."
 
@@ -58,7 +57,6 @@ export default function () {
         onClick={() => {
           setCalendarViewStage.value = "FIRST_STAGE"
         }}
-        leftSection={<IconCaretLeftFilled />}
         variant="transparent"
       >
         Back
