@@ -13,9 +13,18 @@ export const callbackAfterInitFromStorage = async <T>(
   // @ts-expect-error
   const valueFromSupabase = variableName in firstItem ? firstItem[variableName] : null
 
-  if (valueFromSupabase !== signal.value) {
-    signal.value = valueFromSupabase
+  if (valueFromSupabase === signal.value) {
+    console.debug(
+      `[${variableName}Signal] Value in supabase is already up-to-date. Skipping update.`,
+    )
+    return
   }
+
+  signal.value = valueFromSupabase
+  console.debug(
+    `[${variableName}Signal] Updated signal based on value from supabase, new value:`,
+    signal.value,
+  )
 }
 
 export const updateSupabase = async <T>(
@@ -27,12 +36,34 @@ export const updateSupabase = async <T>(
   const userId = session?.user.id
   if (!userId) return console.error(`[${variableName}Signal] User is not logged in`)
 
-  const response = await supabase
+  const queryResponse = await supabase
+    .from("user_config")
+    .select(variableName)
+    .eq("user_id", userId)
+
+  const firstItem = queryResponse.data?.[0]
+
+  // @ts-expect-error
+  const valueFromSupabase = variableName in firstItem ? firstItem[variableName] : null
+
+  if (valueFromSupabase === value) {
+    console.debug(
+      `[${variableName}Signal] Value in supabase is already up-to-date. Skipping update.`,
+    )
+    return
+  }
+
+  const updateResponse = await supabase
     .from("user_config")
     .update([{ [variableName]: value }])
     .eq("user_id", userId)
 
-  console.debug(`[${variableName}Signal] Updated value in supabase`, response)
+  console.debug(
+    `[${variableName}Signal] Updated value in supabase. New value:`,
+    value,
+    "response:",
+    updateResponse,
+  )
 }
 
 const updateSignalValueFromSupabase = <T>(
@@ -41,9 +72,26 @@ const updateSignalValueFromSupabase = <T>(
   variableName: string,
 ) => {
   const newValue = payload.new[variableName]
-  if (newValue !== undefined && newValue !== innerSignalObject.value) {
-    innerSignalObject.value = newValue
+
+  if (newValue === undefined) {
+    console.error(
+      `[${variableName}Signal] Value in supabase is missing. Skipping update.`,
+    )
+    return
   }
+
+  if (newValue === innerSignalObject.value) {
+    console.debug(
+      `[${variableName}Signal] Value in supabase is already up-to-date. Skipping update.`,
+    )
+    return
+  }
+
+  innerSignalObject.value = newValue
+  console.debug(
+    `[${variableName}Signal] Updated signal based on value from supabase, new value:`,
+    newValue,
+  )
 }
 
 export const setupSupabaseChangeListener = <T>(
@@ -51,13 +99,18 @@ export const setupSupabaseChangeListener = <T>(
   signal: Signal<T>,
   supabase: SupabaseClient,
 ) => {
+  let timeout: NodeJS.Timeout | null = null
+
   supabase
     .channel("userConfigChanged")
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "user_config" },
       (payload) => {
-        updateSignalValueFromSupabase(payload, signal, variableName)
+        if (timeout) clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          updateSignalValueFromSupabase(payload, signal, variableName)
+        }, 1000)
       },
     )
     .subscribe()
