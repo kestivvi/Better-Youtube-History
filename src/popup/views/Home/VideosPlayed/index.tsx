@@ -38,7 +38,7 @@ export default function () {
   // TODO: I have no clue why this is needed, but without it the component does not update
   useSignals()
 
-  if (videosFiltered.value.length === 0) {
+  if (currentlyPlayedVideosSignal.value.length === 0) {
     return (
       <Tooltip
         position="bottom"
