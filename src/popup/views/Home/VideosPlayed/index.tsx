@@ -27,7 +27,7 @@ const videosFiltered = computed(() =>
         dayjs(a.endTime).diff(dayjs(b.endTime), "seconds") < 11
 
       if (endTimesAlmostTheSame) {
-        return dayjs(a.startTime).diff(dayjs(b.startTime))
+        return dayjs(b.startTime).diff(dayjs(a.startTime))
       }
 
       return dayjs(b.endTime).diff(dayjs(a.endTime))
