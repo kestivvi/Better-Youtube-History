@@ -107,44 +107,40 @@ export default function () {
   ] as const
 
   return (
-    <Stack my={10}>
-      {/* TODO: Are those fields disabled while submitting? */}
+    <Box style={{ position: 'relative', minHeight: '100%' }}>
+      <Stack my={10} pb={60}>
+        {fields.map(({ name, Component }) => (
+          <Controller
+            key={name}
+            name={name}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <Component {...field} error={error?.message} disabled={isSubmitting} />
+            )}
+          />
+        ))}
+      </Stack>
 
-      {fields.map(({ name, Component }) => (
-        <Controller
-          key={name}
-          name={name}
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <Component {...field} error={error?.message} />
-          )}
-        />
-      ))}
-
-      {/* TODO: Show "Validating" when validation is being done */}
-      {isDirty && (
-        <Box
-          style={{
-            position: "sticky",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1,
-            paddingTop: 10,
-            paddingBottom: 10,
-          }}
+      <Box
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1,
+          padding: "10px 16px",
+          background: "#282828",
+        }}
+      >
+        <Button
+          fullWidth
+          onClick={handleSubmit(onSubmit)}
+          disabled={isSubmitting || !isDirty}
+          loading={isSubmitting}
         >
-          <Button
-            fullWidth
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-            loading={isSubmitting}
-          >
-            {/* TODO: Text should be different for more states like failed submission */}
-            {isSubmitting ? "Saving..." : "Save"}
-          </Button>
-        </Box>
-      )}
-    </Stack>
+          {isSubmitting ? "Saving..." : "Save"}
+        </Button>
+      </Box>
+    </Box>
   )
 }
