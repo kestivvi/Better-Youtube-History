@@ -12,9 +12,8 @@ type Props = {
 export default function ({ view, setView }: Props) {
   return (
     <>
-      <Group justify="space-between" px={10} py={5}>
+      <Group justify="space-between" px={10} py={8}>
         <ViewSwitchButton view={view} setView={setView} />
-
         <CustomAvatar />
       </Group>
     </>
