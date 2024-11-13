@@ -6,50 +6,28 @@ import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWat
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import { calendarIdSignal } from "@/shared/state/calendarId"
 import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
-import { effect } from "@preact/signals-react"
 import { database } from "../database"
-import flushEventsToCalendar from "./flushEventsToCalendar"
+import { CalendarService } from "./CalendarService"
 
-const ALARM_NAME = "CALENDAR_SYNC_ALARM"
+const RETRY_DELAY_MS = 1000
 
-function handleAlarm(alarm: chrome.alarms.Alarm) {
-  // If the alarm is not the one we set, ignore it
-  if (alarm.name !== ALARM_NAME) return
+export default async function setupCalendarSync(retryCount = 0): Promise<void> {
+  if (!database) {
+    console.log(`Database not ready, retrying in ${RETRY_DELAY_MS}ms (attempt ${retryCount + 1})`)
+    setTimeout(() => setupCalendarSync(retryCount + 1), RETRY_DELAY_MS)
+    return
+  }
 
-  flushEventsToCalendar(
-    database,
-    activityRetentionPeriodSignal.value,
-    videoResumeThresholdSignal.value,
-    minVideoWatchDurationSignal.value,
-    calendarEventPrefixSignal.value,
-    calendarIdSignal.value,
-    providerTokenSignal.value,
+  const calendarService = new CalendarService(database, {
+    activityRetentionPeriodSignal,
+    videoResumeThresholdSignal,
+    minVideoWatchDurationSignal,
+    calendarEventPrefixSignal,
+    calendarIdSignal,
+    providerTokenSignal,
+    calendarSyncFrequencySignal,
     currentlyPlayedVideosSignal,
-  )
-}
-
-async function createAlarm(periodInMinutes: number) {
-  const existingAlarm = await chrome.alarms.get(ALARM_NAME)
-  if (existingAlarm) return
-
-  chrome.alarms.create(ALARM_NAME, {
-    // Delay the first alarm by 30 seconds
-    delayInMinutes: 0.5,
-    // Every another alarm will be triggered every `periodInMinutes`
-    periodInMinutes,
   })
-}
 
-export default function setupCalendarSync() {
-  chrome.alarms.onAlarm.addListener(handleAlarm)
-
-  // Signal effect runs on creation and whenever the signal value changes
-  effect(() => {
-    const periodInMinutes = calendarSyncFrequencySignal.value / 60
-    createAlarm(periodInMinutes)
-
-    // Cleanup function runs when the effect is disposed
-    // Or in other words, before effect runs again on signal value change
-    return () => chrome.alarms.clear(ALARM_NAME)
-  })
+  calendarService.initialize()
 }
