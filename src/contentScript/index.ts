@@ -1,3 +1,12 @@
-import checkVideoElement from "./checkVideoElement"
+import { VIDEO_CHECK_INTERVAL } from "./constants"
+import { VideoElementManager } from "./VideoElementManager"
 
-setInterval(checkVideoElement, 5000)
+const videoManager = new VideoElementManager()
+
+setInterval(() => {
+  videoManager.checkForNewVideoElement()
+}, VIDEO_CHECK_INTERVAL)
+
+window.addEventListener("unload", () => {
+  videoManager.cleanup()
+})
