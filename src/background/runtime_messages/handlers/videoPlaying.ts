@@ -2,17 +2,39 @@ import { type MyDatabase, database } from "@/background/database"
 import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
-import type { Signal } from "@preact/signals-react"
 import dayjs from "dayjs"
 import type { RxDocument } from "rxdb"
-import type { OnMessageListener, VideoInfo, VideoPlayingMessage } from "../types"
+import type { OnMessageListener, VideoPlayingMessage } from "../types"
 
-async function findLastVideoById(
-  database: MyDatabase,
-  videoId: string,
-): Promise<RxDocument<VideoEventDocType> | undefined> {
-  try {
-    const [foundVideo] = await database.videos_events
+export class VideoPlayingHandler {
+  constructor(private readonly db: MyDatabase) {}
+
+  async handleVideoEvent(message: VideoPlayingMessage): Promise<void> {
+    try {
+      const { timestamp, videoInfo } = message.data
+
+      const lastVideoEvent = await this.getLastVideoEvent(videoInfo.videoId)
+      const timeSinceLastEvent = lastVideoEvent
+        ? dayjs(timestamp).diff(dayjs(lastVideoEvent.endTime), "seconds")
+        : Number.POSITIVE_INFINITY
+
+      const shouldCreateNew =
+        !lastVideoEvent || timeSinceLastEvent > videoResumeThresholdSignal.value
+
+      if (shouldCreateNew) {
+        await this.createNewVideoEvent(timestamp, videoInfo)
+      } else {
+        await this.updateExistingVideoEvent(lastVideoEvent, timestamp)
+      }
+    } catch (error) {
+      console.error("Error handling video playing event:", error)
+    }
+  }
+
+  private async getLastVideoEvent(
+    videoId: string,
+  ): Promise<RxDocument<VideoEventDocType> | null> {
+    const [lastVideoEvent] = await this.db.videos_events
       .find({
         selector: { videoId },
         sort: [{ startTime: "desc" }],
@@ -20,79 +42,49 @@ async function findLastVideoById(
       })
       .exec()
 
-    return foundVideo
-  } catch (error) {
-    console.error("Error finding the last video by ID:", error)
-    return undefined
-  }
-}
-
-async function insertNewVideoEvent(
-  database: MyDatabase,
-  videoInfo: VideoInfo,
-  timestamp: string,
-  signal: Signal<VideoEventDocType[]>,
-): Promise<void> {
-  const newVideo: VideoEventDocType = {
-    id: `${timestamp}__${videoInfo.videoId}`,
-    startTime: timestamp,
-    endTime: timestamp,
-    uploaded: false,
-    ...videoInfo,
+    return lastVideoEvent || null
   }
 
-  try {
-    await database.videos_events.insert(newVideo)
-    signal.value = [...signal.value, newVideo]
-  } catch (error) {
-    console.error("Error inserting new video event:", error)
-  }
-}
+  private async createNewVideoEvent(
+    timestamp: string,
+    videoInfo: VideoPlayingMessage["data"]["videoInfo"],
+  ): Promise<void> {
+    const newVideo: VideoEventDocType = {
+      id: `${timestamp}__${videoInfo.videoId}`,
+      startTime: timestamp,
+      endTime: timestamp,
+      uploaded: false,
+      videoId: videoInfo.videoId,
+      title: videoInfo.title,
+      channelName: videoInfo.channelName,
+      channelUrl: videoInfo.channelUrl,
+    }
 
-async function patchVideoEvent(
-  video: RxDocument<VideoEventDocType>,
-  timestamp: string,
-  signal: Signal<VideoEventDocType[]>,
-) {
-  try {
-    await video.patch({ endTime: timestamp })
-    signal.value = signal.value.map((v) =>
-      v.id === video.primary ? { ...v, endTime: timestamp } : v,
+    await this.db.videos_events.insert(newVideo)
+    currentlyPlayedVideosSignal.value = [...currentlyPlayedVideosSignal.value, newVideo]
+  }
+
+  private async updateExistingVideoEvent(
+    lastVideoEvent: RxDocument<VideoEventDocType>,
+    timestamp: string,
+  ): Promise<void> {
+    await lastVideoEvent.patch({ endTime: timestamp })
+    currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map((v) =>
+      v.id === lastVideoEvent.id ? { ...v, endTime: timestamp } : v,
     )
-  } catch (error) {
-    console.error("Error patching video event:", error)
   }
 }
 
-export const videoPlayingHandler: OnMessageListener<VideoPlayingMessage> = async (
+export const handleVideoPlaying: OnMessageListener<VideoPlayingMessage> = async (
   message,
   _sender,
   _sendResponse,
 ) => {
-  // If the database is not initialized, we can't do anything
-  if (!database) return console.error("Database not initialized.")
-
-  const { timestamp, videoInfo } = message.data
-
-  // Find the last played video by videoId
-  const foundVideo = await findLastVideoById(database, videoInfo.videoId)
-
-  if (!foundVideo) {
-    await insertNewVideoEvent(database, videoInfo, timestamp, currentlyPlayedVideosSignal)
-  } else {
-    const endTime = dayjs(foundVideo.endTime)
-    const timestampTime = dayjs(timestamp)
-    const time_difference = timestampTime.diff(endTime, "seconds")
-
-    if (time_difference > videoResumeThresholdSignal.value) {
-      await insertNewVideoEvent(
-        database,
-        videoInfo,
-        timestamp,
-        currentlyPlayedVideosSignal,
-      )
-    } else {
-      await patchVideoEvent(foundVideo, timestamp, currentlyPlayedVideosSignal)
-    }
+  if (!database) {
+    console.error("Database not initialized.")
+    return
   }
+
+  const handler = new VideoPlayingHandler(database)
+  await handler.handleVideoEvent(message)
 }

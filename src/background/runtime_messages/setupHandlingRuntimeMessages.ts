@@ -1,4 +1,4 @@
-import { videoPlayingHandler } from "./handlers/videoPlaying"
+import { handleVideoPlaying } from "./handlers/videoPlaying"
 import type { Message } from "./types"
 
 // This function is used to ensure that we handle all possible message types
@@ -11,7 +11,7 @@ export function setupHandlingRuntimeMessages() {
   chrome.runtime.onMessage.addListener(async (message: Message, sender, sendResponse) => {
     switch (message.type) {
       case "VIDEO_PLAYING":
-        videoPlayingHandler(message, sender, sendResponse)
+        await handleVideoPlaying(message, sender, sendResponse)
         break
       default:
         exhaustiveCheck(message.type)
