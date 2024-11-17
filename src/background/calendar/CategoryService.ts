@@ -27,18 +27,30 @@ export class CategoryService {
     const categories = [...this.config.categoriesSignal.value, this.OTHER_CATEGORY]
     const categoryDescriptions = categories.map(c => {
       const description = c.description || `Videos that belong to the ${c.name} category`
-      return `${c.name}: ${description}`
-    }).join('\n')
+      return `[CATEGORY]
+Name: ${c.name}
+Description >>>
+${description}
+<<<`
+    }).join('\n\n')
     
-    return `Analyze the following YouTube video metadata and categorize it into exactly one of these categories:
+    return `You are tasked with categorizing a YouTube video into exactly one of the following categories:
 
 ${categoryDescriptions}
 
-Video Title: ${videoInfo.title}
-Channel Name: ${videoInfo.channelName}
-Description: ${videoInfo.description}
+[VIDEO METADATA]
+Title: ${videoInfo.title}
+Channel: ${videoInfo.channelName}
+Description >>>
+${videoInfo.description}
+<<<
 
-Respond with just the category name, nothing else. If the video doesn't fit into any specific category, respond with "other".`
+[INSTRUCTIONS]
+Analyze the video metadata and respond with exactly one category name from the list above.
+Focus on the main content and topic of the video - ignore affiliate links, social media links, 
+sponsorship mentions, and other promotional content in the description.
+If the video doesn't fit any specific category, respond with "other".
+Respond with just the category name, nothing else.`
   }
 
   private async queryLLM(prompt: string): Promise<string | null> {
