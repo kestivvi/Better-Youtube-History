@@ -5,7 +5,7 @@ import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWat
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import { calendarIdSignal } from "@/shared/state/calendarId"
 import { valibotResolver } from "@hookform/resolvers/valibot"
-import { Box, Button, Stack } from "@mantine/core"
+import { Box, Button, Stack, Tabs } from "@mantine/core"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import * as v from "valibot"
 import ActivityRetentionPeriodField, {
@@ -45,11 +45,34 @@ const formSchema = v.objectAsync({
 
 type FormType = v.InferOutput<typeof formSchema>
 
+type FieldName = keyof FormType
+
 type FieldConfig = {
-  name: keyof FormType
+  name: FieldName
   Component: React.ComponentType<any>
   type: 'text' | 'number' | 'categories'
 }
+
+type FieldGroups = {
+  basic: readonly ["calendarId", "calendarEventPrefix", "calendarSyncFrequency", "videoResumeThreshold", "minVideoWatchDuration", "activityRetentionPeriod"]
+  categories: readonly ["llmApiUrl", "llmApiKey", "categories"]
+}
+
+const fieldGroups: FieldGroups = {
+  basic: [
+    "calendarId",
+    "calendarEventPrefix",
+    "calendarSyncFrequency",
+    "videoResumeThreshold",
+    "minVideoWatchDuration",
+    "activityRetentionPeriod",
+  ],
+  categories: [
+    "llmApiUrl",
+    "llmApiKey",
+    "categories"
+  ]
+} as const
 
 export default function () {
   const {
@@ -95,8 +118,8 @@ export default function () {
     videoResumeThresholdSignal.value = dataToSend.videoResumeThreshold
     minVideoWatchDurationSignal.value = dataToSend.minVideoWatchDuration
     activityRetentionPeriodSignal.value = dataToSend.activityRetentionPeriod
-    llmApiKeySignal.value = dataToSend.llmApiKey
-    llmApiUrlSignal.value = dataToSend.llmApiUrl
+    llmApiKeySignal.value = dataToSend.llmApiKey ?? null
+    llmApiUrlSignal.value = dataToSend.llmApiUrl ?? null
     categoriesSignal.value = dataToSend.categories
 
     reset(data)
@@ -134,13 +157,13 @@ export default function () {
       type: 'number'
     },
     {
-      name: "llmApiKey",
-      Component: LLMApiKeyField,
+      name: "llmApiUrl",
+      Component: LLMApiUrlField,
       type: 'text'
     },
     {
-      name: "llmApiUrl",
-      Component: LLMApiUrlField,
+      name: "llmApiKey",
+      Component: LLMApiKeyField,
       type: 'text'
     },
     {
@@ -151,32 +174,59 @@ export default function () {
   ]
 
   return (
-    <Box style={{ position: 'relative', minHeight: '100%' }}>
-      <Stack my={10} pb={60}>
-        {fields.map(({ name, Component, type }) => (
-          <Controller
-            key={name}
-            name={name}
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              if (type === 'categories') {
-                return (
-                  <Component
-                    value={field.value as Category[]}
-                    onChange={field.onChange}
-                    error={error?.message}
-                    disabled={isSubmitting}
-                  />
-                )
-              }
-              
-              return (
-                <Component {...field} error={error?.message} disabled={isSubmitting} />
-              )
-            }}
-          />
-        ))}
-      </Stack>
+    <Box style={{ position: 'relative', minHeight: '100%' }} px={0}>
+      <Tabs defaultValue="basic" my={10} pb={60}>
+        <Tabs.List grow>
+          <Tabs.Tab value="basic">Basic</Tabs.Tab>
+          <Tabs.Tab value="categories">Categorizing</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value="basic">
+          <Stack mt="md">
+            {fields
+              .filter(({ name }) => (fieldGroups.basic as readonly FieldName[]).includes(name))
+              .map(({ name, Component }) => (
+                <Controller
+                  key={name}
+                  name={name}
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <Component {...field} error={error?.message} disabled={isSubmitting} />
+                  )}
+                />
+              ))}
+          </Stack>
+        </Tabs.Panel>
+
+        <Tabs.Panel value="categories">
+          <Stack mt="md">
+            {fields
+              .filter(({ name }) => (fieldGroups.categories as readonly FieldName[]).includes(name))
+              .map(({ name, Component, type }) => (
+                <Controller
+                  key={name}
+                  name={name}
+                  control={control}
+                  render={({ field, fieldState: { error } }) => {
+                    if (type === 'categories') {
+                      return (
+                        <Component
+                          value={field.value as Category[]}
+                          onChange={field.onChange}
+                          error={error?.message}
+                          disabled={isSubmitting}
+                        />
+                      )
+                    }
+                    return (
+                      <Component {...field} error={error?.message} disabled={isSubmitting} />
+                    )
+                  }}
+                />
+              ))}
+          </Stack>
+        </Tabs.Panel>
+      </Tabs>
 
       <Box
         style={{

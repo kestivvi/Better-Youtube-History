@@ -3,7 +3,7 @@ import Form from "./Form"
 
 export default function () {
   return (
-    <Box mx={20}>
+    <Box mx={10}>
       <Form />
     </Box>
   )

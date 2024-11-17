@@ -50,17 +50,18 @@ export default forwardRef(
         </div>
         
         {value.map((category, index) => (
-          <Stack key={index} gap="xs" p="xs" style={{ border: '1px solid #404040', borderRadius: '4px' }}>
+          <Group key={index} wrap="nowrap" gap="xs">
             <TextInput
-              label="Name"
               placeholder="Category name"
+              size="xs"
               value={category.name}
               onChange={(e) => updateCategory(index, 'name', e.target.value)}
               error={error && index === value.length - 1 ? error : undefined}
               disabled={disabled}
+              style={{ flex: 1 }}
             />
             <Select
-              label="Type"
+              size="xs"
               value={category.type}
               onChange={(newValue) => updateCategory(index, 'type', newValue || 'neutral')}
               data={[
@@ -69,30 +70,29 @@ export default forwardRef(
                 { value: 'neutral', label: 'Neutral' }
               ]}
               disabled={disabled}
+              style={{ width: 100 }}
             />
-            <Group justify="flex-end">
-              <ActionIcon 
-                color="red" 
-                onClick={() => removeCategory(index)}
-                disabled={disabled}
-                variant="light"
-                size="md"
-              >
-                <IconTrash size="1rem" />
-              </ActionIcon>
-            </Group>
-          </Stack>
+            <ActionIcon 
+              color="red" 
+              onClick={() => removeCategory(index)}
+              disabled={disabled}
+              variant="light"
+              size="sm"
+            >
+              <IconTrash size="0.9rem" />
+            </ActionIcon>
+          </Group>
         ))}
         
-        <Group justify="center" mt="xs">
+        <Group justify="center">
           <ActionIcon 
             onClick={addCategory} 
             variant="light" 
             color="blue"
             disabled={disabled}
-            size="lg"
+            size="sm"
           >
-            <IconPlus size="1.1rem" />
+            <IconPlus size="0.9rem" />
           </ActionIcon>
         </Group>
       </Stack>
