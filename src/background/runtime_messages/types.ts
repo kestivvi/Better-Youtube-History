@@ -24,7 +24,7 @@ export interface VideoPlayingMessage extends GeneralMessage<"VIDEO_PLAYING"> {
 
 export type VideoInfo = Pick<
   VideoEventDocType,
-  "channelName" | "channelUrl" | "title" | "videoId"
+  "channelName" | "channelUrl" | "title" | "videoId" | "description"
 >
 
 ////////////////////////////////////////////////////////////////////

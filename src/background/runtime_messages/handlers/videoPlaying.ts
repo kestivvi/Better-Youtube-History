@@ -58,6 +58,7 @@ export class VideoPlayingHandler {
       title: videoInfo.title,
       channelName: videoInfo.channelName,
       channelUrl: videoInfo.channelUrl,
+      description: videoInfo.description,
     }
 
     await this.db.videos_events.insert(newVideo)

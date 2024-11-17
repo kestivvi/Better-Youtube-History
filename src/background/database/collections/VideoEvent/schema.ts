@@ -25,6 +25,9 @@ const videoEventSchemaLiteral = {
     channelUrl: {
       type: "string",
     },
+    description: {
+      type: "string",
+    },
     startTime: {
       type: "string",
       format: "date-time",
@@ -36,6 +39,13 @@ const videoEventSchemaLiteral = {
     uploaded: {
       type: "boolean",
     },
+    category: {
+      type: "string",
+    },
+    categoryType: {
+      type: "string",
+      enum: ["positive", "negative", "neutral"]
+    },
   },
   required: [
     "id",
@@ -43,6 +53,7 @@ const videoEventSchemaLiteral = {
     "title",
     "channelName",
     "channelUrl",
+    "description",
     "startTime",
     "endTime",
   ],

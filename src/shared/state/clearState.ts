@@ -27,6 +27,13 @@ import {
   videoResumeThresholdSignal,
 } from "./calendar/videoResumeThreshold"
 import { calendarIdSignal } from "./calendarId"
+import {
+  DEFAULT_CATEGORIES,
+  DEFAULT_LLM_API_URL,
+  categoriesSignal,
+  llmApiKeySignal,
+  llmApiUrlSignal,
+} from "./calendar/categoryConfig"
 
 export function clearState() {
   // There is no supabaseSignal cleared, because it is not stored in chrome.storage.local
@@ -47,4 +54,9 @@ export function clearState() {
   calendarSyncFrequencySignal.value = DEFAULT_CALENDAR_SYNC_FREQUENCY
   minVideoWatchDurationSignal.value = DEFAULT_MIN_VIDEO_WATCH_DURATION
   videoResumeThresholdSignal.value = DEFAULT_VIDEO_RESUME_THRESHOLD
+
+  // Category configuration
+  categoriesSignal.value = DEFAULT_CATEGORIES
+  llmApiUrlSignal.value = DEFAULT_LLM_API_URL
+  llmApiKeySignal.value = null
 }

@@ -56,6 +56,7 @@ const scrapFromHiddenJson = (info: Partial<VideoInfo>): Partial<VideoInfo> => {
         info.videoId || parsedInfo.embedUrl?.split("/")?.pop()?.split("?")?.shift(),
       title: info.title || (parsedInfo.name ?? undefined),
       channelName: info.channelName || (parsedInfo.author ?? undefined),
+      description: info.description || (parsedInfo.description ?? undefined),
     }
   } catch (error) {
     console.debug("Failed to parse hidden JSON:", error)
@@ -87,6 +88,7 @@ export default function scrapVideoInfo(): VideoInfo {
     info.title ? null : "title",
     info.channelName ? null : "channelName",
     info.channelUrl ? null : "channelUrl",
+    info.description ? null : "description",
   ].filter(Boolean)
 
   if (missingProperties.length > 0) {
@@ -95,10 +97,5 @@ export default function scrapVideoInfo(): VideoInfo {
     )
   }
 
-  return {
-    videoId: info.videoId,
-    title: info.title,
-    channelName: info.channelName,
-    channelUrl: info.channelUrl,
-  } as VideoInfo
+  return info as VideoInfo
 }

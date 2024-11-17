@@ -5,11 +5,13 @@ import { EventInfo, addEventToGoogleCalendar } from "@/shared/calendar/addEventT
 import { VideoEventDocType } from "../database/collections/VideoEvent/schema"
 import { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
 import type { RxDocument } from 'rxdb'
+import { CategoryService, CategoryServiceConfig, CategoryType } from "./CategoryService"
 
 type VideoEventDocument = RxDocument<VideoEventDocType>
 
 export class CalendarService {
   private readonly ALARM_NAME = "CALENDAR_SYNC_ALARM"
+  private readonly categoryService: CategoryService
 
   constructor(
     private readonly database: MyDatabase | null,
@@ -22,8 +24,11 @@ export class CalendarService {
       providerTokenSignal: Signal<string | null>
       calendarSyncFrequencySignal: Signal<number>
       currentlyPlayedVideosSignal: Signal<CurrentlyPlayedVideoType[]>
+      categoryConfig: CategoryServiceConfig
     }
-  ) {}
+  ) {
+    this.categoryService = new CategoryService(config.categoryConfig)
+  }
 
   public initialize(): void {
     chrome.alarms.onAlarm.addListener(this.handleAlarm)
@@ -109,6 +114,25 @@ export class CalendarService {
 
   private async uploadEvents(events: VideoEventDocument[]): Promise<void> {
     for (const event of events) {
+      // Categorize video if not already categorized
+      if (!event.category) {
+        const videoInfo = {
+          title: event.title,
+          channelName: event.channelName,
+          channelUrl: event.channelUrl,
+          videoId: event.videoId,
+          description: event.description
+        }
+        
+        const category = await this.categoryService.categorizeVideo(videoInfo)
+        if (category) {
+          await event.patch({
+            category: category.name,
+            categoryType: category.type
+          })
+        }
+      }
+
       const eventInfo = this.prepareEventInfo(event)
       const added = await addEventToGoogleCalendar(
         this.config.calendarIdSignal.value!,
@@ -122,10 +146,38 @@ export class CalendarService {
     }
   }
 
+  private getCategoryEmoji(categoryType: CategoryType): string {
+    switch (categoryType) {
+      case 'positive':
+        return '✅'
+      case 'negative':
+        return '⚠️'
+      case 'neutral':
+        return '➖'
+    }
+  }
+
+  private getCategoryInfluenceText(categoryType: CategoryType): string {
+    switch (categoryType) {
+      case 'positive':
+        return 'Positive Activity'
+      case 'negative':
+        return 'Negative Activity'
+      case 'neutral':
+        return 'Neutral Activity'
+    }
+  }
+
   private prepareEventInfo(event: VideoEventDocument): EventInfo {
+    const categoryInfo = event.category && event.categoryType
+      ? `\nCategory: ${event.category} (${this.getCategoryEmoji(event.categoryType)} ${this.getCategoryInfluenceText(event.categoryType)})`
+      : ''
+    
+    const summaryEmoji = event.categoryType ? `${this.getCategoryEmoji(event.categoryType)} ` : ''
+    
     return {
-      summary: `${this.config.calendarEventPrefixSignal.value} ${event.title}`,
-      description: `https://www.youtube.com/watch?v=${event.videoId}\nChannel: ${event.channelName}`,
+      summary: `${this.config.calendarEventPrefixSignal.value} ${summaryEmoji}${event.title}`,
+      description: `https://www.youtube.com/watch?v=${event.videoId}\nChannel: ${event.channelName}${categoryInfo}`,
       startTime: event.startTime,
       endTime: event.endTime,
     }
@@ -139,4 +191,5 @@ export class CalendarService {
         video.id === event.id ? { ...video, uploaded: true } : video
       )
   }
+
 } 
