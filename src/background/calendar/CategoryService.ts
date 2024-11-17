@@ -6,6 +6,7 @@ export type CategoryType = "positive" | "negative" | "neutral"
 export interface Category {
   name: string
   type: CategoryType
+  description?: string
 }
 
 export interface CategoryServiceConfig {
@@ -24,10 +25,15 @@ export class CategoryService {
 
   private createPrompt(videoInfo: VideoInfo): string {
     const categories = [...this.config.categoriesSignal.value, this.OTHER_CATEGORY]
-    const categoryNames = categories.map(c => c.name).join(', ')
+    const categoryDescriptions = categories.map(c => {
+      const description = c.description || `Videos that belong to the ${c.name} category`
+      return `${c.name}: ${description}`
+    }).join('\n')
     
-    return `Analyze the following YouTube video metadata and categorize it into exactly one of these categories: ${categoryNames}.
-    
+    return `Analyze the following YouTube video metadata and categorize it into exactly one of these categories:
+
+${categoryDescriptions}
+
 Video Title: ${videoInfo.title}
 Channel Name: ${videoInfo.channelName}
 Description: ${videoInfo.description}

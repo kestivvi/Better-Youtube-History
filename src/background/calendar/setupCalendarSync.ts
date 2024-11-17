@@ -19,11 +19,6 @@ export default async function setupCalendarSync(retryCount = 0): Promise<void> {
     return
   }
 
-  if (!llmApiKeySignal.value) {
-    console.log('LLM API key not set, calendar service will not categorize videos')
-    return
-  }
-
   const calendarService = new CalendarService(database, {
     activityRetentionPeriodSignal,
     videoResumeThresholdSignal,

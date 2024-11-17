@@ -1,5 +1,5 @@
 import { Category, CategoryType } from "@/background/calendar/CategoryService"
-import { ActionIcon, Group, Select, Stack, Text, TextInput } from "@mantine/core"
+import { ActionIcon, Group, Select, Stack, Text, TextInput, Textarea } from "@mantine/core"
 import { IconPlus, IconTrash } from "@tabler/icons-react"
 import { type ForwardedRef, forwardRef } from "react"
 import * as v from "valibot"
@@ -10,7 +10,13 @@ const categorySchema = v.object({
     v.literal("positive"),
     v.literal("negative"),
     v.literal("neutral")
-  ], "Invalid category type")
+  ], "Invalid category type"),
+  description: v.optional(
+    v.pipe(
+      v.string(),
+      v.maxLength(500, "Description must be less than 500 characters")
+    )
+  )
 })
 
 export const categoriesFieldSchema = v.array(categorySchema)
@@ -25,7 +31,7 @@ interface CategoriesFieldProps {
 export default forwardRef(
   ({ value, onChange, error, disabled }: CategoriesFieldProps, ref: ForwardedRef<HTMLDivElement>) => {
     const addCategory = () => {
-      onChange([...value, { name: '', type: 'neutral' }])
+      onChange([...value, { name: '', type: 'neutral', description: '' }])
     }
 
     const removeCategory = (index: number) => {
@@ -50,38 +56,67 @@ export default forwardRef(
         </div>
         
         {value.map((category, index) => (
-          <Group key={index} wrap="nowrap" gap="xs">
-            <TextInput
-              placeholder="Category name"
-              size="xs"
-              value={category.name}
-              onChange={(e) => updateCategory(index, 'name', e.target.value)}
-              error={error && index === value.length - 1 ? error : undefined}
-              disabled={disabled}
-              style={{ flex: 1 }}
-            />
-            <Select
-              size="xs"
-              value={category.type}
-              onChange={(newValue) => updateCategory(index, 'type', newValue || 'neutral')}
-              data={[
-                { value: 'positive', label: 'Positive' },
-                { value: 'negative', label: 'Negative' },
-                { value: 'neutral', label: 'Neutral' }
-              ]}
-              disabled={disabled}
-              style={{ width: 100 }}
-            />
-            <ActionIcon 
-              color="red" 
-              onClick={() => removeCategory(index)}
-              disabled={disabled}
-              variant="light"
-              size="sm"
-            >
-              <IconTrash size="0.9rem" />
-            </ActionIcon>
-          </Group>
+          <Stack key={index} gap="xs">
+            <Group wrap="nowrap" gap="xs">
+              <TextInput
+                placeholder="Category name"
+                size="xs"
+                value={category.name}
+                onChange={(e) => updateCategory(index, 'name', e.target.value)}
+                error={error && index === value.length - 1 ? error : undefined}
+                disabled={disabled}
+                style={{ flex: 1 }}
+              />
+              <Select
+                size="xs"
+                value={category.type}
+                onChange={(newValue) => updateCategory(index, 'type', newValue || 'neutral')}
+                data={[
+                  { value: 'positive', label: 'Positive' },
+                  { value: 'negative', label: 'Negative' },
+                  { value: 'neutral', label: 'Neutral' }
+                ]}
+                disabled={disabled}
+                style={{ width: 100 }}
+              />
+              <ActionIcon 
+                color="red" 
+                onClick={() => removeCategory(index)}
+                disabled={disabled}
+                variant="light"
+                size="sm"
+              >
+                <IconTrash size="0.9rem" />
+              </ActionIcon>
+            </Group>
+            
+            <Stack gap={0}>
+              <Textarea
+                placeholder="Category description (optional)"
+                size="xs"
+                value={category.description || ''}
+                onChange={(e) => updateCategory(index, 'description', e.target.value)}
+                disabled={disabled}
+                maxLength={500}
+                autosize
+                minRows={2}
+                styles={{
+                  input: {
+                    fontSize: '12px',
+                    overflow: 'hidden'
+                  }
+                }}
+              />
+              <Text 
+                size="xs" 
+                c="dimmed" 
+                ta="right"
+                mt={2}
+              >
+                {(category.description?.length || 0)}/500
+              </Text>
+            </Stack>
+          </Stack>
         ))}
         
         <Group justify="center">
