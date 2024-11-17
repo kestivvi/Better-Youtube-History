@@ -2,12 +2,22 @@ import { type MyDatabase, database } from "@/background/database"
 import type { VideoEventDocType } from "@/background/database/collections/VideoEvent/schema"
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
+import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
 import dayjs from "dayjs"
 import type { RxDocument } from "rxdb"
 import type { OnMessageListener, VideoPlayingMessage } from "../types"
+import { CategoryService, CategoryServiceConfig } from "@/background/calendar/CategoryService"
+import { categoriesSignal, llmApiUrlSignal, llmApiKeySignal } from "@/shared/state/calendar/categoryConfig"
 
 export class VideoPlayingHandler {
-  constructor(private readonly db: MyDatabase) {}
+  private readonly categoryService: CategoryService
+
+  constructor(
+    private readonly db: MyDatabase,
+    private readonly categoryConfig: CategoryServiceConfig
+  ) {
+    this.categoryService = new CategoryService(categoryConfig)
+  }
 
   async handleVideoEvent(message: VideoPlayingMessage): Promise<void> {
     try {
@@ -69,10 +79,56 @@ export class VideoPlayingHandler {
     lastVideoEvent: RxDocument<VideoEventDocType>,
     timestamp: string,
   ): Promise<void> {
-    await lastVideoEvent.patch({ endTime: timestamp })
-    currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map((v) =>
-      v.id === lastVideoEvent.id ? { ...v, endTime: timestamp } : v,
-    )
+    // First, get the fresh document
+    const freshDoc = await this.db.videos_events.findOne(lastVideoEvent.id).exec()
+    if (!freshDoc) {
+      console.error('Document no longer exists:', lastVideoEvent.id)
+      return
+    }
+
+    // Update endTime
+    await freshDoc.patch({ endTime: timestamp })
+    
+    // Recheck duration with fresh document
+    const timeWatched = dayjs(timestamp).diff(dayjs(freshDoc.startTime), "seconds")
+    const minDurationExceeded = timeWatched >= minVideoWatchDurationSignal.value
+    
+    if (minDurationExceeded && !freshDoc.category) {
+      const videoInfo = {
+        title: freshDoc.title,
+        channelName: freshDoc.channelName,
+        channelUrl: freshDoc.channelUrl,
+        videoId: freshDoc.videoId,
+        description: freshDoc.description
+      }
+      
+      const category = await this.categoryService.categorizeVideo(videoInfo)
+      if (category) {
+        // Get fresh document again before category update
+        const docToUpdate = await this.db.videos_events.findOne(lastVideoEvent.id).exec()
+        if (docToUpdate) {
+          await docToUpdate.patch({
+            category: category.name,
+            categoryType: category.type
+          })
+        }
+      }
+    }
+
+    // Get final state for signal update
+    const finalDoc = await this.db.videos_events.findOne(lastVideoEvent.id).exec()
+    if (finalDoc) {
+      currentlyPlayedVideosSignal.value = currentlyPlayedVideosSignal.value.map((v) =>
+        v.id === finalDoc.id 
+          ? { 
+              ...v, 
+              endTime: finalDoc.endTime,
+              category: finalDoc.category,
+              categoryType: finalDoc.categoryType
+            } 
+          : v,
+      )
+    }
   }
 }
 
@@ -86,6 +142,12 @@ export const handleVideoPlaying: OnMessageListener<VideoPlayingMessage> = async 
     return
   }
 
-  const handler = new VideoPlayingHandler(database)
+  const categoryConfig = {
+    categoriesSignal,
+    llmApiUrlSignal,
+    apiKeySignal: llmApiKeySignal
+  }
+
+  const handler = new VideoPlayingHandler(database, categoryConfig)
   await handler.handleVideoEvent(message)
 }

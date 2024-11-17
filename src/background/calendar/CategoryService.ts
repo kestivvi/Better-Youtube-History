@@ -41,21 +41,21 @@ Respond with just the category name, nothing else. If the video doesn't fit into
       const apiKey = this.config.apiKeySignal.value
 
       if (!apiUrl) {
-        console.warn('CategoryService: API URL not set')
+        console.error('CategoryService: API URL not set')
         return null
       }
 
-      if (!apiKey) {
-        console.warn('CategoryService: API key not set')
-        return null
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+
+      if (apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`
       }
 
       const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
+        headers,
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
           messages: [
@@ -68,20 +68,29 @@ Respond with just the category name, nothing else. If the video doesn't fit into
               content: prompt
             }
           ],
-          temperature: 0.3,
-          max_tokens: 50
+          temperature: 0.3
         })
       })
 
       if (!response.ok) {
-        console.warn(`CategoryService: LLM API request failed: ${response.statusText}`)
+        const errorText = await response.text()
+        console.error(`CategoryService: LLM API request failed:`, {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        })
         return null
       }
 
       const data = await response.json()
+      if (!data.choices?.[0]?.message?.content) {
+        console.error('CategoryService: Unexpected API response format:', data)
+        return null
+      }
+      
       return data.choices[0].message.content.trim().toLowerCase()
     } catch (error) {
-      console.warn('CategoryService: Error querying LLM:', error)
+      console.error('CategoryService: Error querying LLM:', error)
       return null
     }
   }

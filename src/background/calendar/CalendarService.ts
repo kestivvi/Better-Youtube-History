@@ -114,25 +114,6 @@ export class CalendarService {
 
   private async uploadEvents(events: VideoEventDocument[]): Promise<void> {
     for (const event of events) {
-      // Categorize video if not already categorized
-      if (!event.category) {
-        const videoInfo = {
-          title: event.title,
-          channelName: event.channelName,
-          channelUrl: event.channelUrl,
-          videoId: event.videoId,
-          description: event.description
-        }
-        
-        const category = await this.categoryService.categorizeVideo(videoInfo)
-        if (category) {
-          await event.patch({
-            category: category.name,
-            categoryType: category.type
-          })
-        }
-      }
-
       const eventInfo = this.prepareEventInfo(event)
       const added = await addEventToGoogleCalendar(
         this.config.calendarIdSignal.value!,
