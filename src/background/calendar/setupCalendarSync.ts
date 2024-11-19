@@ -8,13 +8,14 @@ import { calendarIdSignal } from "@/shared/state/calendarId"
 import { currentlyPlayedVideosSignal } from "@/shared/state/video/currentlyPlayedVideos"
 import { database } from "../database"
 import { CalendarService } from "./CalendarService"
-import { categoriesSignal, llmApiKeySignal, llmApiUrlSignal } from "@/shared/state/calendar/categoryConfig"
 
 const RETRY_DELAY_MS = 1000
 
 export default async function setupCalendarSync(retryCount = 0): Promise<void> {
   if (!database) {
-    console.log(`Database not ready, retrying in ${RETRY_DELAY_MS}ms (attempt ${retryCount + 1})`)
+    console.log(
+      `Database not ready, retrying in ${RETRY_DELAY_MS}ms (attempt ${retryCount + 1})`,
+    )
     setTimeout(() => setupCalendarSync(retryCount + 1), RETRY_DELAY_MS)
     return
   }
@@ -28,11 +29,6 @@ export default async function setupCalendarSync(retryCount = 0): Promise<void> {
     providerTokenSignal,
     calendarSyncFrequencySignal,
     currentlyPlayedVideosSignal,
-    categoryConfig: {
-      categoriesSignal,
-      apiKeySignal: llmApiKeySignal,
-      llmApiUrlSignal,
-    }
   })
 
   calendarService.initialize()

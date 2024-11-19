@@ -19,6 +19,13 @@ import {
   calendarSyncFrequencySignal,
 } from "./calendar/calendarSyncFrequency"
 import {
+  DEFAULT_CATEGORIES,
+  DEFAULT_LLM_API_URL,
+  categoriesSignal,
+  llmApiKeySignal,
+  llmApiUrlSignal,
+} from "./calendar/categoryConfig"
+import {
   DEFAULT_MIN_VIDEO_WATCH_DURATION,
   minVideoWatchDurationSignal,
 } from "./calendar/minVideoWatchDuration"
@@ -27,13 +34,6 @@ import {
   videoResumeThresholdSignal,
 } from "./calendar/videoResumeThreshold"
 import { calendarIdSignal } from "./calendarId"
-import {
-  DEFAULT_CATEGORIES,
-  DEFAULT_LLM_API_URL,
-  categoriesSignal,
-  llmApiKeySignal,
-  llmApiUrlSignal,
-} from "./calendar/categoryConfig"
 
 export function clearState() {
   // There is no supabaseSignal cleared, because it is not stored in chrome.storage.local

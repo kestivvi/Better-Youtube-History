@@ -1,6 +1,12 @@
+import type { Category } from "@/background/calendar/CategoryService"
 import { activityRetentionPeriodSignal } from "@/shared/state/calendar/activityRetentionPeriod"
 import { calendarEventPrefixSignal } from "@/shared/state/calendar/calendarEventPrefix"
 import { calendarSyncFrequencySignal } from "@/shared/state/calendar/calendarSyncFrequency"
+import {
+  categoriesSignal,
+  llmApiKeySignal,
+  llmApiUrlSignal,
+} from "@/shared/state/calendar/categoryConfig"
 import { minVideoWatchDurationSignal } from "@/shared/state/calendar/minVideoWatchDuration"
 import { videoResumeThresholdSignal } from "@/shared/state/calendar/videoResumeThreshold"
 import { calendarIdSignal } from "@/shared/state/calendarId"
@@ -18,17 +24,15 @@ import CalendarIdField, { calendarIdFieldSchema } from "./Fields/CalendarIdField
 import CalendarSyncFrequencyField, {
   calendarSyncFrequencyFieldSchema,
 } from "./Fields/CalendarSyncFrequencyField"
+import CategoriesField, { categoriesFieldSchema } from "./Fields/CategoriesField"
+import LLMApiKeyField, { llmApiKeyFieldSchema } from "./Fields/LLMApiKeyField"
+import LLMApiUrlField, { llmApiUrlFieldSchema } from "./Fields/LLMApiUrlField"
 import MinVideoWatchDurationField, {
   minVideoWatchDurationFieldSchema,
 } from "./Fields/MinVideoWatchDurationField"
 import VideoResumeThresholdField, {
   videoResumeThresholdFieldSchema,
 } from "./Fields/VideoResumeThresholdField"
-import LLMApiKeyField, { llmApiKeyFieldSchema } from "./Fields/LLMApiKeyField"
-import LLMApiUrlField, { llmApiUrlFieldSchema } from "./Fields/LLMApiUrlField"
-import CategoriesField, { categoriesFieldSchema } from "./Fields/CategoriesField"
-import { llmApiKeySignal, llmApiUrlSignal, categoriesSignal } from "@/shared/state/calendar/categoryConfig"
-import { Category } from "@/background/calendar/CategoryService"
 
 // TODO: Maybe there is a way to generate this from JSON Schema?
 const formSchema = v.objectAsync({
@@ -49,12 +53,20 @@ type FieldName = keyof FormType
 
 type FieldConfig = {
   name: FieldName
+  // biome-ignore lint/suspicious/noExplicitAny: Component needs to accept various prop types for different form fields
   Component: React.ComponentType<any>
-  type: 'text' | 'number' | 'categories'
+  type: "text" | "number" | "categories"
 }
 
 type FieldGroups = {
-  basic: readonly ["calendarId", "calendarEventPrefix", "calendarSyncFrequency", "videoResumeThreshold", "minVideoWatchDuration", "activityRetentionPeriod"]
+  basic: readonly [
+    "calendarId",
+    "calendarEventPrefix",
+    "calendarSyncFrequency",
+    "videoResumeThreshold",
+    "minVideoWatchDuration",
+    "activityRetentionPeriod",
+  ]
   categories: readonly ["llmApiUrl", "llmApiKey", "categories"]
 }
 
@@ -67,11 +79,7 @@ const fieldGroups: FieldGroups = {
     "minVideoWatchDuration",
     "activityRetentionPeriod",
   ],
-  categories: [
-    "llmApiUrl",
-    "llmApiKey",
-    "categories"
-  ]
+  categories: ["llmApiUrl", "llmApiKey", "categories"],
 } as const
 
 export default function () {
@@ -129,52 +137,52 @@ export default function () {
     {
       name: "calendarId",
       Component: CalendarIdField,
-      type: 'text'
+      type: "text",
     },
     {
       name: "calendarEventPrefix",
       Component: CalendarEventPrefixField,
-      type: 'text'
+      type: "text",
     },
     {
       name: "calendarSyncFrequency",
       Component: CalendarSyncFrequencyField,
-      type: 'number'
+      type: "number",
     },
     {
       name: "videoResumeThreshold",
       Component: VideoResumeThresholdField,
-      type: 'number'
+      type: "number",
     },
     {
       name: "minVideoWatchDuration",
       Component: MinVideoWatchDurationField,
-      type: 'number'
+      type: "number",
     },
     {
       name: "activityRetentionPeriod",
       Component: ActivityRetentionPeriodField,
-      type: 'number'
+      type: "number",
     },
     {
       name: "llmApiUrl",
       Component: LLMApiUrlField,
-      type: 'text'
+      type: "text",
     },
     {
       name: "llmApiKey",
       Component: LLMApiKeyField,
-      type: 'text'
+      type: "text",
     },
     {
       name: "categories",
       Component: CategoriesField,
-      type: 'categories'
+      type: "categories",
     },
   ]
 
   return (
-    <Box style={{ position: 'relative', minHeight: '100%' }} px={0}>
+    <Box style={{ position: "relative", minHeight: "100%" }} px={0}>
       <Tabs defaultValue="basic" my={10} pb={60}>
         <Tabs.List grow>
           <Tabs.Tab value="basic">Basic</Tabs.Tab>
@@ -184,14 +192,20 @@ export default function () {
         <Tabs.Panel value="basic">
           <Stack mt="md">
             {fields
-              .filter(({ name }) => (fieldGroups.basic as readonly FieldName[]).includes(name))
+              .filter(({ name }) =>
+                (fieldGroups.basic as readonly FieldName[]).includes(name),
+              )
               .map(({ name, Component }) => (
                 <Controller
                   key={name}
                   name={name}
                   control={control}
                   render={({ field, fieldState: { error } }) => (
-                    <Component {...field} error={error?.message} disabled={isSubmitting} />
+                    <Component
+                      {...field}
+                      error={error?.message}
+                      disabled={isSubmitting}
+                    />
                   )}
                 />
               ))}
@@ -201,14 +215,16 @@ export default function () {
         <Tabs.Panel value="categories">
           <Stack mt="md">
             {fields
-              .filter(({ name }) => (fieldGroups.categories as readonly FieldName[]).includes(name))
+              .filter(({ name }) =>
+                (fieldGroups.categories as readonly FieldName[]).includes(name),
+              )
               .map(({ name, Component, type }) => (
                 <Controller
                   key={name}
                   name={name}
                   control={control}
                   render={({ field, fieldState: { error } }) => {
-                    if (type === 'categories') {
+                    if (type === "categories") {
                       return (
                         <Component
                           value={field.value as Category[]}
@@ -219,7 +235,11 @@ export default function () {
                       )
                     }
                     return (
-                      <Component {...field} error={error?.message} disabled={isSubmitting} />
+                      <Component
+                        {...field}
+                        error={error?.message}
+                        disabled={isSubmitting}
+                      />
                     )
                   }}
                 />

@@ -1,9 +1,10 @@
-import { Signal } from "@preact/signals-react"
-import { VideoInfo } from "../runtime_messages/types"
+import type { Signal } from "@preact/signals-react"
+import type { VideoInfo } from "../runtime_messages/types"
 
 export type CategoryType = "positive" | "negative" | "neutral"
 
 export interface Category {
+  id: string
   name: string
   type: CategoryType
   description?: string
@@ -17,23 +18,27 @@ export interface CategoryServiceConfig {
 
 export class CategoryService {
   private readonly OTHER_CATEGORY: Category = {
-    name: 'other',
-    type: 'neutral'
+    id: crypto.randomUUID(),
+    name: "other",
+    type: "neutral",
   }
 
   constructor(private readonly config: CategoryServiceConfig) {}
 
   private createPrompt(videoInfo: VideoInfo): string {
     const categories = [...this.config.categoriesSignal.value, this.OTHER_CATEGORY]
-    const categoryDescriptions = categories.map(c => {
-      const description = c.description || `Videos that belong to the ${c.name} category`
-      return `[CATEGORY]
+    const categoryDescriptions = categories
+      .map((c) => {
+        const description =
+          c.description || `Videos that belong to the ${c.name} category`
+        return `[CATEGORY]
 Name: ${c.name}
 Description >>>
 ${description}
 <<<`
-    }).join('\n\n')
-    
+      })
+      .join("\n\n")
+
     return `You are tasked with categorizing a YouTube video into exactly one of the following categories:
 
 ${categoryDescriptions}
@@ -59,56 +64,57 @@ Respond with just the category name, nothing else.`
       const apiKey = this.config.apiKeySignal.value
 
       if (!apiUrl) {
-        console.error('CategoryService: API URL not set')
+        console.error("CategoryService: API URL not set")
         return null
       }
 
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       }
 
       if (apiKey) {
-        headers['Authorization'] = `Bearer ${apiKey}`
+        headers.Authorization = `Bearer ${apiKey}`
       }
 
       const response = await fetch(apiUrl, {
-        method: 'POST',
+        method: "POST",
         headers,
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: "gpt-3.5-turbo",
           messages: [
             {
-              role: 'system',
-              content: 'You are a video categorization assistant. Respond only with the category name, nothing else.'
+              role: "system",
+              content:
+                "You are a video categorization assistant. Respond only with the category name, nothing else.",
             },
             {
-              role: 'user',
-              content: prompt
-            }
+              role: "user",
+              content: prompt,
+            },
           ],
-          temperature: 0.3
-        })
+          temperature: 0.3,
+        }),
       })
 
       if (!response.ok) {
         const errorText = await response.text()
-        console.error(`CategoryService: LLM API request failed:`, {
+        console.error("CategoryService: LLM API request failed:", {
           status: response.status,
           statusText: response.statusText,
-          error: errorText
+          error: errorText,
         })
         return null
       }
 
       const data = await response.json()
       if (!data.choices?.[0]?.message?.content) {
-        console.error('CategoryService: Unexpected API response format:', data)
+        console.error("CategoryService: Unexpected API response format:", data)
         return null
       }
-      
+
       return data.choices[0].message.content.trim().toLowerCase()
     } catch (error) {
-      console.error('CategoryService: Error querying LLM:', error)
+      console.error("CategoryService: Error querying LLM:", error)
       return null
     }
   }
@@ -116,14 +122,13 @@ Respond with just the category name, nothing else.`
   public async categorizeVideo(videoInfo: VideoInfo): Promise<Category | null> {
     const prompt = this.createPrompt(videoInfo)
     const categoryName = await this.queryLLM(prompt)
-    
+
     if (!categoryName) {
       return null
     }
-    
+
     const categories = [...this.config.categoriesSignal.value, this.OTHER_CATEGORY]
-    const category = categories.find(c => c.name.toLowerCase() === categoryName)
+    const category = categories.find((c) => c.name.toLowerCase() === categoryName)
     return category ?? this.OTHER_CATEGORY
   }
 }
-

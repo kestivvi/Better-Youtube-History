@@ -1,17 +1,19 @@
-import { Signal, effect } from "@preact/signals-react"
-import { MyDatabase } from "../database"
+import {
+  type EventInfo,
+  addEventToGoogleCalendar,
+} from "@/shared/calendar/addEventToGoogleCalendar"
+import type { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
+import { type Signal, effect } from "@preact/signals-react"
 import dayjs from "dayjs"
-import { EventInfo, addEventToGoogleCalendar } from "@/shared/calendar/addEventToGoogleCalendar"
-import { VideoEventDocType } from "../database/collections/VideoEvent/schema"
-import { CurrentlyPlayedVideoType } from "@/shared/state/video/currentlyPlayedVideos"
-import type { RxDocument } from 'rxdb'
-import { CategoryService, CategoryServiceConfig, CategoryType } from "./CategoryService"
+import type { RxDocument } from "rxdb"
+import type { MyDatabase } from "../database"
+import type { VideoEventDocType } from "../database/collections/VideoEvent/schema"
+import type { CategoryType } from "./CategoryService"
 
 type VideoEventDocument = RxDocument<VideoEventDocType>
 
 export class CalendarService {
   private readonly ALARM_NAME = "CALENDAR_SYNC_ALARM"
-  private readonly categoryService: CategoryService
 
   constructor(
     private readonly database: MyDatabase | null,
@@ -24,11 +26,8 @@ export class CalendarService {
       providerTokenSignal: Signal<string | null>
       calendarSyncFrequencySignal: Signal<number>
       currentlyPlayedVideosSignal: Signal<CurrentlyPlayedVideoType[]>
-      categoryConfig: CategoryServiceConfig
-    }
-  ) {
-    this.categoryService = new CategoryService(config.categoryConfig)
-  }
+    },
+  ) {}
 
   public initialize(): void {
     chrome.alarms.onAlarm.addListener(this.handleAlarm)
@@ -66,7 +65,7 @@ export class CalendarService {
     }
 
     const { calendarIdSignal, providerTokenSignal } = this.config
-    
+
     if (!calendarIdSignal.value) {
       throw new Error("Calendar ID not set")
     }
@@ -115,11 +114,15 @@ export class CalendarService {
   private async uploadEvents(events: VideoEventDocument[]): Promise<void> {
     for (const event of events) {
       const eventInfo = this.prepareEventInfo(event)
-      const added = await addEventToGoogleCalendar(
-        this.config.calendarIdSignal.value!,
-        eventInfo,
-        this.config.providerTokenSignal.value!
-      )
+      const calendarId = this.config.calendarIdSignal.value
+      const providerToken = this.config.providerTokenSignal.value
+
+      if (!calendarId || !providerToken) {
+        console.warn("Calendar ID or provider token is null, skipping event upload")
+        continue
+      }
+
+      const added = await addEventToGoogleCalendar(calendarId, eventInfo, providerToken)
 
       if (added) {
         await this.markEventAsUploaded(event)
@@ -129,33 +132,36 @@ export class CalendarService {
 
   private getCategoryEmoji(categoryType: CategoryType): string {
     switch (categoryType) {
-      case 'positive':
-        return '✅'
-      case 'negative':
-        return '⚠️'
-      case 'neutral':
-        return '➖'
+      case "positive":
+        return "✅"
+      case "negative":
+        return "⚠️"
+      case "neutral":
+        return "➖"
     }
   }
 
   private getCategoryInfluenceText(categoryType: CategoryType): string {
     switch (categoryType) {
-      case 'positive':
-        return 'Positive Activity'
-      case 'negative':
-        return 'Negative Activity'
-      case 'neutral':
-        return 'Neutral Activity'
+      case "positive":
+        return "Positive Activity"
+      case "negative":
+        return "Negative Activity"
+      case "neutral":
+        return "Neutral Activity"
     }
   }
 
   private prepareEventInfo(event: VideoEventDocument): EventInfo {
-    const categoryInfo = event.category && event.categoryType
-      ? `\nCategory: ${event.category} (${this.getCategoryEmoji(event.categoryType)} ${this.getCategoryInfluenceText(event.categoryType)})`
-      : ''
-    
-    const summaryEmoji = event.categoryType ? `${this.getCategoryEmoji(event.categoryType)} ` : ''
-    
+    const categoryInfo =
+      event.category && event.categoryType
+        ? `\nCategory: ${event.category} (${this.getCategoryEmoji(event.categoryType)} ${this.getCategoryInfluenceText(event.categoryType)})`
+        : ""
+
+    const summaryEmoji = event.categoryType
+      ? `${this.getCategoryEmoji(event.categoryType)} `
+      : ""
+
     return {
       summary: `${this.config.calendarEventPrefixSignal.value} ${summaryEmoji}${event.title}`,
       description: `https://www.youtube.com/watch?v=${event.videoId}\nChannel: ${event.channelName}${categoryInfo}`,
@@ -166,11 +172,10 @@ export class CalendarService {
 
   private async markEventAsUploaded(event: VideoEventDocument): Promise<void> {
     await event.patch({ uploaded: true })
-    
-    this.config.currentlyPlayedVideosSignal.value = 
-      this.config.currentlyPlayedVideosSignal.value.map(video => 
-        video.id === event.id ? { ...video, uploaded: true } : video
+
+    this.config.currentlyPlayedVideosSignal.value =
+      this.config.currentlyPlayedVideosSignal.value.map((video) =>
+        video.id === event.id ? { ...video, uploaded: true } : video,
       )
   }
-
-} 
+}

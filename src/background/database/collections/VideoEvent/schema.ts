@@ -38,13 +38,16 @@ const videoEventSchemaLiteral = {
     },
     uploaded: {
       type: "boolean",
+      default: false,
     },
     category: {
       type: "string",
+      optional: true,
     },
     categoryType: {
       type: "string",
-      enum: ["positive", "negative", "neutral"]
+      enum: ["positive", "negative", "neutral"],
+      optional: true,
     },
   },
   required: [
@@ -56,6 +59,7 @@ const videoEventSchemaLiteral = {
     "description",
     "startTime",
     "endTime",
+    "uploaded",
   ],
 } as const
 

@@ -1,5 +1,5 @@
-import { VIDEO_CHECK_INTERVAL } from "./constants"
 import { VideoElementManager } from "./VideoElementManager"
+import { VIDEO_CHECK_INTERVAL } from "./constants"
 
 const videoManager = new VideoElementManager()
 

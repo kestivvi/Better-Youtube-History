@@ -51,9 +51,9 @@ export default function () {
 
           {videosEvents.map((videoEvent) => (
             <div key={videoEvent.id}>
-              {videoEvent.title} - {videoEvent.startTime} - {videoEvent.endTime} - 
-              {videoEvent.category ?? 'No category'} ({videoEvent.categoryType ?? 'No type'}) -
-              {videoEvent.uploaded && "uploaded"}
+              {videoEvent.title} - {videoEvent.startTime} - {videoEvent.endTime} -
+              {videoEvent.category ?? "No category"} (
+              {videoEvent.categoryType ?? "No type"}) -{videoEvent.uploaded && "uploaded"}
             </div>
           ))}
         </>
