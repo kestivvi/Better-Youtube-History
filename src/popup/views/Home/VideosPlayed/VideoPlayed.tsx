@@ -26,11 +26,11 @@ const secondsToHms = (timeInSeconds: number) =>
 const getCategoryEmoji = (categoryType: CategoryType): string => {
   switch (categoryType) {
     case "positive":
-      return "✅"
+      return "🟩"
     case "negative":
-      return "⚠️"
+      return "🟥"
     case "neutral":
-      return "➖"
+      return "🟦"
   }
 }
 

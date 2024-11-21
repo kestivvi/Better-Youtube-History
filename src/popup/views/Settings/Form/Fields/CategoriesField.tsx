@@ -13,7 +13,6 @@ import { type ForwardedRef, forwardRef } from "react"
 import * as v from "valibot"
 
 const categorySchema = v.object({
-  id: v.string("Category ID is required"),
   name: v.string("Category name is required"),
   type: v.union(
     [v.literal("positive"), v.literal("negative"), v.literal("neutral")],
@@ -42,7 +41,6 @@ export default forwardRef(
       onChange([
         ...value,
         {
-          id: crypto.randomUUID(),
           name: "",
           type: "neutral",
           description: "",
@@ -78,21 +76,16 @@ export default forwardRef(
           </Text>
         </div>
 
-        {value.map((category) => (
-          <Stack key={category.id} gap="xs">
+        {value.map((category, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          <Stack key={index} gap="xs">
             <Group wrap="nowrap" gap="xs">
               <TextInput
                 placeholder="Category name"
                 size="xs"
                 value={category.name}
-                onChange={(e) =>
-                  updateCategory(value.indexOf(category), "name", e.target.value)
-                }
-                error={
-                  error && value.indexOf(category) === value.length - 1
-                    ? error
-                    : undefined
-                }
+                onChange={(e) => updateCategory(index, "name", e.target.value)}
+                error={error && index === value.length - 1 ? error : undefined}
                 disabled={disabled}
                 style={{ flex: 1 }}
               />
@@ -100,7 +93,7 @@ export default forwardRef(
                 size="xs"
                 value={category.type}
                 onChange={(newValue) =>
-                  updateCategory(value.indexOf(category), "type", newValue || "neutral")
+                  updateCategory(index, "type", newValue || "neutral")
                 }
                 data={[
                   { value: "positive", label: "Positive" },
@@ -112,7 +105,7 @@ export default forwardRef(
               />
               <ActionIcon
                 color="red"
-                onClick={() => removeCategory(value.indexOf(category))}
+                onClick={() => removeCategory(index)}
                 disabled={disabled}
                 variant="light"
                 size="sm"
@@ -126,9 +119,7 @@ export default forwardRef(
                 placeholder="Category description (optional)"
                 size="xs"
                 value={category.description || ""}
-                onChange={(e) =>
-                  updateCategory(value.indexOf(category), "description", e.target.value)
-                }
+                onChange={(e) => updateCategory(index, "description", e.target.value)}
                 disabled={disabled}
                 maxLength={500}
                 autosize

@@ -4,7 +4,6 @@ import type { VideoInfo } from "../runtime_messages/types"
 export type CategoryType = "positive" | "negative" | "neutral"
 
 export interface Category {
-  id: string
   name: string
   type: CategoryType
   description?: string
@@ -18,8 +17,7 @@ export interface CategoryServiceConfig {
 
 export class CategoryService {
   private readonly OTHER_CATEGORY: Category = {
-    id: crypto.randomUUID(),
-    name: "other",
+    name: "Other",
     type: "neutral",
   }
 

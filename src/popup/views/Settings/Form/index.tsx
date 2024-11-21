@@ -93,7 +93,6 @@ export default function () {
     defaultValues: {
       calendarId: calendarIdSignal.value ?? "",
       calendarEventPrefix: calendarEventPrefixSignal.value,
-      // TODO: I think those transformations should be defined in the fields themselves
       calendarSyncFrequency: calendarSyncFrequencySignal.value / 60,
       videoResumeThreshold: videoResumeThresholdSignal.value / 60,
       minVideoWatchDuration: minVideoWatchDurationSignal.value,
@@ -109,7 +108,6 @@ export default function () {
 
     const dataToSend = {
       ...data,
-      // TODO: I think those transformations should be defined in the fields themselves
       calendarSyncFrequency: data.calendarSyncFrequency * 60,
       videoResumeThreshold: data.videoResumeThreshold * 60,
       minVideoWatchDuration: data.minVideoWatchDuration,
@@ -119,7 +117,6 @@ export default function () {
       categories: data.categories,
     }
 
-    // TODO: Maybe there is a better way of doing this?
     calendarIdSignal.value = dataToSend.calendarId
     calendarEventPrefixSignal.value = dataToSend.calendarEventPrefix
     calendarSyncFrequencySignal.value = dataToSend.calendarSyncFrequency
@@ -128,7 +125,7 @@ export default function () {
     activityRetentionPeriodSignal.value = dataToSend.activityRetentionPeriod
     llmApiKeySignal.value = dataToSend.llmApiKey ?? null
     llmApiUrlSignal.value = dataToSend.llmApiUrl ?? null
-    categoriesSignal.value = dataToSend.categories
+    categoriesSignal.value = data.categories
 
     reset(data)
   }
@@ -228,7 +225,10 @@ export default function () {
                       return (
                         <Component
                           value={field.value as Category[]}
-                          onChange={field.onChange}
+                          onChange={(newValue: Category[]) => {
+                            field.onChange(newValue)
+                            console.log("Categories changed:", newValue)
+                          }}
                           error={error?.message}
                           disabled={isSubmitting}
                         />

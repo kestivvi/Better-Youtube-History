@@ -3,21 +3,18 @@ import { createSignalSupabaseSynced } from "../signals/SupabaseSignal/createSign
 
 export const DEFAULT_CATEGORIES: Category[] = [
   {
-    id: "educational",
     name: "educational",
     type: "positive",
     description:
       "Videos that teach new skills, explain concepts, or provide academic knowledge. Including tutorials, lectures, documentaries, and explainer videos.",
   },
   {
-    id: "productivity",
     name: "productivity",
     type: "positive",
     description:
       "Videos about self-improvement, time management, work efficiency, and professional development. Including workflow tutorials and productivity tips.",
   },
   {
-    id: "entertainment",
     name: "entertainment",
     type: "negative",
     description:

@@ -133,11 +133,11 @@ export class CalendarService {
   private getCategoryEmoji(categoryType: CategoryType): string {
     switch (categoryType) {
       case "positive":
-        return "✅"
+        return "🟩"
       case "negative":
-        return "⚠️"
+        return "🟥"
       case "neutral":
-        return "➖"
+        return "🟦"
     }
   }
 
