@@ -16,12 +16,14 @@ const SELECTORS = {
   hiddenJson: "#microformat > player-microformat-renderer > script",
 } as const
 
+const VIDEO_ID_REGEX = /https:\/\/i\.ytimg\.com\/sb\/([a-zA-Z0-9_-]+)\//
+
 const scrapFromMiniPlayer = (info: Partial<VideoInfo>): Partial<VideoInfo> => {
   // Extract video ID from style attribute
   const videoIdElement = document.querySelector(SELECTORS.miniPlayer.videoId)
   const styleWithVideoId = videoIdElement?.getAttribute("style")
   const extractedVideoId = styleWithVideoId
-    ? styleWithVideoId.match(/https:\/\/i\.ytimg\.com\/sb\/([a-zA-Z0-9_-]+)\//)?.[1]
+    ? styleWithVideoId.match(VIDEO_ID_REGEX)?.[1]
     : undefined
 
   // Extract title from either of two possible elements
