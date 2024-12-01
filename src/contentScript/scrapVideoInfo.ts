@@ -17,31 +17,37 @@ const SELECTORS = {
 } as const
 
 const scrapFromMiniPlayer = (info: Partial<VideoInfo>): Partial<VideoInfo> => {
-  const styleWithVideoId = document
-    .querySelector(SELECTORS.miniPlayer.videoId)
-    ?.getAttribute("style")
+  // Extract video ID from style attribute
+  const videoIdElement = document.querySelector(SELECTORS.miniPlayer.videoId)
+  const styleWithVideoId = videoIdElement?.getAttribute("style")
+  const extractedVideoId = styleWithVideoId
+    ? styleWithVideoId.match(/https:\/\/i\.ytimg\.com\/sb\/([a-zA-Z0-9_-]+)\//)?.[1]
+    : undefined
+
+  // Extract title from either of two possible elements
+  const titleElement1 = document.querySelector(SELECTORS.miniPlayer.title1)
+  const titleElement2 = document.querySelector(SELECTORS.miniPlayer.title2)
+  const extractedTitle =
+    titleElement1?.getAttribute("aria-label") ??
+    titleElement2?.getAttribute("aria-label") ??
+    undefined
+
+  // Extract channel name from either of two possible elements
+  const channelNameElement1 = document.querySelector(SELECTORS.miniPlayer.channelName1)
+  const channelNameElement2 = document.querySelector(SELECTORS.miniPlayer.channelName2)
+  const extractedChannelName =
+    channelNameElement1?.textContent ?? channelNameElement2?.textContent ?? undefined
+
+  // Extract channel URL
+  const channelUrlElement = document.querySelector(SELECTORS.miniPlayer.channelUrl)
+  const extractedChannelUrl = channelUrlElement?.getAttribute("href") ?? undefined
 
   return {
     ...info,
-    videoId:
-      info.videoId ||
-      (styleWithVideoId
-        ? styleWithVideoId.match(/https:\/\/i\.ytimg\.com\/sb\/([a-zA-Z0-9_-]+)\//)?.[1]
-        : undefined),
-    title:
-      info.title ||
-      (document.querySelector(SELECTORS.miniPlayer.title1)?.getAttribute("aria-label") ??
-        document.querySelector(SELECTORS.miniPlayer.title2)?.getAttribute("aria-label") ??
-        undefined),
-    channelName:
-      info.channelName ||
-      (document.querySelector(SELECTORS.miniPlayer.channelName1)?.textContent ??
-        document.querySelector(SELECTORS.miniPlayer.channelName2)?.textContent ??
-        undefined),
-    channelUrl:
-      info.channelUrl ||
-      (document.querySelector(SELECTORS.miniPlayer.channelUrl)?.getAttribute("href") ??
-        undefined),
+    videoId: info.videoId || extractedVideoId,
+    title: info.title || extractedTitle,
+    channelName: info.channelName || extractedChannelName,
+    channelUrl: info.channelUrl || extractedChannelUrl,
   }
 }
 
